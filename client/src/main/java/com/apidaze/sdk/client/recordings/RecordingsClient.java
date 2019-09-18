@@ -9,7 +9,7 @@ import reactor.core.publisher.Flux;
 
 import javax.validation.constraints.NotNull;
 
-import static com.apidaze.sdk.client.credentials.ApiAuthenticator.authenticate;
+import static com.apidaze.sdk.client.base.ApiAuthenticator.authenticate;
 
 @AllArgsConstructor
 public class RecordingsClient implements Recordings {
@@ -20,11 +20,10 @@ public class RecordingsClient implements Recordings {
     private final Credentials credentials;
 
     @Builder
-    public static RecordingsClient create(@NotNull String baseUrl, @NotNull Credentials credentials) {
-        Assert.notNull(baseUrl, "baseUrl must not be null");
-        Assert.notNull(baseUrl, "credentials must not be null");
+    public static RecordingsClient create(@NotNull Credentials credentials) {
+        Assert.notNull(credentials, "Credentials must not be null.");
 
-        return new RecordingsClient(WebClient.create(baseUrl), credentials);
+        return new RecordingsClient(WebClient.create(BASE_URL), credentials);
     }
 
     @Override
