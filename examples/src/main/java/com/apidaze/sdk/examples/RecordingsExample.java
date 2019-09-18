@@ -3,8 +3,10 @@ package com.apidaze.sdk.examples;
 import com.apidaze.sdk.client.credentials.Credentials;
 import com.apidaze.sdk.client.recordings.Recordings;
 import com.apidaze.sdk.client.recordings.RecordingsClient;
+import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 
+@Slf4j
 public class RecordingsExample {
 
     public static void main(String... args) {
@@ -21,16 +23,9 @@ public class RecordingsExample {
         // initiate the client using create method
         Recordings recordings = RecordingsClient.create(baseUrl, new Credentials(apiKey, apiSecret));
 
-        // initiate the client using builder
-//        Recordings recordings = RecordingsClient.builder()
-//                .baseUrl(baseUrl)
-//                .credentials(new Credentials(apiKey, apiSecret))
-//                .build();
-
         // get recordings list
         val response = recordings.list().collectList().block();
 
-
-        System.out.println(response);
+        log.info("Recordings: {}", response);
     }
 }

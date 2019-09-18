@@ -2,8 +2,10 @@ package com.apidaze.sdk.examples;
 
 import com.apidaze.sdk.client.credentials.Credentials;
 import com.apidaze.sdk.client.credentials.CredentialsValidator;
+import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 
+@Slf4j
 public class CredentialsValidationExample {
 
     public static void main(String... args) {
@@ -20,9 +22,15 @@ public class CredentialsValidationExample {
         // initiate the client
         CredentialsValidator validator = CredentialsValidator.create(baseUrl, new Credentials(apiKey, apiSecret));
 
+        // or initiate the client using builder
+//        Recordings recordings = RecordingsClient.builder()
+//                .baseUrl(baseUrl)
+//                .credentials(new Credentials(apiKey, apiSecret))
+//                .build();
+
         // validate credentials
         val response = validator.validateCredentials().block();
 
-        System.out.println(response);
+        log.info(response);
     }
 }
