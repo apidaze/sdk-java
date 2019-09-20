@@ -1,7 +1,6 @@
 package com.apidaze.sdk.examples;
 
 import com.apidaze.sdk.client.credentials.Credentials;
-import com.apidaze.sdk.client.recordings.Recordings;
 import com.apidaze.sdk.client.recordings.RecordingsClient;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
@@ -16,11 +15,11 @@ public class RecordingsExample {
             System.exit(1);
         }
 
-        final String apiKey = args[0];
-        final String apiSecret = args[1];
+        val apiKey = args[0];
+        val apiSecret = args[1];
 
         // initiate the client using create method
-        Recordings recordings = RecordingsClient.create(new Credentials(apiKey, apiSecret));
+        val recordings = RecordingsClient.create(new Credentials(apiKey, apiSecret));
 
         // get recordings list
         val response = recordings.list().collectList().block();

@@ -9,7 +9,7 @@ import reactor.core.publisher.Flux;
 
 import javax.validation.constraints.NotNull;
 
-import static com.apidaze.sdk.client.base.ApiAuthenticator.authenticate;
+import static com.apidaze.sdk.client.base.ApiAuthenticator.uriWithAuthentication;
 
 @AllArgsConstructor
 public class RecordingsClient implements Recordings {
@@ -22,15 +22,13 @@ public class RecordingsClient implements Recordings {
     @Builder
     public static RecordingsClient create(@NotNull Credentials credentials) {
         Assert.notNull(credentials, "Credentials must not be null.");
-
         return new RecordingsClient(WebClient.create(BASE_URL), credentials);
     }
 
     @Override
     public Flux<String> list() {
         return client.get()
-                .uri(authenticate(BASE_PATH, credentials)
-                        .andThen(uriBuilder -> uriBuilder.build()))
+                .uri(uriWithAuthentication(BASE_PATH, credentials))
                 .retrieve()
                 .bodyToFlux(String.class);
     }

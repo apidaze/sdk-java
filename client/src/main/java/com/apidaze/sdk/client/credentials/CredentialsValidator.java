@@ -9,7 +9,7 @@ import reactor.core.publisher.Mono;
 
 import javax.validation.constraints.NotNull;
 
-import static com.apidaze.sdk.client.base.ApiAuthenticator.authenticate;
+import static com.apidaze.sdk.client.base.ApiAuthenticator.withAuthentication;
 
 @AllArgsConstructor
 public class CredentialsValidator implements ApiClient {
@@ -28,8 +28,8 @@ public class CredentialsValidator implements ApiClient {
 
     public Mono<String> validateCredentials() {
         return client.get()
-                .uri(authenticate(BASE_PATH, credentials)
-                        .andThen(uriBuilder -> uriBuilder.build()))
+                .uri(withAuthentication(BASE_PATH, credentials)
+                        .andThen(builder -> builder.build()))
                 .retrieve()
                 .bodyToMono(String.class);
     }

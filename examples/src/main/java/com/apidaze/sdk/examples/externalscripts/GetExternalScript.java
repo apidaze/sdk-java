@@ -1,0 +1,36 @@
+package com.apidaze.sdk.examples.externalscripts;
+
+import com.apidaze.sdk.client.credentials.Credentials;
+import com.apidaze.sdk.client.externalscripts.ExternalScriptsClient;
+import lombok.extern.slf4j.Slf4j;
+import lombok.val;
+
+import static java.lang.Long.parseLong;
+
+@Slf4j
+public class GetExternalScript {
+
+    public static void main(String... args) {
+
+        if (args.length < 3) {
+            System.err.println("You must provide: <apiKey> <apiSecret> <scriptId> in the  argument list");
+            System.exit(1);
+        }
+
+        val apiKey = args[0];
+        val apiSecret = args[1];
+        val scriptId = args[2];
+
+        // initiate the client using create method
+        val externalScripts = ExternalScriptsClient.create(new Credentials(apiKey, apiSecret));
+
+        // get external script
+        try {
+            val id = parseLong(scriptId);
+            val script = externalScripts.get(id).block();
+            log.info("Retrieved {}", script);
+        } catch (NumberFormatException e) {
+            System.err.println("scriptId must be a number");
+        }
+    }
+}
