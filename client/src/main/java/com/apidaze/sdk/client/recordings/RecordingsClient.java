@@ -1,5 +1,6 @@
 package com.apidaze.sdk.client.recordings;
 
+import com.apidaze.sdk.client.base.BaseApiClient;
 import com.apidaze.sdk.client.credentials.Credentials;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,10 +10,8 @@ import reactor.core.publisher.Flux;
 
 import javax.validation.constraints.NotNull;
 
-import static com.apidaze.sdk.client.base.ApiAuthenticator.uriWithAuthentication;
-
 @AllArgsConstructor
-public class RecordingsClient implements Recordings {
+public class RecordingsClient extends BaseApiClient implements Recordings {
 
     private static final String BASE_PATH = "recordings";
 
@@ -28,8 +27,18 @@ public class RecordingsClient implements Recordings {
     @Override
     public Flux<String> list() {
         return client.get()
-                .uri(uriWithAuthentication(BASE_PATH, credentials))
+                .uri(uriWithAuthentication())
                 .retrieve()
                 .bodyToFlux(String.class);
+    }
+
+    @Override
+    protected String getBasePath() {
+        return BASE_PATH;
+    }
+
+    @Override
+    protected Credentials getCredentials() {
+        return credentials;
     }
 }

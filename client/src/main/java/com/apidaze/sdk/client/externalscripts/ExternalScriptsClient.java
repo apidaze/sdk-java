@@ -1,5 +1,6 @@
 package com.apidaze.sdk.client.externalscripts;
 
+import com.apidaze.sdk.client.base.BaseApiClient;
 import com.apidaze.sdk.client.credentials.Credentials;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -10,12 +11,10 @@ import reactor.core.publisher.Mono;
 
 import javax.validation.constraints.NotNull;
 
-import static com.apidaze.sdk.client.base.ApiAuthenticator.withAuthentication;
-import static com.apidaze.sdk.client.base.ApiAuthenticator.uriWithAuthentication;
 import static org.springframework.web.reactive.function.BodyInserters.fromFormData;
 
 @AllArgsConstructor
-public class ExternalScriptsClient implements ExternalScripts {
+public class ExternalScriptsClient extends BaseApiClient implements ExternalScripts {
 
     private static final String BASE_PATH = "externalscripts";
     private static final String URL = "url";
@@ -33,7 +32,7 @@ public class ExternalScriptsClient implements ExternalScripts {
     @Override
     public Flux<ExternalScript> list() {
         return client.get()
-                .uri(uriWithAuthentication(BASE_PATH, credentials))
+                .uri(uriWithAuthentication())
                 .retrieve()
                 .bodyToFlux(ExternalScript.class);
     }
@@ -41,46 +40,45 @@ public class ExternalScriptsClient implements ExternalScripts {
     @Override
     public Mono<ExternalScript> create(String name, String url) {
         return client.post()
-                .uri(uriWithAuthentication(BASE_PATH, credentials))
+                .uri(uriWithAuthentication())
                 .body(fromFormData(NAME, name).with(URL, url))
                 .retrieve()
                 .bodyToMono(ExternalScript.class);
     }
 
     @Override
-    public Mono<ExternalScript> get(Long id) {
+    public Mono<ExternalScript> get(@NotNull Long id) {
+        Assert.notNull(id, "id must not be null");
         return client.get()
-                .uri(withAuthentication(BASE_PATH, credentials)
-                        .andThen(builder -> builder.pathSegment(id.toString()).build()))
+                .uri(withAuthentication().andThen(builder -> builder.pathSegment(String.valueOf(id)).build()))
                 .retrieve()
                 .bodyToMono(ExternalScript.class);
     }
 
     @Override
-    public Mono<ExternalScript> update(Long id, String name, String url) {
+    public Mono<ExternalScript> update(@NotNull Long id, String name, String url) {
+        Assert.notNull(id, "id must not be null");
         return client.put()
-                .uri(withAuthentication(BASE_PATH, credentials)
-                        .andThen(builder -> builder.pathSegment(id.toString()).build()))
+                .uri(withAuthentication().andThen(builder -> builder.pathSegment(String.valueOf(id)).build()))
                 .body(fromFormData(NAME, name).with(URL, url))
                 .retrieve()
                 .bodyToMono(ExternalScript.class);
     }
 
     @Override
-    public Mono<ExternalScript> updateName(Long id, String name) {
+    public Mono<ExternalScript> updateName(@NotNull Long id, String name) {
+        Assert.notNull(id, "id must not be null");
         return client.put()
-                .uri(withAuthentication(BASE_PATH, credentials)
-                        .andThen(builder -> builder.pathSegment(id.toString()).build()))
+                .uri(withAuthentication().andThen(builder -> builder.pathSegment(String.valueOf(id)).build()))
                 .body(fromFormData(NAME, name))
                 .retrieve()
                 .bodyToMono(ExternalScript.class);
     }
 
     @Override
-    public Mono<ExternalScript> updateUrl(Long id, String url) {
+    public Mono<ExternalScript> updateUrl(@NotNull Long id, String url) {
         return client.put()
-                .uri(withAuthentication(BASE_PATH, credentials)
-                        .andThen(builder -> builder.pathSegment(id.toString()).build()))
+                .uri(withAuthentication().andThen(builder -> builder.pathSegment(String.valueOf(id)).build()))
                 .body(fromFormData(URL, url))
                 .retrieve()
                 .bodyToMono(ExternalScript.class);
@@ -88,11 +86,21 @@ public class ExternalScriptsClient implements ExternalScripts {
 
 
     @Override
-    public Mono<Void> delete(Long id) {
+    public Mono<Void> delete(@NotNull Long id) {
+        Assert.notNull(id, "id must not be null");
         return client.delete()
-                .uri(withAuthentication(BASE_PATH, credentials)
-                        .andThen(builder -> builder.pathSegment(id.toString()).build()))
+                .uri(withAuthentication().andThen(builder -> builder.pathSegment(String.valueOf(id)).build()))
                 .retrieve()
                 .bodyToMono(Void.class);
+    }
+
+    @Override
+    protected String getBasePath() {
+        return BASE_PATH;
+    }
+
+    @Override
+    protected Credentials getCredentials() {
+        return credentials;
     }
 }

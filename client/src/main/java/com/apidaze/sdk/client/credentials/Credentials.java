@@ -8,6 +8,7 @@ import javax.validation.constraints.NotNull;
 
 @Data
 public class Credentials {
+
     private final String apiKey;
     private final String apiSecret;
 

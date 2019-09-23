@@ -1,10 +1,9 @@
 package com.apidaze.sdk.client.externalscripts;
 
-import com.apidaze.sdk.client.base.ApiClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-public interface ExternalScripts extends ApiClient {
+public interface ExternalScripts {
 
     Flux<ExternalScript> list();
 

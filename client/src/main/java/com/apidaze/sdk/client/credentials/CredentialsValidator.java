@@ -1,6 +1,6 @@
 package com.apidaze.sdk.client.credentials;
 
-import com.apidaze.sdk.client.base.ApiClient;
+import com.apidaze.sdk.client.base.BaseApiClient;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import org.springframework.util.Assert;
@@ -9,10 +9,8 @@ import reactor.core.publisher.Mono;
 
 import javax.validation.constraints.NotNull;
 
-import static com.apidaze.sdk.client.base.ApiAuthenticator.withAuthentication;
-
 @AllArgsConstructor
-public class CredentialsValidator implements ApiClient {
+public class CredentialsValidator extends BaseApiClient {
 
     private static final String BASE_PATH = "validates";
 
@@ -28,10 +26,18 @@ public class CredentialsValidator implements ApiClient {
 
     public Mono<String> validateCredentials() {
         return client.get()
-                .uri(withAuthentication(BASE_PATH, credentials)
-                        .andThen(builder -> builder.build()))
+                .uri(uriWithAuthentication())
                 .retrieve()
                 .bodyToMono(String.class);
     }
 
+    @Override
+    protected String getBasePath() {
+        return BASE_PATH;
+    }
+
+    @Override
+    protected Credentials getCredentials() {
+        return credentials;
+    }
 }
