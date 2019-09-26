@@ -20,10 +20,10 @@ public class CreateExternalScript {
         val scriptName = args[2];
         val scriptUrl = args[3];
 
-        // initiate the client using create method
-        val externalScripts = ExternalScriptsClient.create(new Credentials(apiKey, apiSecret));
+        // initiate the client
+        val externalScripts = ExternalScriptsClient.builder().credentials(new Credentials(apiKey, apiSecret)).build();
 
-        // create external script
+        // create an external script
         val createdScript = externalScripts.create(scriptName, scriptUrl).block();
         log.info("Created {}", createdScript);
     }

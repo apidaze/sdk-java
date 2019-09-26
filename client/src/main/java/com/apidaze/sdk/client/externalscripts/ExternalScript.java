@@ -3,10 +3,7 @@ package com.apidaze.sdk.client.externalscripts;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.ZonedDateTime;
 
@@ -15,8 +12,8 @@ import java.time.ZonedDateTime;
 @NoArgsConstructor
 @Setter
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
-public
-class ExternalScript {
+@Builder
+public class ExternalScript {
     private Long id;
     private String name;
     private String url;

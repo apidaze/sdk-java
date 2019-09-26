@@ -21,10 +21,10 @@ public class GetExternalScript {
         val apiSecret = args[1];
         val scriptId = args[2];
 
-        // initiate the client using create method
-        val externalScripts = ExternalScriptsClient.create(new Credentials(apiKey, apiSecret));
+        // initiate the client
+        val externalScripts = ExternalScriptsClient.builder().credentials(new Credentials(apiKey, apiSecret)).build();
 
-        // get external script
+        // get an external script
         try {
             val id = parseLong(scriptId);
             val script = externalScripts.get(id).block();

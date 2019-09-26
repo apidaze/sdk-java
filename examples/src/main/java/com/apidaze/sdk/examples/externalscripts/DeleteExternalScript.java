@@ -22,9 +22,9 @@ public class DeleteExternalScript {
         val scriptId = args[2];
 
         // initiate the client
-        val externalScripts = ExternalScriptsClient.create(new Credentials(apiKey, apiSecret));
+        val externalScripts = ExternalScriptsClient.builder().credentials(new Credentials(apiKey, apiSecret)).build();
 
-        // delete external script
+        // delete an external script
         try {
             val id = parseLong(scriptId);
             externalScripts.delete(id).block();

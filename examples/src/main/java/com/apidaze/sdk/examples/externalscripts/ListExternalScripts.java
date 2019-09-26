@@ -1,8 +1,6 @@
 package com.apidaze.sdk.examples.externalscripts;
 
 import com.apidaze.sdk.client.credentials.Credentials;
-import com.apidaze.sdk.client.externalscripts.ExternalScript;
-import com.apidaze.sdk.client.externalscripts.ExternalScripts;
 import com.apidaze.sdk.client.externalscripts.ExternalScriptsClient;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
@@ -20,8 +18,8 @@ public class ListExternalScripts {
         val apiKey = args[0];
         val apiSecret = args[1];
 
-        // initiate the client using create method
-        val externalScripts = ExternalScriptsClient.create(new Credentials(apiKey, apiSecret));
+        // initiate the client
+        val externalScripts = ExternalScriptsClient.builder().credentials(new Credentials(apiKey, apiSecret)).build();
 
         // get external scripts list
         val list = externalScripts.list().collectList().block();

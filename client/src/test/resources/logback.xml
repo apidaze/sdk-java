@@ -6,8 +6,6 @@
         </encoder>
     </appender>
 
-    <logger name="org.springframework.web.reactive.function.client.ExchangeFunctions" level="DEBUG"/>
-
     <root level="info">
         <appender-ref ref="STDOUT" />
     </root>

@@ -9,8 +9,10 @@ import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
 
+import static java.util.Objects.isNull;
 import static org.springframework.web.reactive.function.BodyInserters.fromFormData;
 
 @AllArgsConstructor
@@ -24,9 +26,14 @@ public class ExternalScriptsClient extends BaseApiClient implements ExternalScri
     private final Credentials credentials;
 
     @Builder
-    public static ExternalScriptsClient create(@NotNull Credentials credentials) {
+    public static ExternalScriptsClient create(@NotNull Credentials credentials, @Nullable String baseUrl) {
         Assert.notNull(credentials, "Credentials must not be null.");
-        return new ExternalScriptsClient(WebClient.create(BASE_URL), credentials);
+
+        if (isNull(baseUrl)) {
+            baseUrl = BASE_URL;
+        }
+
+        return new ExternalScriptsClient(WebClient.create(baseUrl), credentials);
     }
 
     @Override
