@@ -4,8 +4,7 @@ import org.mockserver.model.HttpRequest;
 
 import static com.apidaze.sdk.client.AbstractClientTest.API_KEY;
 import static com.apidaze.sdk.client.AbstractClientTest.API_SECRET;
-import static io.netty.handler.codec.http.HttpMethod.GET;
-import static io.netty.handler.codec.http.HttpMethod.POST;
+import static io.netty.handler.codec.http.HttpMethod.*;
 import static org.mockserver.model.HttpRequest.request;
 import static org.mockserver.model.Parameter.param;
 import static org.mockserver.model.ParameterBody.params;
@@ -37,7 +36,31 @@ class ExternalScriptsRequest {
                         params(
                                 param("name", scriptName),
                                 param("url", scriptUrl)
-                        )
-                );
+                        ));
+    }
+
+    static HttpRequest update(Long id, String newScriptName, String newScriptUrl) {
+        return request()
+                .withMethod(PUT.name())
+                .withHeader(CONTENT_TYPE, "application/x-www-form-urlencoded;charset=utf-8")
+                .withPath("/" + API_KEY + "/externalscripts/" + id)
+                .withQueryStringParameters(param("api_secret", API_SECRET))
+                .withBody(
+                        params(
+                                param("name", newScriptName),
+                                param("url", newScriptUrl)
+                        ));
+    }
+
+    static HttpRequest updateUrl(Long id, String newUrl) {
+        return request()
+                .withMethod(PUT.name())
+                .withHeader(CONTENT_TYPE, "application/x-www-form-urlencoded;charset=utf-8")
+                .withPath("/" + API_KEY + "/externalscripts/" + id)
+                .withQueryStringParameters(param("api_secret", API_SECRET))
+                .withBody(
+                        params(
+                                param("url", newUrl)
+                        ));
     }
 }

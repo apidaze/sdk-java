@@ -14,6 +14,7 @@ class ExternalScriptsResponse {
 
     static HttpResponse one(ExternalScript externalScript) {
         return response()
+                .withStatusCode(OK.value())
                 .withHeader(CONTENT_TYPE, APPLICATION_JSON_UTF8_VALUE)
                 .withBody(json(externalScript));
     }

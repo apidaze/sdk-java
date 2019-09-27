@@ -78,40 +78,80 @@ public class ExternalScriptsClientTest extends AbstractClientTest {
 
     @Test
     public void shouldReturnExternalScriptById() {
-        val scriptToBeReturned = script1;
+        val script = script1;
 
         mockServer
-                .when(getById(scriptToBeReturned.getId()))
-                .respond(one(scriptToBeReturned).withStatusCode(200));
+                .when(getById(script.getId()))
+                .respond(one(script));
 
-        val response = client.get(scriptToBeReturned.getId()).block();
+        val response = client.get(script.getId()).block();
 
         assertThat(response)
                 .usingRecursiveComparison()
                 .withComparatorForType(dateTimeComparator, ZonedDateTime.class)
-                .isEqualTo(scriptToBeReturned);
+                .isEqualTo(script);
 
-        mockServer.verify(getById(scriptToBeReturned.getId()));
+        mockServer.verify(getById(script.getId()));
     }
 
     @Test
     public void shouldCreateExternalScript() {
-        val scriptToBeCreated = script1;
-        val scriptName = scriptToBeCreated.getName();
-        val scriptUrl = scriptToBeCreated.getUrl();
+        val script = script1;
+        val scriptName = script.getName();
+        val scriptUrl = script.getUrl();
 
         mockServer
                 .when(create(scriptName, scriptUrl))
-                .respond(one(scriptToBeCreated).withStatusCode(201));
+                .respond(one(script).withStatusCode(201));
 
         val response = client.create(scriptName, scriptUrl).block();
 
         assertThat(response)
                 .usingRecursiveComparison()
                 .withComparatorForType(dateTimeComparator, ZonedDateTime.class)
-                .isEqualTo(scriptToBeCreated);
+                .isEqualTo(script);
 
         mockServer.verify(create(scriptName, scriptUrl));
     }
 
+    @Test
+    public void shouldUpdateExternalScriptUrl() {
+        val script = script1;
+        val scriptId = script.getId();
+        val scriptUrl = script.getUrl();
+
+        mockServer
+                .when(updateUrl(scriptId, scriptUrl))
+                .respond(one(script).withStatusCode(202));
+
+        val response = client.updateUrl(scriptId, scriptUrl).block();
+
+        assertThat(response)
+                .usingRecursiveComparison()
+                .withComparatorForType(dateTimeComparator, ZonedDateTime.class)
+                .isEqualTo(script);
+
+        mockServer.verify(updateUrl(scriptId, scriptUrl));
+    }
+
+    @Test
+    public void shouldUpdateExternalScriptUrlAndName() {
+        val script = script1;
+        val scriptId = script.getId();
+        val scriptUrl = script.getUrl();
+        val scriptName = script.getName();
+
+        mockServer
+                .when(update(scriptId, scriptName, scriptUrl))
+                .respond(one(script).withStatusCode(202));
+
+        val response = client.update(scriptId, scriptName, scriptUrl).block();
+
+        assertThat(response)
+                .usingRecursiveComparison()
+                .withComparatorForType(dateTimeComparator, ZonedDateTime.class)
+                .isEqualTo(script);
+
+        mockServer.verify(update(scriptId, scriptName, scriptUrl));
+    }
 }
