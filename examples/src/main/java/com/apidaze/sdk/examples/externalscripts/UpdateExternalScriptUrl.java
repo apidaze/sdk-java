@@ -4,6 +4,7 @@ import com.apidaze.sdk.client.credentials.Credentials;
 import com.apidaze.sdk.client.externalscripts.ExternalScriptsClient;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
+import org.springframework.web.reactive.function.client.WebClientResponseException;
 
 import static java.lang.Long.parseLong;
 
@@ -31,7 +32,9 @@ public class UpdateExternalScriptUrl {
             val script = externalScripts.updateUrl(id, newScriptUrl).block();
             log.info("Updated {}", script);
         } catch (NumberFormatException e) {
-            System.err.println("scriptId must be a number");
+            log.error("scriptId must be a number");
+        } catch (WebClientResponseException e) {
+            log.error("API returned the response with status code = {} and body = {}", e.getStatusCode(), e.getResponseBodyAsString());
         }
     }
 }

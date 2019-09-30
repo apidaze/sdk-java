@@ -4,6 +4,7 @@ import com.apidaze.sdk.client.credentials.Credentials;
 import com.apidaze.sdk.client.externalscripts.ExternalScriptsClient;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
+import org.springframework.web.reactive.function.client.WebClientResponseException;
 
 @Slf4j
 public class CreateExternalScript {
@@ -23,8 +24,12 @@ public class CreateExternalScript {
         // initiate the client
         val externalScripts = ExternalScriptsClient.builder().credentials(new Credentials(apiKey, apiSecret)).build();
 
-        // create an external script
-        val createdScript = externalScripts.create(scriptName, scriptUrl).block();
-        log.info("Created {}", createdScript);
+        try {
+            // create an external script
+            val createdScript = externalScripts.create(scriptName, scriptUrl).block();
+            log.info("Created {}", createdScript);
+        } catch (WebClientResponseException e) {
+            log.error("API returned the response with status code = {} and body = {}", e.getStatusCode(), e.getResponseBodyAsString());
+        }
     }
 }
