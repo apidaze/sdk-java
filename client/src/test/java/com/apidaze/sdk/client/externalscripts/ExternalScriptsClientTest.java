@@ -9,6 +9,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.mockserver.client.MockServerClient;
 import org.mockserver.junit.MockServerRule;
+import org.springframework.web.reactive.function.client.WebClientResponseException;
 
 import java.time.ZonedDateTime;
 
@@ -16,6 +17,8 @@ import static com.apidaze.sdk.client.externalscripts.ExternalScriptsRequest.*;
 import static com.apidaze.sdk.client.externalscripts.ExternalScriptsResponse.list;
 import static com.apidaze.sdk.client.externalscripts.ExternalScriptsResponse.one;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import static org.mockserver.model.HttpResponse.response;
 
 public class ExternalScriptsClientTest extends AbstractClientTest {
 
@@ -153,5 +156,20 @@ public class ExternalScriptsClientTest extends AbstractClientTest {
                 .isEqualTo(script);
 
         mockServer.verify(update(scriptId, scriptName, scriptUrl));
+    }
+
+    @Test
+    public void shouldThrowWebClientResponseException_ifApiReturnsAnError() {
+        val script = script1;
+        val scriptId = script.getId();
+        val scriptUrl = script.getUrl();
+
+        mockServer
+                .when(updateUrl(scriptId, scriptUrl))
+                .respond(response().withStatusCode(500));
+
+        assertThatExceptionOfType(WebClientResponseException.InternalServerError.class)
+                .isThrownBy(() -> client.updateUrl(scriptId, scriptUrl).block())
+                .withMessage("500 Internal Server Error");
     }
 }
