@@ -7,15 +7,15 @@ public interface ExternalScripts {
 
     Flux<ExternalScript> list();
 
-    Mono<ExternalScript> create(String name, String url);
+    Mono<ExternalScript> create(String name, URL url);
 
     Mono<ExternalScript> get(Long id);
 
-    Mono<ExternalScript> update(Long id, String name, String url);
+    Mono<ExternalScript> update(Long id, String name, URL url);
 
     Mono<ExternalScript> updateName(Long id, String name);
 
-    Mono<ExternalScript> updateUrl(Long id, String url);
+    Mono<ExternalScript> updateUrl(Long id, URL url);
 
     Mono<Void> delete(Long id);
 }

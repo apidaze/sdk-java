@@ -2,6 +2,8 @@ package com.apidaze.sdk.examples.externalscripts;
 
 import com.apidaze.sdk.client.credentials.Credentials;
 import com.apidaze.sdk.client.externalscripts.ExternalScriptsClient;
+import com.apidaze.sdk.client.externalscripts.InvalidURLException;
+import com.apidaze.sdk.client.externalscripts.URL;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
@@ -29,12 +31,14 @@ public class UpdateExternalScriptUrl {
         // create external script
         try {
             val id = parseLong(scriptId);
-            val script = externalScripts.updateUrl(id, newScriptUrl).block();
+            val script = externalScripts.updateUrl(id, URL.fromString(newScriptUrl)).block();
             log.info("Updated {}", script);
         } catch (NumberFormatException e) {
             log.error("scriptId must be a number");
         } catch (WebClientResponseException e) {
             log.error("API returned the response with status code = {} and body = {}", e.getStatusCode(), e.getResponseBodyAsString());
+        } catch (InvalidURLException e) {
+            log.error("newScriptUrl is invalid ", e);
         }
     }
 }

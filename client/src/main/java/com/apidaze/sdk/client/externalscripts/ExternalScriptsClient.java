@@ -45,10 +45,10 @@ public class ExternalScriptsClient extends BaseApiClient implements ExternalScri
     }
 
     @Override
-    public Mono<ExternalScript> create(String name, String url) {
+    public Mono<ExternalScript> create(String name, URL url) {
         return client.post()
                 .uri(uriWithAuthentication())
-                .body(fromFormData(NAME, name).with(URL, url))
+                .body(fromFormData(NAME, name).with(URL, url.getValue()))
                 .retrieve()
                 .bodyToMono(ExternalScript.class);
     }
@@ -63,11 +63,11 @@ public class ExternalScriptsClient extends BaseApiClient implements ExternalScri
     }
 
     @Override
-    public Mono<ExternalScript> update(@NotNull Long id, String name, String url) {
+    public Mono<ExternalScript> update(@NotNull Long id, String name, URL url) {
         Assert.notNull(id, "id must not be null");
         return client.put()
                 .uri(withAuthentication().andThen(builder -> builder.pathSegment(String.valueOf(id)).build()))
-                .body(fromFormData(NAME, name).with(URL, url))
+                .body(fromFormData(NAME, name).with(URL, url.getValue()))
                 .retrieve()
                 .bodyToMono(ExternalScript.class);
     }
@@ -83,10 +83,10 @@ public class ExternalScriptsClient extends BaseApiClient implements ExternalScri
     }
 
     @Override
-    public Mono<ExternalScript> updateUrl(@NotNull Long id, String url) {
+    public Mono<ExternalScript> updateUrl(@NotNull Long id, URL url) {
         return client.put()
                 .uri(withAuthentication().andThen(builder -> builder.pathSegment(String.valueOf(id)).build()))
-                .body(fromFormData(URL, url))
+                .body(fromFormData(URL, url.getValue()))
                 .retrieve()
                 .bodyToMono(ExternalScript.class);
     }

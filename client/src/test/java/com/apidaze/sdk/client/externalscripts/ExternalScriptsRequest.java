@@ -26,7 +26,7 @@ class ExternalScriptsRequest {
                 .withQueryStringParameters(param("api_secret", API_SECRET));
     }
 
-    static HttpRequest create(String scriptName, String scriptUrl) {
+    static HttpRequest create(String scriptName, URL scriptUrl) {
         return request()
                 .withMethod(POST.name())
                 .withHeader(CONTENT_TYPE, "application/x-www-form-urlencoded;charset=utf-8")
@@ -35,11 +35,11 @@ class ExternalScriptsRequest {
                 .withBody(
                         params(
                                 param("name", scriptName),
-                                param("url", scriptUrl)
+                                param("url", scriptUrl.getValue())
                         ));
     }
 
-    static HttpRequest update(Long id, String newScriptName, String newScriptUrl) {
+    static HttpRequest update(Long id, String newScriptName, URL newScriptUrl) {
         return request()
                 .withMethod(PUT.name())
                 .withHeader(CONTENT_TYPE, "application/x-www-form-urlencoded;charset=utf-8")
@@ -48,11 +48,11 @@ class ExternalScriptsRequest {
                 .withBody(
                         params(
                                 param("name", newScriptName),
-                                param("url", newScriptUrl)
+                                param("url", newScriptUrl.getValue())
                         ));
     }
 
-    static HttpRequest updateUrl(Long id, String newUrl) {
+    static HttpRequest updateUrl(Long id, URL newUrl) {
         return request()
                 .withMethod(PUT.name())
                 .withHeader(CONTENT_TYPE, "application/x-www-form-urlencoded;charset=utf-8")
@@ -60,7 +60,7 @@ class ExternalScriptsRequest {
                 .withQueryStringParameters(param("api_secret", API_SECRET))
                 .withBody(
                         params(
-                                param("url", newUrl)
+                                param("url", newUrl.getValue())
                         ));
     }
 }
