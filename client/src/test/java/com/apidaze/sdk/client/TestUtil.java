@@ -13,14 +13,13 @@ import java.util.Comparator;
 
 import static java.util.Objects.nonNull;
 
-public class AbstractClientTest {
+public class TestUtil {
 
     public static final String API_KEY = "some-api-key";
     public static final String API_SECRET = "some-api-secret";
 
-    protected Comparator<ZonedDateTime> dateTimeComparator = (d1, d2) -> {
-        return ((d1 == d2) || (nonNull(d1) && nonNull(d2) && d1.isEqual(d2))) ? 0 : 1;
-    };
+    public static final Comparator<ZonedDateTime> dateTimeComparator = (d1, d2) ->
+            ((d1 == d2) || (nonNull(d1) && nonNull(d2) && d1.isEqual(d2))) ? 0 : 1;
 
     private static final ObjectMapper mapper = ObjectMapperFactory.createObjectMapper()
             .registerModule(new JavaTimeModule())

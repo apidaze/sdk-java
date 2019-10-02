@@ -4,7 +4,7 @@ import org.mockserver.model.HttpResponse;
 
 import java.util.List;
 
-import static com.apidaze.sdk.client.AbstractClientTest.json;
+import static com.apidaze.sdk.client.TestUtil.json;
 import static org.mockserver.model.HttpResponse.response;
 import static org.springframework.http.HttpHeaders.CONTENT_TYPE;
 import static org.springframework.http.HttpStatus.OK;

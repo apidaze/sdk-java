@@ -2,8 +2,8 @@ package com.apidaze.sdk.client.externalscripts;
 
 import org.mockserver.model.HttpRequest;
 
-import static com.apidaze.sdk.client.AbstractClientTest.API_KEY;
-import static com.apidaze.sdk.client.AbstractClientTest.API_SECRET;
+import static com.apidaze.sdk.client.TestUtil.API_KEY;
+import static com.apidaze.sdk.client.TestUtil.API_SECRET;
 import static io.netty.handler.codec.http.HttpMethod.*;
 import static org.mockserver.model.HttpRequest.request;
 import static org.mockserver.model.Parameter.param;

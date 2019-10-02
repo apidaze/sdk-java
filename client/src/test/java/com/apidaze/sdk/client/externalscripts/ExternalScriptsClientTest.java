@@ -1,6 +1,5 @@
 package com.apidaze.sdk.client.externalscripts;
 
-import com.apidaze.sdk.client.AbstractClientTest;
 import com.apidaze.sdk.client.credentials.Credentials;
 import com.google.common.collect.ImmutableList;
 import lombok.val;
@@ -13,6 +12,7 @@ import org.springframework.web.reactive.function.client.WebClientResponseExcepti
 
 import java.time.ZonedDateTime;
 
+import static com.apidaze.sdk.client.TestUtil.*;
 import static com.apidaze.sdk.client.externalscripts.ExternalScriptsRequest.*;
 import static com.apidaze.sdk.client.externalscripts.ExternalScriptsResponse.list;
 import static com.apidaze.sdk.client.externalscripts.ExternalScriptsResponse.one;
@@ -20,7 +20,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.mockserver.model.HttpResponse.response;
 
-public class ExternalScriptsClientTest extends AbstractClientTest {
+public class ExternalScriptsClientTest {
 
     private static final int PORT = 9876;
 
