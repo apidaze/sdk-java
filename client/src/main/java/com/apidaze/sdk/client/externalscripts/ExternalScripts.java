@@ -13,8 +13,6 @@ public interface ExternalScripts {
 
     Mono<ExternalScript> update(Long id, String name, URL url);
 
-    Mono<ExternalScript> updateName(Long id, String name);
-
     Mono<ExternalScript> updateUrl(Long id, URL url);
 
     Mono<Void> delete(Long id);

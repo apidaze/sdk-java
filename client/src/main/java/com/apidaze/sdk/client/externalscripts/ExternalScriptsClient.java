@@ -83,19 +83,6 @@ public class ExternalScriptsClient extends BaseApiClient implements ExternalScri
     }
 
     @Override
-    public Mono<ExternalScript> updateName(@NotNull Long id, String name) {
-        Assert.notNull(id, "id must not be null");
-        Assert.notNull(name, "name must not be null");
-        Assert.isTrue(name.length() <= MAX_NAME_LENGTH, "name: maximum " + MAX_NAME_LENGTH + " characters long");
-
-        return client.put()
-                .uri(withAuthentication().andThen(builder -> builder.pathSegment(String.valueOf(id)).build()))
-                .body(fromFormData(NAME, name))
-                .retrieve()
-                .bodyToMono(ExternalScript.class);
-    }
-
-    @Override
     public Mono<ExternalScript> updateUrl(@NotNull Long id, URL url) {
         Assert.notNull(id, "id must not be null");
 
