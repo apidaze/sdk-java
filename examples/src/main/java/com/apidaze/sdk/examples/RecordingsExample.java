@@ -22,7 +22,7 @@ public class RecordingsExample {
         val recordings = RecordingsClient.create(new Credentials(apiKey, apiSecret));
 
         // get recordings list
-        val response = recordings.list().collectList().block();
+        val response = recordings.list();
 
         log.info("Recordings: {}", response);
     }

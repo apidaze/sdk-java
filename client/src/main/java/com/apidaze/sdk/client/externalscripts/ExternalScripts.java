@@ -1,19 +1,18 @@
 package com.apidaze.sdk.client.externalscripts;
 
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
+import java.util.List;
 
 public interface ExternalScripts {
 
-    Flux<ExternalScript> list();
+    List<ExternalScript> list();
 
-    Mono<ExternalScript> create(String name, URL url);
+    ExternalScript create(String name, URL url);
 
-    Mono<ExternalScript> get(Long id);
+    ExternalScript get(Long id);
 
-    Mono<ExternalScript> update(Long id, String name, URL url);
+    ExternalScript update(Long id, String name, URL url);
 
-    Mono<ExternalScript> updateUrl(Long id, URL url);
+    ExternalScript updateUrl(Long id, URL url);
 
-    Mono<Void> delete(Long id);
+    Void delete(Long id);
 }

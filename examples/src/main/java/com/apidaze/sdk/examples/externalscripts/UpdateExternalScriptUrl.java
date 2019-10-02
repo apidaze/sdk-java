@@ -31,7 +31,7 @@ public class UpdateExternalScriptUrl {
         // create external script
         try {
             val id = parseLong(scriptId);
-            val script = externalScripts.updateUrl(id, URL.fromString(newScriptUrl)).block();
+            val script = externalScripts.updateUrl(id, URL.fromString(newScriptUrl));
             log.info("Updated {}", script);
         } catch (NumberFormatException e) {
             log.error("scriptId must be a number");

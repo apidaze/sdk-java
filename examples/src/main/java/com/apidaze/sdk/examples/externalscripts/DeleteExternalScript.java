@@ -28,7 +28,7 @@ public class DeleteExternalScript {
         // delete an external script
         try {
             val id = parseLong(scriptId);
-            externalScripts.delete(id).block();
+            externalScripts.delete(id);
             log.info("ExternalScript with id = {} has been deleted.", id);
         } catch (NumberFormatException e) {
             log.error("scriptId must be a number");

@@ -6,9 +6,9 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import org.springframework.util.Assert;
 import org.springframework.web.reactive.function.client.WebClient;
-import reactor.core.publisher.Flux;
 
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 @AllArgsConstructor
 public class RecordingsClient extends BaseApiClient implements Recordings {
@@ -25,11 +25,13 @@ public class RecordingsClient extends BaseApiClient implements Recordings {
     }
 
     @Override
-    public Flux<String> list() {
+    public List<String> list() {
         return client.get()
                 .uri(uriWithAuthentication())
                 .retrieve()
-                .bodyToFlux(String.class);
+                .bodyToFlux(String.class)
+                .collectList()
+                .block();
     }
 
     @Override

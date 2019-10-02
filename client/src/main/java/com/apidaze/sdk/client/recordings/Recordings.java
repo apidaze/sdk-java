@@ -1,7 +1,7 @@
 package com.apidaze.sdk.client.recordings;
 
-import reactor.core.publisher.Flux;
+import java.util.List;
 
 public interface Recordings {
-    Flux<String> list();
+    List<String> list();
 }

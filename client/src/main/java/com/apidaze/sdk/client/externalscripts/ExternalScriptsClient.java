@@ -6,11 +6,11 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import org.springframework.util.Assert;
 import org.springframework.web.reactive.function.client.WebClient;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
 
 import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
+
+import java.util.List;
 
 import static java.util.Objects.isNull;
 import static org.springframework.web.reactive.function.BodyInserters.fromFormData;
@@ -39,36 +39,40 @@ public class ExternalScriptsClient extends BaseApiClient implements ExternalScri
     }
 
     @Override
-    public Flux<ExternalScript> list() {
+    public List<ExternalScript> list() {
         return client.get()
                 .uri(uriWithAuthentication())
                 .retrieve()
-                .bodyToFlux(ExternalScript.class);
+                .bodyToFlux(ExternalScript.class)
+                .collectList()
+                .block();
     }
 
     @Override
-    public Mono<ExternalScript> create(String name, URL url) {
+    public ExternalScript create(String name, URL url) {
         validateName(name);
 
         return client.post()
                 .uri(uriWithAuthentication())
                 .body(fromFormData(NAME, name).with(URL, url.getValue()))
                 .retrieve()
-                .bodyToMono(ExternalScript.class);
+                .bodyToMono(ExternalScript.class)
+                .block();
     }
 
     @Override
-    public Mono<ExternalScript> get(Long id) {
+    public ExternalScript get(Long id) {
         Assert.notNull(id, "id must not be null");
 
         return client.get()
                 .uri(withAuthentication().andThen(builder -> builder.pathSegment(String.valueOf(id)).build()))
                 .retrieve()
-                .bodyToMono(ExternalScript.class);
+                .bodyToMono(ExternalScript.class)
+                .block();
     }
 
     @Override
-    public Mono<ExternalScript> update(Long id, String name, URL url) {
+    public ExternalScript update(Long id, String name, URL url) {
         Assert.notNull(id, "id must not be null");
         Assert.notNull(url, "url must not be null");
         validateName(name);
@@ -77,29 +81,32 @@ public class ExternalScriptsClient extends BaseApiClient implements ExternalScri
                 .uri(withAuthentication().andThen(builder -> builder.pathSegment(String.valueOf(id)).build()))
                 .body(fromFormData(NAME, name).with(URL, url.getValue()))
                 .retrieve()
-                .bodyToMono(ExternalScript.class);
+                .bodyToMono(ExternalScript.class)
+                .block();
     }
 
     @Override
-    public Mono<ExternalScript> updateUrl(Long id, URL url) {
+    public ExternalScript updateUrl(Long id, URL url) {
         Assert.notNull(id, "id must not be null");
 
         return client.put()
                 .uri(withAuthentication().andThen(builder -> builder.pathSegment(String.valueOf(id)).build()))
                 .body(fromFormData(URL, url.getValue()))
                 .retrieve()
-                .bodyToMono(ExternalScript.class);
+                .bodyToMono(ExternalScript.class)
+                .block();
     }
 
 
     @Override
-    public Mono<Void> delete(Long id) {
+    public Void delete(Long id) {
         Assert.notNull(id, "id must not be null");
 
         return client.delete()
                 .uri(withAuthentication().andThen(builder -> builder.pathSegment(String.valueOf(id)).build()))
                 .retrieve()
-                .bodyToMono(Void.class);
+                .bodyToMono(Void.class)
+                .block();
     }
 
     @Override

@@ -28,7 +28,7 @@ public class CreateExternalScript {
 
         try {
             // create an external script
-            val createdScript = externalScripts.create(scriptName, URL.fromString(scriptUrl)).block();
+            val createdScript = externalScripts.create(scriptName, URL.fromString(scriptUrl));
             log.info("Created {}", createdScript);
         } catch (WebClientResponseException e) {
             log.error("API returned the response with status code = {} and body = {}", e.getStatusCode(), e.getResponseBodyAsString());

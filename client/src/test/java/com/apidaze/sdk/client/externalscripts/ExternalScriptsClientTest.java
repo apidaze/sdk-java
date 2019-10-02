@@ -69,7 +69,7 @@ public class ExternalScriptsClientTest {
                 .when(getAll())
                 .respond(list(scripts));
 
-        val response = client.list().collectList().block();
+        val response = client.list();
 
         assertThat(response)
                 .usingComparatorForElementFieldsWithType(dateTimeComparator, ZonedDateTime.class)
@@ -87,7 +87,7 @@ public class ExternalScriptsClientTest {
                 .when(getById(script.getId()))
                 .respond(one(script));
 
-        val response = client.get(script.getId()).block();
+        val response = client.get(script.getId());
 
         assertThat(response)
                 .usingRecursiveComparison()
@@ -107,7 +107,7 @@ public class ExternalScriptsClientTest {
                 .when(create(scriptName, scriptUrl))
                 .respond(one(script).withStatusCode(201));
 
-        val response = client.create(scriptName, scriptUrl).block();
+        val response = client.create(scriptName, scriptUrl);
 
         assertThat(response)
                 .usingRecursiveComparison()
@@ -127,7 +127,7 @@ public class ExternalScriptsClientTest {
                 .when(updateUrl(scriptId, scriptUrl))
                 .respond(one(script).withStatusCode(202));
 
-        val response = client.updateUrl(scriptId, scriptUrl).block();
+        val response = client.updateUrl(scriptId, scriptUrl);
 
         assertThat(response)
                 .usingRecursiveComparison()
@@ -148,7 +148,7 @@ public class ExternalScriptsClientTest {
                 .when(update(scriptId, scriptName, scriptUrl))
                 .respond(one(script).withStatusCode(202));
 
-        val response = client.update(scriptId, scriptName, scriptUrl).block();
+        val response = client.update(scriptId, scriptName, scriptUrl);
 
         assertThat(response)
                 .usingRecursiveComparison()
@@ -167,7 +167,7 @@ public class ExternalScriptsClientTest {
                 .isGreaterThan(ExternalScriptsClient.MAX_NAME_LENGTH);
 
         assertThatExceptionOfType(IllegalArgumentException.class)
-                .isThrownBy(() -> client.create(scriptName, scriptUrl).block())
+                .isThrownBy(() -> client.create(scriptName, scriptUrl))
                 .withMessageContaining("name: maximum");
 
         mockServer.verifyZeroInteractions();
@@ -183,7 +183,7 @@ public class ExternalScriptsClientTest {
                 .isGreaterThan(ExternalScriptsClient.MAX_NAME_LENGTH);
 
         assertThatExceptionOfType(IllegalArgumentException.class)
-                .isThrownBy(() -> client.update(scriptId, scriptName, scriptUrl).block())
+                .isThrownBy(() -> client.update(scriptId, scriptName, scriptUrl))
                 .withMessageContaining("name: maximum");
 
         mockServer.verifyZeroInteractions();
@@ -200,7 +200,7 @@ public class ExternalScriptsClientTest {
                 .respond(response().withStatusCode(500));
 
         assertThatExceptionOfType(WebClientResponseException.InternalServerError.class)
-                .isThrownBy(() -> client.updateUrl(scriptId, scriptUrl).block())
+                .isThrownBy(() -> client.updateUrl(scriptId, scriptUrl))
                 .withMessage("500 Internal Server Error");
     }
 }

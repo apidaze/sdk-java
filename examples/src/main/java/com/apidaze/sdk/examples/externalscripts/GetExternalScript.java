@@ -28,7 +28,7 @@ public class GetExternalScript {
         // get an external script
         try {
             val id = parseLong(scriptId);
-            val script = externalScripts.get(id).block();
+            val script = externalScripts.get(id);
             log.info("Retrieved {}", script);
         } catch (NumberFormatException e) {
             log.error("scriptId must be a number");

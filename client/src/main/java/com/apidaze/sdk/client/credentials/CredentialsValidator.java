@@ -24,11 +24,12 @@ public class CredentialsValidator extends BaseApiClient {
         return new CredentialsValidator(WebClient.create(BASE_URL), credentials);
     }
 
-    public Mono<String> validateCredentials() {
+    public String validateCredentials() {
         return client.get()
                 .uri(uriWithAuthentication())
                 .retrieve()
-                .bodyToMono(String.class);
+                .bodyToMono(String.class)
+                .block();
     }
 
     @Override

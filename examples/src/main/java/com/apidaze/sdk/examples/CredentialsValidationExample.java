@@ -27,7 +27,7 @@ public class CredentialsValidationExample {
 //                .build();
 
         // validate credentials
-        val response = validator.validateCredentials().block();
+        val response = validator.validateCredentials();
 
         log.info(response);
     }

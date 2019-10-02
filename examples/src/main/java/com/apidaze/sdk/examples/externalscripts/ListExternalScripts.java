@@ -22,7 +22,7 @@ public class ListExternalScripts {
         val externalScripts = ExternalScriptsClient.builder().credentials(new Credentials(apiKey, apiSecret)).build();
 
         // get external scripts list
-        val list = externalScripts.list().collectList().block();
+        val list = externalScripts.list();
         log.info("ExternalScripts list: {}", list);
     }
 }
