@@ -48,8 +48,7 @@ public class ExternalScriptsClient extends BaseApiClient implements ExternalScri
 
     @Override
     public Mono<ExternalScript> create(String name, URL url) {
-        Assert.notNull(name, "name must not be null");
-        Assert.isTrue(name.length() <= MAX_NAME_LENGTH, "name: maximum " + MAX_NAME_LENGTH + " characters long");
+        validateName(name);
 
         return client.post()
                 .uri(uriWithAuthentication())
@@ -59,7 +58,7 @@ public class ExternalScriptsClient extends BaseApiClient implements ExternalScri
     }
 
     @Override
-    public Mono<ExternalScript> get(@NotNull Long id) {
+    public Mono<ExternalScript> get(Long id) {
         Assert.notNull(id, "id must not be null");
 
         return client.get()
@@ -69,11 +68,10 @@ public class ExternalScriptsClient extends BaseApiClient implements ExternalScri
     }
 
     @Override
-    public Mono<ExternalScript> update(@NotNull Long id, String name, URL url) {
+    public Mono<ExternalScript> update(Long id, String name, URL url) {
         Assert.notNull(id, "id must not be null");
-        Assert.notNull(name, "name must not be null");
         Assert.notNull(url, "url must not be null");
-        Assert.isTrue(name.length() <= MAX_NAME_LENGTH, "name: maximum " + MAX_NAME_LENGTH + " characters long");
+        validateName(name);
 
         return client.put()
                 .uri(withAuthentication().andThen(builder -> builder.pathSegment(String.valueOf(id)).build()))
@@ -83,7 +81,7 @@ public class ExternalScriptsClient extends BaseApiClient implements ExternalScri
     }
 
     @Override
-    public Mono<ExternalScript> updateUrl(@NotNull Long id, URL url) {
+    public Mono<ExternalScript> updateUrl(Long id, URL url) {
         Assert.notNull(id, "id must not be null");
 
         return client.put()
@@ -95,7 +93,7 @@ public class ExternalScriptsClient extends BaseApiClient implements ExternalScri
 
 
     @Override
-    public Mono<Void> delete(@NotNull Long id) {
+    public Mono<Void> delete(Long id) {
         Assert.notNull(id, "id must not be null");
 
         return client.delete()
@@ -112,5 +110,10 @@ public class ExternalScriptsClient extends BaseApiClient implements ExternalScri
     @Override
     protected Credentials getCredentials() {
         return credentials;
+    }
+
+    private void validateName(String name) {
+        Assert.notNull(name, "name must not be null");
+        Assert.isTrue(name.length() <= MAX_NAME_LENGTH, "name: maximum " + MAX_NAME_LENGTH + " characters long");
     }
 }
