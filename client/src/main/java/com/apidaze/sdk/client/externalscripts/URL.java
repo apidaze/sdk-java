@@ -7,7 +7,7 @@ import org.apache.commons.validator.routines.UrlValidator;
 
 import java.util.Objects;
 
-@ToString
+@ToString(includeFieldNames = false)
 public class URL {
 
     @JsonValue private final String value;
