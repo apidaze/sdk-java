@@ -159,6 +159,37 @@ public class ExternalScriptsClientTest extends AbstractClientTest {
     }
 
     @Test
+    public void shouldNotInvokeApi_ifNameIsTooLongInCreateExternalScript() {
+        val scriptName = "Very long name.................................";
+        val scriptUrl = URL.fromString("http://my.script.com");
+
+        assertThat(scriptName.length())
+                .isGreaterThan(ExternalScriptsClient.MAX_NAME_LENGTH);
+
+        assertThatExceptionOfType(IllegalArgumentException.class)
+                .isThrownBy(() -> client.create(scriptName, scriptUrl).block())
+                .withMessageContaining("name: maximum");
+
+        mockServer.verifyZeroInteractions();
+    }
+
+    @Test
+    public void shouldNotInvokeApi_ifNameIsTooLongInUpdateExternalScript() {
+        val scriptId = 0L;
+        val scriptName = "Very long name.................................";
+        val scriptUrl = URL.fromString("http://my.script.com");
+
+        assertThat(scriptName.length())
+                .isGreaterThan(ExternalScriptsClient.MAX_NAME_LENGTH);
+
+        assertThatExceptionOfType(IllegalArgumentException.class)
+                .isThrownBy(() -> client.update(scriptId, scriptName, scriptUrl).block())
+                .withMessageContaining("name: maximum");
+
+        mockServer.verifyZeroInteractions();
+    }
+
+    @Test
     public void shouldThrowWebClientResponseException_ifApiReturnsAnError() {
         val script = script1;
         val scriptId = script.getId();

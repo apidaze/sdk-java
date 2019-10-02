@@ -18,6 +18,8 @@ import static org.springframework.web.reactive.function.BodyInserters.fromFormDa
 @AllArgsConstructor
 public class ExternalScriptsClient extends BaseApiClient implements ExternalScripts {
 
+    public static final int MAX_NAME_LENGTH = 40;
+
     private static final String BASE_PATH = "externalscripts";
     private static final String URL = "url";
     private static final String NAME = "name";
@@ -46,6 +48,9 @@ public class ExternalScriptsClient extends BaseApiClient implements ExternalScri
 
     @Override
     public Mono<ExternalScript> create(String name, URL url) {
+        Assert.notNull(name, "name must not be null");
+        Assert.isTrue(name.length() <= MAX_NAME_LENGTH, "name: maximum " + MAX_NAME_LENGTH + " characters long");
+
         return client.post()
                 .uri(uriWithAuthentication())
                 .body(fromFormData(NAME, name).with(URL, url.getValue()))
@@ -56,6 +61,7 @@ public class ExternalScriptsClient extends BaseApiClient implements ExternalScri
     @Override
     public Mono<ExternalScript> get(@NotNull Long id) {
         Assert.notNull(id, "id must not be null");
+
         return client.get()
                 .uri(withAuthentication().andThen(builder -> builder.pathSegment(String.valueOf(id)).build()))
                 .retrieve()
@@ -65,6 +71,10 @@ public class ExternalScriptsClient extends BaseApiClient implements ExternalScri
     @Override
     public Mono<ExternalScript> update(@NotNull Long id, String name, URL url) {
         Assert.notNull(id, "id must not be null");
+        Assert.notNull(name, "name must not be null");
+        Assert.notNull(url, "url must not be null");
+        Assert.isTrue(name.length() <= MAX_NAME_LENGTH, "name: maximum " + MAX_NAME_LENGTH + " characters long");
+
         return client.put()
                 .uri(withAuthentication().andThen(builder -> builder.pathSegment(String.valueOf(id)).build()))
                 .body(fromFormData(NAME, name).with(URL, url.getValue()))
@@ -75,6 +85,9 @@ public class ExternalScriptsClient extends BaseApiClient implements ExternalScri
     @Override
     public Mono<ExternalScript> updateName(@NotNull Long id, String name) {
         Assert.notNull(id, "id must not be null");
+        Assert.notNull(name, "name must not be null");
+        Assert.isTrue(name.length() <= MAX_NAME_LENGTH, "name: maximum " + MAX_NAME_LENGTH + " characters long");
+
         return client.put()
                 .uri(withAuthentication().andThen(builder -> builder.pathSegment(String.valueOf(id)).build()))
                 .body(fromFormData(NAME, name))
@@ -84,6 +97,8 @@ public class ExternalScriptsClient extends BaseApiClient implements ExternalScri
 
     @Override
     public Mono<ExternalScript> updateUrl(@NotNull Long id, URL url) {
+        Assert.notNull(id, "id must not be null");
+
         return client.put()
                 .uri(withAuthentication().andThen(builder -> builder.pathSegment(String.valueOf(id)).build()))
                 .body(fromFormData(URL, url.getValue()))
@@ -95,6 +110,7 @@ public class ExternalScriptsClient extends BaseApiClient implements ExternalScri
     @Override
     public Mono<Void> delete(@NotNull Long id) {
         Assert.notNull(id, "id must not be null");
+
         return client.delete()
                 .uri(withAuthentication().andThen(builder -> builder.pathSegment(String.valueOf(id)).build()))
                 .retrieve()
