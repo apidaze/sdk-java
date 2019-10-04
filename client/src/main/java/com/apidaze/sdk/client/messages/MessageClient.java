@@ -32,6 +32,9 @@ public class MessageClient extends BaseApiClient implements Message {
         return new MessageClient(WebClient.create(baseUrl), credentials);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String send(PhoneNumber from, PhoneNumber to, String body) {
         Assert.notNull(from, "from must not be null");
