@@ -15,19 +15,19 @@ public class CredentialsValidationExample {
             System.exit(1);
         }
 
-        final String apiKey = args[0];
-        final String apiSecret = args[1];
+        val apiKey = args[0];
+        val apiSecret = args[1];
 
         // initiate the client
-        CredentialsValidator validator = CredentialsValidator.create(new Credentials(apiKey, apiSecret));
+        val validator = CredentialsValidator.create(new Credentials(apiKey, apiSecret));
 
         // or initiate the client using builder
-//        CredentialsValidator validator = CredentialsValidator.builder()
+//        val validator = CredentialsValidator.builder()
 //                .credentials(new Credentials(apiKey, apiSecret))
 //                .build();
 
         // validate credentials
-        val response = validator.validateCredentials().block();
+        val response = validator.validateCredentials();
 
         log.info(response);
     }
