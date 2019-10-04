@@ -40,7 +40,8 @@ public class MessageClient extends BaseApiClient implements Message {
 
         return client
                 .post()
-                .uri(uriWithAuthentication())
+                .uri(withAuthentication()
+                        .andThen(uriBuilder -> uriBuilder.pathSegment("send").build()))
                 .body(fromFormData("from", from.getNumber())
                         .with("to", to.getNumber())
                         .with("body", body))

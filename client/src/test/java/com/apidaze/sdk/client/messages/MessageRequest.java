@@ -15,7 +15,7 @@ public class MessageRequest {
         return HttpRequest.request()
                 .withMethod(HttpMethod.POST.name())
                 .withHeader(CONTENT_TYPE, "application/x-www-form-urlencoded;charset=utf-8")
-                .withPath("/" + API_KEY + "/sms")
+                .withPath("/" + API_KEY + "/sms/send")
                 .withQueryStringParameters(param("api_secret", API_SECRET))
                 .withBody(params(
                         param("from", from.getNumber()),
