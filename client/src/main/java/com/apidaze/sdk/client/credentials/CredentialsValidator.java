@@ -9,9 +9,10 @@ import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
 
 import static java.util.Objects.isNull;
+import static lombok.AccessLevel.PRIVATE;
 import static org.springframework.util.Assert.notNull;
 
-@AllArgsConstructor
+@AllArgsConstructor(access = PRIVATE)
 public class CredentialsValidator extends BaseApiClient {
 
     private static final String BASE_PATH = "validates";

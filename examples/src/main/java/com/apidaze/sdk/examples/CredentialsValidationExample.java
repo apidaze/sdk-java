@@ -19,12 +19,9 @@ public class CredentialsValidationExample {
         val apiSecret = args[1];
 
         // initiate the client
-        val validator = CredentialsValidator.create(new Credentials(apiKey, apiSecret));
-
-        // or initiate the client using builder
-//        val validator = CredentialsValidator.builder()
-//                .credentials(new Credentials(apiKey, apiSecret))
-//                .build();
+        val validator = CredentialsValidator.builder()
+                .credentials(new Credentials(apiKey, apiSecret))
+                .build();
 
         // validate credentials
         val response = validator.validateCredentials();
