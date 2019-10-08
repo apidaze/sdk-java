@@ -11,7 +11,7 @@ import org.springframework.web.reactive.function.client.WebClientResponseExcepti
 import static java.util.Objects.isNull;
 
 @Slf4j
-public class PlaceACallExample {
+public class PlaceCallExample {
 
     public static void main(String... args) {
 
@@ -19,7 +19,7 @@ public class PlaceACallExample {
         val apiSecret = System.getenv("API_SECRET");
 
         if (isNull(apiKey) || isNull(apiSecret)) {
-            log.error("System environment variable API_KEY or API_SECRET is not set.");
+            log.error("System environment variable API_KEY and API_SECRET must be set.");
             System.exit(1);
         }
 
@@ -32,8 +32,10 @@ public class PlaceACallExample {
 
         // place a call
         try {
-            val callId = calls.create(callerId, origin, destination, Calls.Type.NUMBER);
-            log.info("Call with id = {} has been initiated.", callId);
+            val response = calls.create(callerId, origin, destination, Calls.Type.NUMBER);
+
+            response.getCallId().ifPresent(id -> log.info("Call with id = {} has been initiated.", id));
+            response.getFailure().ifPresent(failure -> log.error("Placing the call failed due to [{}].", failure));
         } catch (WebClientResponseException e) {
             log.error("API returned the response with status code = [{}] and body = [{}]", e.getStatusCode(), e.getResponseBodyAsString());
         }

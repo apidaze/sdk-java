@@ -3,10 +3,8 @@ package com.apidaze.sdk.client.calls;
 import com.apidaze.sdk.client.base.BaseApiClient;
 import com.apidaze.sdk.client.credentials.Credentials;
 import com.apidaze.sdk.client.messages.PhoneNumber;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import javax.annotation.Nullable;
@@ -14,6 +12,7 @@ import javax.validation.constraints.NotNull;
 
 import static java.util.Objects.isNull;
 import static lombok.AccessLevel.PRIVATE;
+import static org.springframework.util.Assert.hasLength;
 import static org.springframework.util.Assert.notNull;
 import static org.springframework.web.reactive.function.BodyInserters.fromFormData;
 
@@ -37,7 +36,12 @@ public class CallsClient extends BaseApiClient implements Calls {
     }
 
     @Override
-    public String create(PhoneNumber callerId, String origin, String destination, Type type) {
+    public CreateResponse create(PhoneNumber callerId, String origin, String destination, Type type) {
+        notNull(callerId, "callerId must not be null");
+        notNull(type, "type must not be null");
+        hasLength(origin, "origin must not be empty");
+        hasLength(destination, "destination must not be empty");
+
         return client.post()
                 .uri(uriWithAuthentication())
                 .body(fromFormData("callerid", callerId.getNumber())
@@ -46,7 +50,6 @@ public class CallsClient extends BaseApiClient implements Calls {
                         .with("type", type.getValue()))
                 .retrieve()
                 .bodyToMono(CreateResponse.class)
-                .map(CreateResponse::getId)
                 .block();
     }
 
@@ -58,11 +61,5 @@ public class CallsClient extends BaseApiClient implements Calls {
     @Override
     protected Credentials getCredentials() {
         return credentials;
-    }
-
-    @Data
-    static class CreateResponse {
-        @JsonProperty("ok")
-        private String id;
     }
 }

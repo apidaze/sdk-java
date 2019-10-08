@@ -11,7 +11,7 @@ import org.mockserver.junit.MockServerRule;
 import static com.apidaze.sdk.client.TestUtil.API_KEY;
 import static com.apidaze.sdk.client.TestUtil.API_SECRET;
 import static com.apidaze.sdk.client.calls.CallsRequest.create;
-import static com.apidaze.sdk.client.calls.CallsResponse.ok;
+import static com.apidaze.sdk.client.calls.CallsResponse.accepted;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class CallsClientTest {
@@ -40,11 +40,12 @@ public class CallsClientTest {
 
         mockServer
                 .when(create(callerId, origin, destination, callType))
-                .respond(ok(callId));
+                .respond(accepted(callId));
 
         val response = client.create(callerId, origin, destination, callType);
 
-        assertThat(response).isEqualTo(callId);
+        assertThat(response.getFailure()).isEmpty();
+        assertThat(response.getCallId()).isPresent().contains(callId);
         mockServer.verify(create(callerId, origin, destination, callType));
     }
 
@@ -59,11 +60,12 @@ public class CallsClientTest {
 
         mockServer
                 .when(create(callerId, origin, destination, callType))
-                .respond(ok(callId));
+                .respond(accepted(callId));
 
         val response = client.create(callerId, origin, destination, callType);
 
-        assertThat(response).isEqualTo(callId);
+        assertThat(response.getFailure()).isEmpty();
+        assertThat(response.getCallId()).isPresent().contains(callId);
         mockServer.verify(create(callerId, origin, destination, callType));
     }
 }

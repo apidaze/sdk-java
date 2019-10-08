@@ -9,7 +9,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
 
 class CallsResponse {
 
-    static HttpResponse ok(String callId) {
+    static HttpResponse accepted(String callId) {
         return response()
                 .withBody("{\"ok\" : \"" + callId + "\"}")
                 .withHeader(CONTENT_TYPE, APPLICATION_JSON_UTF8_VALUE)
