@@ -9,9 +9,16 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
 
 class CallsResponse {
 
-    static HttpResponse accepted(String callId) {
+    static HttpResponse created(String callId) {
         return response()
                 .withBody("{\"ok\" : \"" + callId + "\"}")
+                .withHeader(CONTENT_TYPE, APPLICATION_JSON_UTF8_VALUE)
+                .withStatusCode(ACCEPTED_202.code());
+    }
+
+    static HttpResponse failed(String message) {
+        return response()
+                .withBody("{\"failure\" : \"" + message + "\"}")
                 .withHeader(CONTENT_TYPE, APPLICATION_JSON_UTF8_VALUE)
                 .withStatusCode(ACCEPTED_202.code());
     }
