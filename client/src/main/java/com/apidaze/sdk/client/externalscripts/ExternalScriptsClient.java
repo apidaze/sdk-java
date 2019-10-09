@@ -119,7 +119,7 @@ public class ExternalScriptsClient extends BaseApiClient implements ExternalScri
         return credentials;
     }
 
-    private void validateName(String name) {
+    private static void validateName(String name) {
         Assert.notNull(name, "name must not be null");
         Assert.isTrue(name.length() <= MAX_NAME_LENGTH, "name: maximum " + MAX_NAME_LENGTH + " characters long");
     }
