@@ -1,4 +1,4 @@
-package com.apidaze.sdk.client.credentials;
+package com.apidaze.sdk.client.base;
 
 import lombok.Data;
 import javax.validation.constraints.NotNull;

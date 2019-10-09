@@ -1,9 +1,11 @@
-package com.apidaze.sdk.client.credentials;
+package com.apidaze.sdk.client.validates;
 
 import com.apidaze.sdk.client.base.BaseApiClient;
+import com.apidaze.sdk.client.base.Credentials;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.reactive.function.client.WebClientResponseException;
 
 import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
@@ -31,12 +33,17 @@ public class CredentialsValidator extends BaseApiClient {
         return new CredentialsValidator(WebClient.create(baseUrl), credentials);
     }
 
-    public String validateCredentials() {
-        return client.get()
-                .uri(uriWithAuthentication())
-                .retrieve()
-                .bodyToMono(String.class)
-                .block();
+    public boolean validateCredentials() {
+        try {
+            client.get()
+                    .uri(uriWithAuthentication())
+                    .retrieve()
+                    .bodyToMono(Void.class)
+                    .block();
+            return true;
+        } catch (WebClientResponseException.NotFound | WebClientResponseException.Unauthorized e) {
+            return false;
+        }
     }
 
     @Override

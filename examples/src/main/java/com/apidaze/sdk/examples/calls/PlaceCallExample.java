@@ -2,7 +2,7 @@ package com.apidaze.sdk.examples.calls;
 
 import com.apidaze.sdk.client.calls.Calls;
 import com.apidaze.sdk.client.calls.CallsClient;
-import com.apidaze.sdk.client.credentials.Credentials;
+import com.apidaze.sdk.client.base.Credentials;
 import com.apidaze.sdk.client.messages.PhoneNumber;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
@@ -19,7 +19,7 @@ public class PlaceCallExample {
         val apiSecret = System.getenv("API_SECRET");
 
         if (isNull(apiKey) || isNull(apiSecret)) {
-            log.error("System environment variable API_KEY and API_SECRET must be set.");
+            log.error("System environment variables API_KEY and API_SECRET must be set.");
             System.exit(1);
         }
 

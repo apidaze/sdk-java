@@ -30,7 +30,7 @@
                         <transformer
                                 implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
                             <manifestEntries>
-                                <Main-Class>com.apidaze.sdk.examples.CredentialsValidationExample</Main-Class>
+                                <Main-Class>com.apidaze.sdk.examples.validates.CredentialsValidationExample</Main-Class>
                             </manifestEntries>
                         </transformer>
                     </transformers>

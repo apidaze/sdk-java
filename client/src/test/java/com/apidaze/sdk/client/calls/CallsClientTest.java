@@ -1,6 +1,6 @@
 package com.apidaze.sdk.client.calls;
 
-import com.apidaze.sdk.client.credentials.Credentials;
+import com.apidaze.sdk.client.base.Credentials;
 import com.apidaze.sdk.client.messages.PhoneNumber;
 import lombok.val;
 import org.junit.Rule;

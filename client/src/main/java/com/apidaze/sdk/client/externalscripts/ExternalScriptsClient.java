@@ -1,7 +1,7 @@
 package com.apidaze.sdk.client.externalscripts;
 
 import com.apidaze.sdk.client.base.BaseApiClient;
-import com.apidaze.sdk.client.credentials.Credentials;
+import com.apidaze.sdk.client.base.Credentials;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import org.springframework.util.Assert;

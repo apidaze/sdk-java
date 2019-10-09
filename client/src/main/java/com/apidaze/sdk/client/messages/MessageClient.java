@@ -1,8 +1,7 @@
 package com.apidaze.sdk.client.messages;
 
 import com.apidaze.sdk.client.base.BaseApiClient;
-import com.apidaze.sdk.client.credentials.Credentials;
-import lombok.AccessLevel;
+import com.apidaze.sdk.client.base.Credentials;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import org.springframework.util.Assert;

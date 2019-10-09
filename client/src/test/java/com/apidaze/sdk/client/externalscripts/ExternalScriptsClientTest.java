@@ -1,6 +1,6 @@
 package com.apidaze.sdk.client.externalscripts;
 
-import com.apidaze.sdk.client.credentials.Credentials;
+import com.apidaze.sdk.client.base.Credentials;
 import com.google.common.collect.ImmutableList;
 import lombok.val;
 import org.junit.Before;

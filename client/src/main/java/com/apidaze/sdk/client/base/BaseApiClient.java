@@ -1,6 +1,5 @@
 package com.apidaze.sdk.client.base;
 
-import com.apidaze.sdk.client.credentials.Credentials;
 import org.springframework.web.util.UriBuilder;
 
 import java.net.URI;

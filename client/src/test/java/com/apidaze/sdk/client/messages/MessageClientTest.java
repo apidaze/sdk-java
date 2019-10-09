@@ -1,6 +1,6 @@
 package com.apidaze.sdk.client.messages;
 
-import com.apidaze.sdk.client.credentials.Credentials;
+import com.apidaze.sdk.client.base.Credentials;
 import lombok.val;
 import org.junit.Before;
 import org.junit.Rule;
