@@ -5,18 +5,20 @@ import com.apidaze.sdk.client.recordings.RecordingsClient;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 
+import static java.util.Objects.isNull;
+
 @Slf4j
 public class RecordingsExample {
 
     public static void main(String... args) {
 
-        if (args.length < 2) {
-            System.err.println("You must provide: <apiKey> <apiSecret> in the  argument list!");
+        val apiKey = System.getenv("API_KEY");
+        val apiSecret = System.getenv("API_SECRET");
+
+        if (isNull(apiKey) || isNull(apiSecret)) {
+            log.error("System environment variables API_KEY and API_SECRET must be set.");
             System.exit(1);
         }
-
-        val apiKey = args[0];
-        val apiSecret = args[1];
 
         // initiate the client using create method
         val recordings = RecordingsClient.create(new Credentials(apiKey, apiSecret));

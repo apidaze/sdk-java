@@ -7,28 +7,30 @@ import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 
+import static java.util.Objects.isNull;
+
 @Slf4j
 public class MessageExample {
 
     public static void main(String... args) {
 
-        if (args.length < 2) {
-            System.err.println("You must provide: <apiKey> <apiSecret> in the  argument list!");
+        val apiKey = System.getenv("API_KEY");
+        val apiSecret = System.getenv("API_SECRET");
+
+        if (isNull(apiKey) || isNull(apiSecret)) {
+            log.error("System environment variables API_KEY and API_SECRET must be set.");
             System.exit(1);
         }
-
-        val apiKey = args[0];
-        val apiSecret = args[1];
 
         // initiate the client
         val message = MessageClient.builder().credentials(new Credentials(apiKey, apiSecret)).build();
 
-        try {
-            // define phone numbers and message body
-            val from = PhoneNumber.of("123456789");
-            val to = PhoneNumber.of("987654321");
-            val messageBody = "Have a nice day!";
+        // phone numbers and message body
+        val from = PhoneNumber.of("123456789");
+        val to = PhoneNumber.of("987654321");
+        val messageBody = "Have a nice day!";
 
+        try {
             // send a message
             val response = message.send(from, to, messageBody);
             log.info(response);

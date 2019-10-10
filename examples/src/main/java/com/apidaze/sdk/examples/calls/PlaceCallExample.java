@@ -27,8 +27,8 @@ public class PlaceCallExample {
         val calls = CallsClient.builder().credentials(new Credentials(apiKey, apiSecret)).build();
 
         // call details
-        val callerId = PhoneNumber.of("14129274908");
-        val origin = "48608687380";
+        val callerId = PhoneNumber.of("14123456789");
+        val origin = "48123456789";
         val destination = "48123456789";
 
         try {

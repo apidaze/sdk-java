@@ -8,20 +8,23 @@ import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 
+import static java.util.Objects.isNull;
+
 @Slf4j
 public class CreateExternalScript {
 
     public static void main(String... args) {
 
-        if (args.length < 4) {
-            System.err.println("You must provide: <apiKey> <apiSecret> <scriptName> <scriptUrl> in the  argument list!");
+        val apiKey = System.getenv("API_KEY");
+        val apiSecret = System.getenv("API_SECRET");
+
+        if (isNull(apiKey) || isNull(apiSecret)) {
+            log.error("System environment variables API_KEY and API_SECRET must be set.");
             System.exit(1);
         }
 
-        val apiKey = args[0];
-        val apiSecret = args[1];
-        val scriptName = args[2];
-        val scriptUrl = args[3];
+        val scriptName = "Some cool script";
+        val scriptUrl = "http://cool.script.com";
 
         // initiate the client
         val externalScripts = ExternalScriptsClient.builder().credentials(new Credentials(apiKey, apiSecret)).build();
