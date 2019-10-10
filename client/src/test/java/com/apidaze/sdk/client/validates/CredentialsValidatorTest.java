@@ -1,6 +1,5 @@
 package com.apidaze.sdk.client.validates;
 
-import com.apidaze.sdk.client.base.Credentials;
 import lombok.val;
 import org.junit.Before;
 import org.junit.Rule;
@@ -10,8 +9,7 @@ import org.mockserver.junit.MockServerRule;
 import org.mockserver.model.HttpRequest;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 
-import static com.apidaze.sdk.client.TestUtil.API_KEY;
-import static com.apidaze.sdk.client.TestUtil.API_SECRET;
+import static com.apidaze.sdk.client.TestUtil.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.mockserver.model.HttpRequest.request;
@@ -20,18 +18,12 @@ import static org.mockserver.model.Parameter.param;
 
 public class CredentialsValidatorTest {
 
-    private static final int PORT = 9876;
-
     @Rule
     public MockServerRule mockServerRule = new MockServerRule(this, PORT);
 
     private MockServerClient mockServer;
 
-    private CredentialsValidator validator = CredentialsValidator.builder()
-            .baseUrl("http://localhost:" + PORT)
-            .credentials(new Credentials(API_KEY, API_SECRET))
-            .build();
-
+    private CredentialsValidator validator = CredentialsValidator.create(CREDENTIALS, BASE_URL);
 
     @Before
     public void before() {

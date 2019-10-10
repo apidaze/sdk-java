@@ -25,7 +25,7 @@ public class DeleteExternalScript {
         val id = 1L;
 
         // initiate the client
-        val externalScripts = ExternalScriptsClient.builder().credentials(new Credentials(apiKey, apiSecret)).build();
+        val externalScripts = ExternalScriptsClient.create(new Credentials(apiKey, apiSecret));
 
         // delete an external script
         try {

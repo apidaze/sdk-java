@@ -3,14 +3,15 @@ package com.apidaze.sdk.client.recordings;
 import com.apidaze.sdk.client.base.BaseApiClient;
 import com.apidaze.sdk.client.base.Credentials;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import org.springframework.util.Assert;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
-@AllArgsConstructor
+import static lombok.AccessLevel.PRIVATE;
+
+@AllArgsConstructor(access = PRIVATE)
 public class RecordingsClient extends BaseApiClient implements Recordings {
 
     private static final String BASE_PATH = "recordings";
@@ -18,7 +19,6 @@ public class RecordingsClient extends BaseApiClient implements Recordings {
     private final WebClient client;
     private final Credentials credentials;
 
-    @Builder
     public static RecordingsClient create(@NotNull Credentials credentials) {
         Assert.notNull(credentials, "Credentials must not be null.");
         return new RecordingsClient(WebClient.create(BASE_URL), credentials);

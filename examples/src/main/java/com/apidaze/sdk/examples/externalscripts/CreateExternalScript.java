@@ -27,7 +27,7 @@ public class CreateExternalScript {
         val scriptUrl = "http://cool.script.com";
 
         // initiate the client
-        val externalScripts = ExternalScriptsClient.builder().credentials(new Credentials(apiKey, apiSecret)).build();
+        val externalScripts = ExternalScriptsClient.create(new Credentials(apiKey, apiSecret));
 
         try {
             // create an external script

@@ -22,7 +22,7 @@ public class ActiveCallsExample {
         }
 
         // initiate the client
-        val calls = CallsClient.builder().credentials(new Credentials(apiKey, apiSecret)).build();
+        val calls = CallsClient.create(new Credentials(apiKey, apiSecret));
 
         try {
             val response = calls.getActiveCalls();

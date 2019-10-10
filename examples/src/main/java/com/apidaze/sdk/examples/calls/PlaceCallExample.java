@@ -24,7 +24,7 @@ public class PlaceCallExample {
         }
 
         // initiate the client
-        val calls = CallsClient.builder().credentials(new Credentials(apiKey, apiSecret)).build();
+        val calls = CallsClient.create(new Credentials(apiKey, apiSecret));
 
         // call details
         val callerId = PhoneNumber.of("14123456789");

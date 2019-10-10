@@ -22,7 +22,7 @@ public class ListExternalScripts {
         }
 
         // initiate the client
-        val externalScripts = ExternalScriptsClient.builder().credentials(new Credentials(apiKey, apiSecret)).build();
+        val externalScripts = ExternalScriptsClient.create(new Credentials(apiKey, apiSecret));
 
         try {
             // get external scripts list

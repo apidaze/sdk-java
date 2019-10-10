@@ -4,18 +4,15 @@ import com.apidaze.sdk.client.base.BaseApiClient;
 import com.apidaze.sdk.client.base.Credentials;
 import com.apidaze.sdk.client.messages.PhoneNumber;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.val;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import static java.util.Objects.isNull;
 import static java.util.Objects.requireNonNull;
 import static lombok.AccessLevel.PRIVATE;
 import static org.springframework.util.Assert.hasLength;
@@ -30,13 +27,13 @@ public class CallsClient extends BaseApiClient implements Calls {
     private final WebClient client;
     private final Credentials credentials;
 
-    @Builder
-    public static CallsClient create(@NotNull Credentials credentials, @Nullable String baseUrl) {
-        notNull(credentials, "Credentials must not be null.");
+    public static CallsClient create(@NotNull Credentials credentials) {
+        return create(credentials, BASE_URL);
+    }
 
-        if (isNull(baseUrl)) {
-            baseUrl = BASE_URL;
-        }
+    static CallsClient create(@NotNull Credentials credentials, @NotNull String baseUrl) {
+        notNull(credentials, "Credentials must not be null.");
+        notNull(baseUrl, "baseUrl must not be null.");
 
         return new CallsClient(WebClient.create(baseUrl), credentials);
     }

@@ -24,7 +24,7 @@ public class DeleteActiveCallExample {
         }
 
         // initiate the client
-        val calls = CallsClient.builder().credentials(new Credentials(apiKey, apiSecret)).build();
+        val calls = CallsClient.create(new Credentials(apiKey, apiSecret));
 
         // call id to be deleted
         val callId = UUID.randomUUID();

@@ -1,6 +1,5 @@
 package com.apidaze.sdk.client.calls;
 
-import com.apidaze.sdk.client.base.Credentials;
 import com.apidaze.sdk.client.messages.PhoneNumber;
 import com.google.common.collect.ImmutableList;
 import lombok.val;
@@ -13,8 +12,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
-import static com.apidaze.sdk.client.TestUtil.API_KEY;
-import static com.apidaze.sdk.client.TestUtil.API_SECRET;
+import static com.apidaze.sdk.client.TestUtil.*;
 import static com.apidaze.sdk.client.calls.CallsRequest.*;
 import static com.apidaze.sdk.client.calls.CallsResponse.*;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -22,18 +20,12 @@ import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 public class CallsClientTest {
 
-    private static final int PORT = 9876;
-
     @Rule
     public MockServerRule mockServerRule = new MockServerRule(this, PORT);
 
     private MockServerClient mockServer;
 
-    private Calls client = CallsClient.builder()
-            .baseUrl("http://localhost:" + PORT)
-            .credentials(new Credentials(API_KEY, API_SECRET))
-            .build();
-
+    private Calls client = CallsClient.create(CREDENTIALS, BASE_URL);
 
     @Test
     public void shouldPlaceACallOfTypeNumber() {

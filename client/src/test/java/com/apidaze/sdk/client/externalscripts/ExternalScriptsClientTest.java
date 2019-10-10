@@ -1,6 +1,5 @@
 package com.apidaze.sdk.client.externalscripts;
 
-import com.apidaze.sdk.client.base.Credentials;
 import com.google.common.collect.ImmutableList;
 import lombok.val;
 import org.junit.Before;
@@ -22,17 +21,12 @@ import static org.mockserver.model.HttpResponse.response;
 
 public class ExternalScriptsClientTest {
 
-    private static final int PORT = 9876;
-
     @Rule
     public MockServerRule mockServerRule = new MockServerRule(this, PORT);
 
     private MockServerClient mockServer;
 
-    private ExternalScripts client = ExternalScriptsClient.builder()
-            .baseUrl("http://localhost:" + PORT)
-            .credentials(new Credentials(API_KEY, API_SECRET))
-            .build();
+    private ExternalScripts client = ExternalScriptsClient.create(CREDENTIALS, BASE_URL);
 
     private ExternalScript script1 = ExternalScript.builder()
             .id(1L)

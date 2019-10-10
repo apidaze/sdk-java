@@ -3,15 +3,12 @@ package com.apidaze.sdk.client.externalscripts;
 import com.apidaze.sdk.client.base.BaseApiClient;
 import com.apidaze.sdk.client.base.Credentials;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import org.springframework.util.Assert;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
-import static java.util.Objects.isNull;
 import static lombok.AccessLevel.PRIVATE;
 import static org.springframework.web.reactive.function.BodyInserters.fromFormData;
 
@@ -27,13 +24,13 @@ public class ExternalScriptsClient extends BaseApiClient implements ExternalScri
     private final WebClient client;
     private final Credentials credentials;
 
-    @Builder
-    public static ExternalScriptsClient create(@NotNull Credentials credentials, @Nullable String baseUrl) {
-        Assert.notNull(credentials, "Credentials must not be null.");
+    public static ExternalScriptsClient create(@NotNull Credentials credentials) {
+        return create(credentials, BASE_URL);
+    }
 
-        if (isNull(baseUrl)) {
-            baseUrl = BASE_URL;
-        }
+    static ExternalScriptsClient create(@NotNull Credentials credentials, @NotNull String baseUrl) {
+        Assert.notNull(credentials, "Credentials must not be null.");
+        Assert.notNull(baseUrl, "baseUrl must not be null.");
 
         return new ExternalScriptsClient(WebClient.create(baseUrl), credentials);
     }

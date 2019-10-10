@@ -29,7 +29,7 @@ public class UpdateExternalScriptUrl {
         val newScriptUrl = "http://new.cool.script.com";
 
         // initiate the client
-        val externalScripts = ExternalScriptsClient.builder().credentials(new Credentials(apiKey, apiSecret)).build();
+        val externalScripts = ExternalScriptsClient.create(new Credentials(apiKey, apiSecret));
 
         // create external script
         try {

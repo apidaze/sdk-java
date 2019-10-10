@@ -23,7 +23,7 @@ public class MessageExample {
         }
 
         // initiate the client
-        val message = MessageClient.builder().credentials(new Credentials(apiKey, apiSecret)).build();
+        val message = MessageClient.create(new Credentials(apiKey, apiSecret));
 
         // phone numbers and message body
         val from = PhoneNumber.of("123456789");
