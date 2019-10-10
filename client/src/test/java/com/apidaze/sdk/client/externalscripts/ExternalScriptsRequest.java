@@ -4,11 +4,11 @@ import org.mockserver.model.HttpRequest;
 
 import static com.apidaze.sdk.client.TestUtil.API_KEY;
 import static com.apidaze.sdk.client.TestUtil.API_SECRET;
+import static com.google.common.net.HttpHeaders.CONTENT_TYPE;
 import static io.netty.handler.codec.http.HttpMethod.*;
 import static org.mockserver.model.HttpRequest.request;
 import static org.mockserver.model.Parameter.param;
 import static org.mockserver.model.ParameterBody.params;
-import static org.springframework.http.HttpHeaders.CONTENT_TYPE;
 
 class ExternalScriptsRequest {
 
@@ -29,7 +29,7 @@ class ExternalScriptsRequest {
     static HttpRequest create(String scriptName, URL scriptUrl) {
         return request()
                 .withMethod(POST.name())
-                .withHeader(CONTENT_TYPE, "application/x-www-form-urlencoded;charset=utf-8")
+                .withHeader(CONTENT_TYPE, "application/x-www-form-urlencoded")
                 .withPath("/" + API_KEY + "/externalscripts")
                 .withQueryStringParameters(param("api_secret", API_SECRET))
                 .withBody(
@@ -42,7 +42,7 @@ class ExternalScriptsRequest {
     static HttpRequest update(Long id, String newScriptName, URL newScriptUrl) {
         return request()
                 .withMethod(PUT.name())
-                .withHeader(CONTENT_TYPE, "application/x-www-form-urlencoded;charset=utf-8")
+                .withHeader(CONTENT_TYPE, "application/x-www-form-urlencoded")
                 .withPath("/" + API_KEY + "/externalscripts/" + id)
                 .withQueryStringParameters(param("api_secret", API_SECRET))
                 .withBody(
@@ -55,7 +55,7 @@ class ExternalScriptsRequest {
     static HttpRequest updateUrl(Long id, URL newUrl) {
         return request()
                 .withMethod(PUT.name())
-                .withHeader(CONTENT_TYPE, "application/x-www-form-urlencoded;charset=utf-8")
+                .withHeader(CONTENT_TYPE, "application/x-www-form-urlencoded")
                 .withPath("/" + API_KEY + "/externalscripts/" + id)
                 .withQueryStringParameters(param("api_secret", API_SECRET))
                 .withBody(

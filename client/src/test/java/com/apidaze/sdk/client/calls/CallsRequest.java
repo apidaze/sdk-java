@@ -7,13 +7,12 @@ import java.util.UUID;
 
 import static com.apidaze.sdk.client.TestUtil.API_KEY;
 import static com.apidaze.sdk.client.TestUtil.API_SECRET;
+import static com.google.common.net.HttpHeaders.CONTENT_TYPE;
 import static io.netty.handler.codec.http.HttpMethod.DELETE;
 import static io.netty.handler.codec.http.HttpMethod.GET;
 import static org.mockserver.model.HttpRequest.request;
 import static org.mockserver.model.Parameter.param;
 import static org.mockserver.model.ParameterBody.params;
-import static org.springframework.http.HttpHeaders.CONTENT_TYPE;
-import static org.springframework.http.HttpMethod.POST;
 
 class CallsRequest {
 
@@ -21,8 +20,8 @@ class CallsRequest {
 
     static HttpRequest create(PhoneNumber callerId, String origin, String destination, Calls.Type callType) {
         return request()
-                .withMethod(POST.name())
-                .withHeader(CONTENT_TYPE, "application/x-www-form-urlencoded;charset=utf-8")
+                .withMethod("POST")
+                .withHeader(CONTENT_TYPE, "application/x-www-form-urlencoded")
                 .withPath("/" + API_KEY + "/" + BASE_PATH)
                 .withQueryStringParameters(param("api_secret", API_SECRET))
                 .withBody(

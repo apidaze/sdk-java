@@ -4,7 +4,8 @@ import com.apidaze.sdk.client.base.Credentials;
 import com.apidaze.sdk.client.externalscripts.ExternalScriptsClient;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
-import org.springframework.web.reactive.function.client.WebClientResponseException;
+
+import java.io.IOException;
 
 import static java.util.Objects.isNull;
 
@@ -28,8 +29,8 @@ public class ListExternalScripts {
             // get external scripts list
             val list = externalScripts.list();
             log.info("ExternalScripts list: {}", list);
-        } catch (WebClientResponseException e) {
-            log.error("API returned the response with status code = {} and body = {}", e.getStatusCode(), e.getResponseBodyAsString());
+        } catch (IOException e) {
+            log.error("An error occurred during communicating with API", e);
         }
     }
 }

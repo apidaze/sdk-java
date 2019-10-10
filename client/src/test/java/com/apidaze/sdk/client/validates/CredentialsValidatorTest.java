@@ -7,11 +7,12 @@ import org.junit.Test;
 import org.mockserver.client.MockServerClient;
 import org.mockserver.junit.MockServerRule;
 import org.mockserver.model.HttpRequest;
-import org.springframework.web.reactive.function.client.WebClientResponseException;
+
+import java.io.IOException;
 
 import static com.apidaze.sdk.client.TestUtil.*;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import static org.assertj.core.api.Assertions.assertThatIOException;
 import static org.mockserver.model.HttpRequest.request;
 import static org.mockserver.model.HttpResponse.response;
 import static org.mockserver.model.Parameter.param;
@@ -31,55 +32,55 @@ public class CredentialsValidatorTest {
     }
 
     @Test
-    public void shouldReturnTrue_ifApiReturnsStatusCodeOK() {
+    public void shouldReturnTrue_ifApiReturnsStatusCodeOK() throws IOException {
         val responseBody = "\"status\": { \"global\": \"Authentication succeeded\" }";
 
         mockServer
-                .when(validateRequest())
+                .when(validateCredentialRequest())
                 .respond(response(responseBody));
 
         val result = validator.validateCredentials();
 
-        mockServer.verify(validateRequest());
+        mockServer.verify(validateCredentialRequest());
         assertThat(result).isTrue();
     }
 
     @Test
-    public void shouldReturnFalse_ifApiReturnsStatusCode401() {
+    public void shouldReturnFalse_ifApiReturnsStatusCode401() throws IOException {
         mockServer
-                .when(validateRequest())
+                .when(validateCredentialRequest())
                 .respond(response().withStatusCode(401));
 
         val result = validator.validateCredentials();
 
-        mockServer.verify(validateRequest());
+        mockServer.verify(validateCredentialRequest());
         assertThat(result).isFalse();
     }
 
     @Test
-    public void shouldReturnFalse_ifApiReturnsStatusCode404() {
+    public void shouldReturnFalse_ifApiReturnsStatusCode404() throws IOException {
         mockServer
-                .when(validateRequest())
+                .when(validateCredentialRequest())
                 .respond(response().withStatusCode(404));
 
         val result = validator.validateCredentials();
 
-        mockServer.verify(validateRequest());
+        mockServer.verify(validateCredentialRequest());
         assertThat(result).isFalse();
     }
 
     @Test
-    public void shouldThrowWebClientResponseException_ifApiReturnsStatusCode500() {
+    public void shouldThrowIOException_ifApiReturnsStatusCode500() {
         mockServer
-                .when(validateRequest())
+                .when(validateCredentialRequest())
                 .respond(response().withStatusCode(500));
 
-        assertThatExceptionOfType(WebClientResponseException.InternalServerError.class)
+        assertThatIOException()
                 .isThrownBy(() -> validator.validateCredentials())
-                .withMessage("500 Internal Server Error");
+                .withMessageContainingAll("500", "Internal Server Error");
     }
 
-    private static HttpRequest validateRequest() {
+    private static HttpRequest validateCredentialRequest() {
         return request()
                 .withMethod("GET")
                 .withPath("/" + API_KEY + "/validates")

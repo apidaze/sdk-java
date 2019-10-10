@@ -8,6 +8,7 @@ import org.junit.Test;
 import org.mockserver.client.MockServerClient;
 import org.mockserver.junit.MockServerRule;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
@@ -28,7 +29,7 @@ public class CallsClientTest {
     private Calls client = CallsClient.create(CREDENTIALS, BASE_URL);
 
     @Test
-    public void shouldPlaceACallOfTypeNumber() {
+    public void shouldPlaceACallOfTypeNumber() throws IOException {
         val callerId = PhoneNumber.of("14123456789");
         val origin = "48123456789";
         val destination = "48987654321";
@@ -46,7 +47,7 @@ public class CallsClientTest {
     }
 
     @Test
-    public void shouldPlaceACallOfTypeSipAccount() {
+    public void shouldPlaceACallOfTypeSipAccount() throws IOException {
         val callerId = PhoneNumber.of("14123456789");
         val origin = "sip-account-origin";
         val destination = "sip-account-destination";
@@ -102,7 +103,7 @@ public class CallsClientTest {
 
 
     @Test
-    public void shouldDeleteActiveCall() {
+    public void shouldDeleteActiveCall() throws IOException {
         val id = UUID.fromString("d64baf26-b116-4478-97b5-899de580461f");
 
         mockServer
@@ -129,7 +130,7 @@ public class CallsClientTest {
     }
 
     @Test
-    public void shouldReturnListOfActiveCalls() {
+    public void shouldReturnListOfActiveCalls() throws IOException {
         val activeCalls = generateActiveCallsList();
 
         mockServer
@@ -145,7 +146,7 @@ public class CallsClientTest {
     }
 
     @Test
-    public void shouldReturnActiveCallById() {
+    public void shouldReturnActiveCallById() throws IOException {
         val activeCall = generateActiveCallsList().get(0);
         val id = activeCall.getUuid();
 
@@ -181,6 +182,4 @@ public class CallsClientTest {
                         .build()
         );
     }
-
-
 }

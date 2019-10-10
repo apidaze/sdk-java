@@ -1,11 +1,13 @@
 package com.apidaze.sdk.examples.messages;
 
 import com.apidaze.sdk.client.base.Credentials;
+import com.apidaze.sdk.client.messages.InvalidPhoneNumberException;
 import com.apidaze.sdk.client.messages.MessageClient;
 import com.apidaze.sdk.client.messages.PhoneNumber;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
-import org.springframework.web.reactive.function.client.WebClientResponseException;
+
+import java.io.IOException;
 
 import static java.util.Objects.isNull;
 
@@ -26,16 +28,18 @@ public class MessageExample {
         val message = MessageClient.create(new Credentials(apiKey, apiSecret));
 
         // phone numbers and message body
-        val from = PhoneNumber.of("123456789");
-        val to = PhoneNumber.of("987654321");
+        val from = "123456789";
+        val to = "987654321";
         val messageBody = "Have a nice day!";
 
         try {
             // send a message
-            val response = message.send(from, to, messageBody);
+            val response = message.send(PhoneNumber.of(from), PhoneNumber.of(to), messageBody);
             log.info(response);
-        } catch (WebClientResponseException e) {
-            log.error("API returned the response with status code = [{}] and body = [{}]", e.getStatusCode(), e.getResponseBodyAsString());
+        } catch (IOException e) {
+            log.error("An error occurred during communicating with API", e);
+        } catch (InvalidPhoneNumberException e) {
+            log.error("Phone number {} is invalid", e.getMessage());
         }
     }
 }

@@ -6,7 +6,8 @@ import com.apidaze.sdk.client.externalscripts.InvalidURLException;
 import com.apidaze.sdk.client.externalscripts.URL;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
-import org.springframework.web.reactive.function.client.WebClientResponseException;
+
+import java.io.IOException;
 
 import static java.util.Objects.isNull;
 
@@ -35,8 +36,8 @@ public class UpdateExternalScriptUrl {
         try {
             val script = externalScripts.updateUrl(id, URL.fromString(newScriptUrl));
             log.info("Updated {}", script);
-        } catch (WebClientResponseException e) {
-            log.error("API returned the response with status code = {} and body = {}", e.getStatusCode(), e.getResponseBodyAsString());
+        } catch (IOException e) {
+            log.error("An error occurred during communicating with API", e);
         } catch (InvalidURLException e) {
             log.error("newScriptUrl is invalid ", e);
         }

@@ -5,6 +5,8 @@ import com.apidaze.sdk.client.recordings.RecordingsClient;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 
+import java.io.IOException;
+
 import static java.util.Objects.isNull;
 
 @Slf4j
@@ -24,8 +26,11 @@ public class RecordingsExample {
         val recordings = RecordingsClient.create(new Credentials(apiKey, apiSecret));
 
         // get recordings list
-        val response = recordings.list();
-
-        log.info("Recordings: {}", response);
+        try {
+            val response = recordings.list();
+            log.info("Recordings: {}", response);
+        } catch (IOException e) {
+            log.error("An error occurred during communicating with API", e);
+        }
     }
 }

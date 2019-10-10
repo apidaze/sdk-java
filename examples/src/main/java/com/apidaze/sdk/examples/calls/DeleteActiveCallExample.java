@@ -4,8 +4,8 @@ import com.apidaze.sdk.client.base.Credentials;
 import com.apidaze.sdk.client.calls.CallsClient;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
-import org.springframework.web.reactive.function.client.WebClientResponseException;
 
+import java.io.IOException;
 import java.util.UUID;
 
 import static java.util.Objects.isNull;
@@ -27,14 +27,14 @@ public class DeleteActiveCallExample {
         val calls = CallsClient.create(new Credentials(apiKey, apiSecret));
 
         // call id to be deleted
-        val callId = UUID.randomUUID();
+        val callId = UUID.fromString("3691360b-412c-4a9a-aea7-e9f089851c8b");
 
         // delete a call
         try {
             calls.deleteActiveCall(callId);
             log.info("Call with id = {} has been deleted.", callId);
-        } catch (WebClientResponseException e) {
-            log.error("API returned the response with status code = [{}] and body = [{}]", e.getStatusCode(), e.getResponseBodyAsString());
+        } catch (IOException e) {
+            log.error("An error occurred during communicating with API", e);
         } catch (CallsClient.ApiResponseException e) {
             log.error("Deleting the call failed due to [{}].", e.getMessage());
         }

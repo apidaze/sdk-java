@@ -4,6 +4,7 @@ import com.apidaze.sdk.client.messages.PhoneNumber;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
@@ -18,13 +19,13 @@ public interface Calls {
      * @param callType    The type of the terminal to ring first.
      * @return Call id
      */
-    UUID create(PhoneNumber callerId, String origin, String destination, Type callType);
+    UUID create(PhoneNumber callerId, String origin, String destination, Type callType) throws IOException;
 
-    List<ActiveCall> getActiveCalls();
+    List<ActiveCall> getActiveCalls() throws IOException;
 
-    ActiveCall getActiveCall(UUID id);
+    ActiveCall getActiveCall(UUID id) throws IOException;
 
-    void deleteActiveCall(UUID id);
+    void deleteActiveCall(UUID id) throws IOException;
 
     @AllArgsConstructor
     enum Type {

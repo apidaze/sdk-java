@@ -22,6 +22,8 @@ public class TestUtil {
     public static final String API_SECRET = "some-api-secret";
     public static final Credentials CREDENTIALS = new Credentials(API_KEY, API_SECRET);
 
+    public static final String APPLICATION_JSON_UTF8_VALUE = "application/json; charset=utf-8";
+
     public static final Comparator<ZonedDateTime> dateTimeComparator = (d1, d2) ->
             ((d1 == d2) || (nonNull(d1) && nonNull(d2) && d1.isEqual(d2))) ? 0 : 1;
 
