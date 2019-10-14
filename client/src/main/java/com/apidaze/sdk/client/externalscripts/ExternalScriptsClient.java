@@ -1,7 +1,7 @@
 package com.apidaze.sdk.client.externalscripts;
 
 import com.apidaze.sdk.client.base.BaseApiClient;
-import com.apidaze.sdk.client.credentials.Credentials;
+import com.apidaze.sdk.client.base.Credentials;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import org.springframework.util.Assert;
@@ -9,13 +9,13 @@ import org.springframework.web.reactive.function.client.WebClient;
 
 import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
-
 import java.util.List;
 
 import static java.util.Objects.isNull;
+import static lombok.AccessLevel.PRIVATE;
 import static org.springframework.web.reactive.function.BodyInserters.fromFormData;
 
-@AllArgsConstructor
+@AllArgsConstructor(access = PRIVATE)
 public class ExternalScriptsClient extends BaseApiClient implements ExternalScripts {
 
     public static final int MAX_NAME_LENGTH = 40;

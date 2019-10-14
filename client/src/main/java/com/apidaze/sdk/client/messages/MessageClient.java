@@ -1,7 +1,7 @@
 package com.apidaze.sdk.client.messages;
 
 import com.apidaze.sdk.client.base.BaseApiClient;
-import com.apidaze.sdk.client.credentials.Credentials;
+import com.apidaze.sdk.client.base.Credentials;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import org.springframework.util.Assert;
@@ -11,9 +11,10 @@ import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
 
 import static java.util.Objects.isNull;
+import static lombok.AccessLevel.PRIVATE;
 import static org.springframework.web.reactive.function.BodyInserters.fromFormData;
 
-@AllArgsConstructor
+@AllArgsConstructor(access = PRIVATE)
 public class MessageClient extends BaseApiClient implements Message {
 
     private static final String BASE_PATH = "sms";

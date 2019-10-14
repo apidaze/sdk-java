@@ -1,10 +1,8 @@
-package com.apidaze.sdk.client.credentials;
+package com.apidaze.sdk.client.base;
 
 import lombok.Data;
-import org.springframework.util.Assert;
-
 import javax.validation.constraints.NotNull;
-
+import static org.springframework.util.Assert.notNull;
 
 @Data
 public class Credentials {
@@ -13,8 +11,8 @@ public class Credentials {
     private final String apiSecret;
 
     public Credentials(@NotNull String apiKey, @NotNull String apiSecret) {
-        Assert.notNull(apiKey, "apiKey must not be null");
-        Assert.notNull(apiSecret, "apiSecret must not be null");
+        notNull(apiKey, "apiKey must not be null");
+        notNull(apiSecret, "apiSecret must not be null");
 
         this.apiKey = apiKey;
         this.apiSecret = apiSecret;

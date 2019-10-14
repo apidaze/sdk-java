@@ -1,6 +1,6 @@
 package com.apidaze.sdk.examples.externalscripts;
 
-import com.apidaze.sdk.client.credentials.Credentials;
+import com.apidaze.sdk.client.base.Credentials;
 import com.apidaze.sdk.client.externalscripts.ExternalScriptsClient;
 import com.apidaze.sdk.client.externalscripts.InvalidURLException;
 import com.apidaze.sdk.client.externalscripts.URL;

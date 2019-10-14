@@ -1,6 +1,6 @@
 package com.apidaze.sdk.examples.messages;
 
-import com.apidaze.sdk.client.credentials.Credentials;
+import com.apidaze.sdk.client.base.Credentials;
 import com.apidaze.sdk.client.messages.MessageClient;
 import com.apidaze.sdk.client.messages.PhoneNumber;
 import lombok.extern.slf4j.Slf4j;
