@@ -65,7 +65,7 @@ public class CallsClientTest {
     }
 
     @Test
-    public void createShouldThrowApiResponseException_ifApiReturnsBodyWithFailureMessage() {
+    public void createShouldThrowCreateResponseException_ifApiReturnsBodyWithFailureMessage() {
         val callerId = PhoneNumber.of("14123456789");
         val origin = "48123456789";
         val destination = "48987654321";
@@ -76,7 +76,7 @@ public class CallsClientTest {
                 .when(create(callerId, origin, destination, callType))
                 .respond(failed(failureMessage));
 
-        assertThatExceptionOfType(CallsClient.ApiResponseException.class)
+        assertThatExceptionOfType(CallsClient.CreateResponseException.class)
                 .isThrownBy(() -> client.create(callerId, origin, destination, callType))
                 .withMessage(failureMessage);
 
@@ -84,7 +84,7 @@ public class CallsClientTest {
     }
 
     @Test
-    public void createShouldThrowApiResponseException_ifApiReturnsEmptyJson() {
+    public void createShouldThrowCreateResponseException_ifApiReturnsEmptyJson() {
         val callerId = PhoneNumber.of("14123456789");
         val origin = "48123456789";
         val destination = "48987654321";
@@ -94,7 +94,7 @@ public class CallsClientTest {
                 .when(create(callerId, origin, destination, callType))
                 .respond(emptyJson());
 
-        assertThatExceptionOfType(CallsClient.ApiResponseException.class)
+        assertThatExceptionOfType(CallsClient.CreateResponseException.class)
                 .isThrownBy(() -> client.create(callerId, origin, destination, callType))
                 .withMessage("missing call id in the response body");
 
@@ -116,7 +116,7 @@ public class CallsClientTest {
     }
 
     @Test
-    public void deleteActiveCallShouldThrowApiResponseException_ifApiReturnsBodyWithFailureMessage() {
+    public void deleteActiveCallShouldThrowDeleteResponseException_ifApiReturnsBodyWithFailureMessage() {
         val id = UUID.fromString("d64baf26-b116-4478-97b5-899de580461f");
         val failureMessage = "NORMAL TEMPORARY_FAILURE";
 
@@ -124,7 +124,7 @@ public class CallsClientTest {
                 .when(delete(id))
                 .respond(failed(failureMessage));
 
-        assertThatExceptionOfType(CallsClient.ApiResponseException.class)
+        assertThatExceptionOfType(CallsClient.DeleteResponseException.class)
                 .isThrownBy(() -> client.deleteActiveCall(id))
                 .withMessage(failureMessage);
     }

@@ -73,7 +73,7 @@ public class CallsClient extends BaseApiClient implements Calls {
             return requireNonNull(responseBody, "API returned empty response body")
                     .getOk()
                     .map(UUID::fromString)
-                    .orElseThrow(() -> new ApiResponseException(
+                    .orElseThrow(() -> new CreateResponseException(
                             responseBody.getFailure()
                                     .orElse("missing call id in the response body"))
                     );
@@ -124,15 +124,21 @@ public class CallsClient extends BaseApiClient implements Calls {
 
             if (responseBody != null) {
                 responseBody.getFailure().ifPresent(message -> {
-                    throw new ApiResponseException(message);
+                    throw new DeleteResponseException(message);
                 });
             }
 
         }
     }
 
-    public static class ApiResponseException extends RuntimeException {
-        ApiResponseException(String message) {
+    public static class CreateResponseException extends RuntimeException {
+        CreateResponseException(String message) {
+            super(message);
+        }
+    }
+
+    public static class DeleteResponseException extends RuntimeException {
+        DeleteResponseException(String message) {
             super(message);
         }
     }

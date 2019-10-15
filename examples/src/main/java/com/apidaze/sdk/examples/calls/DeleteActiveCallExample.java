@@ -35,7 +35,7 @@ public class DeleteActiveCallExample {
             log.info("Call with id = {} has been deleted.", callId);
         } catch (IOException e) {
             log.error("An error occurred during communicating with API", e);
-        } catch (CallsClient.ApiResponseException e) {
+        } catch (CallsClient.DeleteResponseException e) {
             log.error("Deleting the call failed due to [{}].", e.getMessage());
         }
     }
