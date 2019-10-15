@@ -1,7 +1,11 @@
 package com.apidaze.sdk.client.messages;
 
-import lombok.*;
-import org.springframework.util.Assert;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.ToString;
+import lombok.Value;
+
+import static java.util.Objects.requireNonNull;
 
 @Value
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
@@ -13,7 +17,7 @@ public class PhoneNumber {
     String number;
 
     public static PhoneNumber of(String number) {
-        Assert.notNull(number, "number must not be null");
+        requireNonNull(number, "number must not be null");
 
         if (number.matches(NUMBER_PATTERN)) {
             return new PhoneNumber(number);

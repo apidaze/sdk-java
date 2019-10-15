@@ -8,12 +8,14 @@ import com.apidaze.sdk.client.messages.PhoneNumber;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 
 import static java.util.Objects.isNull;
 
 @Slf4j
-public class PlaceCallExample {
+public class ActiveCallsAllInOneExample {
 
     public static void main(String... args) {
 
@@ -37,10 +39,28 @@ public class PlaceCallExample {
             // place a call
             val callId = calls.create(PhoneNumber.of(callerId), origin, destination, Calls.Type.NUMBER);
             log.info("Call with id = {} has been initiated.", callId);
+
+            // get active call details
+            val activeCall = calls.getActiveCall(callId);
+            log.info("Initiated call details = {}", activeCall);
+
+            // get full list of active calls
+            val activeCalls = calls.getActiveCalls();
+            log.info("Active calls list = {}", activeCalls);
+
+            // hung up the active call
+            log.info("Press RETURN to hung up the call...");
+            new BufferedReader(new InputStreamReader(System.in)).readLine();
+
+            calls.deleteActiveCall(callId);
+            log.info("Call with id = {} has been deleted.", callId);
+
         } catch (IOException e) {
-            log.error("An error occurred during communicating with API", e);
+            log.error("IOException occurred", e);
         } catch (CallsClient.CreateResponseException e) {
             log.error("Placing the call failed due to [{}].", e.getMessage());
+        } catch (CallsClient.DeleteResponseException e) {
+            log.error("Deleting the call failed due to [{}].", e.getMessage());
         } catch (InvalidPhoneNumberException e) {
             log.error("Phone number {} is invalid", e.getMessage());
         }

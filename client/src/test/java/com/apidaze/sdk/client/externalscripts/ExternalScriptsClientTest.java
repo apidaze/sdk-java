@@ -1,6 +1,5 @@
 package com.apidaze.sdk.client.externalscripts;
 
-import com.apidaze.sdk.client.base.Credentials;
 import com.google.common.collect.ImmutableList;
 import lombok.val;
 import org.junit.Before;
@@ -8,31 +7,25 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.mockserver.client.MockServerClient;
 import org.mockserver.junit.MockServerRule;
-import org.springframework.web.reactive.function.client.WebClientResponseException;
 
+import java.io.IOException;
 import java.time.ZonedDateTime;
 
 import static com.apidaze.sdk.client.TestUtil.*;
 import static com.apidaze.sdk.client.externalscripts.ExternalScriptsRequest.*;
 import static com.apidaze.sdk.client.externalscripts.ExternalScriptsResponse.list;
 import static com.apidaze.sdk.client.externalscripts.ExternalScriptsResponse.one;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import static org.assertj.core.api.Assertions.*;
 import static org.mockserver.model.HttpResponse.response;
 
 public class ExternalScriptsClientTest {
-
-    private static final int PORT = 9876;
 
     @Rule
     public MockServerRule mockServerRule = new MockServerRule(this, PORT);
 
     private MockServerClient mockServer;
 
-    private ExternalScripts client = ExternalScriptsClient.builder()
-            .baseUrl("http://localhost:" + PORT)
-            .credentials(new Credentials(API_KEY, API_SECRET))
-            .build();
+    private ExternalScripts client = ExternalScriptsClient.create(CREDENTIALS, BASE_URL);
 
     private ExternalScript script1 = ExternalScript.builder()
             .id(1L)
@@ -62,7 +55,7 @@ public class ExternalScriptsClientTest {
     }
 
     @Test
-    public void shouldReturnExternalScriptsList() {
+    public void shouldReturnExternalScriptsList() throws IOException {
         val scripts = ImmutableList.of(script1, script2);
 
         mockServer
@@ -80,7 +73,7 @@ public class ExternalScriptsClientTest {
     }
 
     @Test
-    public void shouldReturnExternalScriptById() {
+    public void shouldReturnExternalScriptById() throws IOException {
         val script = script1;
 
         mockServer
@@ -98,7 +91,7 @@ public class ExternalScriptsClientTest {
     }
 
     @Test
-    public void shouldCreateExternalScript() {
+    public void shouldCreateExternalScript() throws IOException {
         val script = script1;
         val scriptName = script.getName();
         val scriptUrl = script.getUrl();
@@ -118,7 +111,7 @@ public class ExternalScriptsClientTest {
     }
 
     @Test
-    public void shouldUpdateExternalScriptUrl() {
+    public void shouldUpdateExternalScriptUrl() throws IOException {
         val script = script1;
         val scriptId = script.getId();
         val scriptUrl = script.getUrl();
@@ -138,7 +131,7 @@ public class ExternalScriptsClientTest {
     }
 
     @Test
-    public void shouldUpdateExternalScriptUrlAndName() {
+    public void shouldUpdateExternalScriptUrlAndName() throws IOException {
         val script = script1;
         val scriptId = script.getId();
         val scriptUrl = script.getUrl();
@@ -166,7 +159,7 @@ public class ExternalScriptsClientTest {
         assertThat(scriptName.length())
                 .isGreaterThan(ExternalScriptsClient.MAX_NAME_LENGTH);
 
-        assertThatExceptionOfType(IllegalArgumentException.class)
+        assertThatIllegalArgumentException()
                 .isThrownBy(() -> client.create(scriptName, scriptUrl))
                 .withMessageContaining("name: maximum");
 
@@ -182,7 +175,7 @@ public class ExternalScriptsClientTest {
         assertThat(scriptName.length())
                 .isGreaterThan(ExternalScriptsClient.MAX_NAME_LENGTH);
 
-        assertThatExceptionOfType(IllegalArgumentException.class)
+        assertThatIllegalArgumentException()
                 .isThrownBy(() -> client.update(scriptId, scriptName, scriptUrl))
                 .withMessageContaining("name: maximum");
 
@@ -190,7 +183,7 @@ public class ExternalScriptsClientTest {
     }
 
     @Test
-    public void shouldThrowWebClientResponseException_ifApiReturnsAnError() {
+    public void shouldThrowIOException_ifApiReturnsAnError() {
         val script = script1;
         val scriptId = script.getId();
         val scriptUrl = script.getUrl();
@@ -199,8 +192,8 @@ public class ExternalScriptsClientTest {
                 .when(updateUrl(scriptId, scriptUrl))
                 .respond(response().withStatusCode(500));
 
-        assertThatExceptionOfType(WebClientResponseException.InternalServerError.class)
+        assertThatIOException()
                 .isThrownBy(() -> client.updateUrl(scriptId, scriptUrl))
-                .withMessage("500 Internal Server Error");
+                .withMessageContainingAll("500","Internal Server Error");
     }
 }

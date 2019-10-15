@@ -1,7 +1,7 @@
-package com.apidaze.sdk.examples;
+package com.apidaze.sdk.examples.calls;
 
 import com.apidaze.sdk.client.base.Credentials;
-import com.apidaze.sdk.client.recordings.RecordingsClient;
+import com.apidaze.sdk.client.calls.CallsClient;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 
@@ -10,7 +10,7 @@ import java.io.IOException;
 import static java.util.Objects.isNull;
 
 @Slf4j
-public class RecordingsExample {
+public class ActiveCallsExample {
 
     public static void main(String... args) {
 
@@ -22,13 +22,12 @@ public class RecordingsExample {
             System.exit(1);
         }
 
-        // initiate the client using create method
-        val recordings = RecordingsClient.create(new Credentials(apiKey, apiSecret));
+        // initiate the client
+        val calls = CallsClient.create(new Credentials(apiKey, apiSecret));
 
-        // get recordings list
         try {
-            val response = recordings.list();
-            log.info("Recordings: {}", response);
+            val response = calls.getActiveCalls();
+            log.info("Active calls: {}", response);
         } catch (IOException e) {
             log.error("An error occurred during communicating with API", e);
         }

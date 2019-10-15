@@ -1,18 +1,19 @@
 package com.apidaze.sdk.client.externalscripts;
 
+import java.io.IOException;
 import java.util.List;
 
 public interface ExternalScripts {
 
-    List<ExternalScript> list();
+    List<ExternalScript> list() throws IOException;
 
-    ExternalScript create(String name, URL url);
+    ExternalScript create(String name, URL url) throws IOException;
 
-    ExternalScript get(Long id);
+    ExternalScript get(Long id) throws IOException;
 
-    ExternalScript update(Long id, String name, URL url);
+    ExternalScript update(Long id, String name, URL url) throws IOException;
 
-    ExternalScript updateUrl(Long id, URL url);
+    ExternalScript updateUrl(Long id, URL url) throws IOException;
 
-    Void delete(Long id);
+    void delete(Long id) throws IOException;
 }

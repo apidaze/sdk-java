@@ -1,35 +1,28 @@
 package com.apidaze.sdk.client.messages;
 
-import com.apidaze.sdk.client.base.Credentials;
 import lombok.val;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.mockserver.client.MockServerClient;
 import org.mockserver.junit.MockServerRule;
-import org.springframework.web.reactive.function.client.WebClientResponseException;
 
-import static com.apidaze.sdk.client.TestUtil.API_KEY;
-import static com.apidaze.sdk.client.TestUtil.API_SECRET;
+import java.io.IOException;
+
+import static com.apidaze.sdk.client.TestUtil.*;
 import static com.apidaze.sdk.client.messages.MessageRequest.send;
 import static com.apidaze.sdk.client.messages.MessageResponse.ok;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import static org.assertj.core.api.Assertions.*;
 import static org.mockserver.model.HttpResponse.response;
 
 public class MessageClientTest {
-
-    private static final int PORT = 9876;
 
     @Rule
     public MockServerRule mockServerRule = new MockServerRule(this, PORT);
 
     private MockServerClient mockServer;
 
-    private Message client = MessageClient.builder()
-            .baseUrl("http://localhost:" + PORT)
-            .credentials(new Credentials(API_KEY, API_SECRET))
-            .build();
+    private Message client = MessageClient.create(CREDENTIALS, BASE_URL);
 
     @Before
     public void setUp() {
@@ -37,7 +30,7 @@ public class MessageClientTest {
     }
 
     @Test
-    public void shouldSendMessage() {
+    public void shouldSendMessage() throws IOException {
         val from = PhoneNumber.of("123456789");
         val to = PhoneNumber.of("987654321");
         val messageBody = "Have a nice day!";
@@ -60,15 +53,15 @@ public class MessageClientTest {
         val to = PhoneNumber.of("987654321");
         val emptyBody = "";
 
-        assertThatExceptionOfType(IllegalArgumentException.class)
+        assertThatIllegalArgumentException()
                 .isThrownBy(() -> client.send(from, to, emptyBody))
-                .withMessage("body must not be empty");
+                .withMessage("body must not be null or empty");
 
         mockServer.verifyZeroInteractions();
     }
 
     @Test
-    public void shouldThrowWebClientResponseException_ifApiReturnsAnError() {
+    public void shouldThrowIOException_ifApiReturnsAnError() {
         val from = PhoneNumber.of("123456789");
         val to = PhoneNumber.of("987654321");
         val messageBody = "Have a nice day!";
@@ -77,8 +70,8 @@ public class MessageClientTest {
                 .when(send(from, to, messageBody))
                 .respond(response().withStatusCode(500));
 
-        assertThatExceptionOfType(WebClientResponseException.InternalServerError.class)
+        assertThatIOException()
                 .isThrownBy(() -> client.send(from, to, messageBody))
-                .withMessage("500 Internal Server Error");
+                .withMessageContainingAll("500", "Internal Server Error");
     }
 }

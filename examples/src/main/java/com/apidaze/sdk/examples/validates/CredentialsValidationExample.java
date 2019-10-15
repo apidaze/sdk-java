@@ -5,6 +5,8 @@ import com.apidaze.sdk.client.validates.CredentialsValidator;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 
+import java.io.IOException;
+
 import static java.util.Objects.isNull;
 
 @Slf4j
@@ -21,17 +23,17 @@ public class CredentialsValidationExample {
         }
 
         // initiate the client
-        val validator = CredentialsValidator.builder()
-                .credentials(new Credentials(apiKey, apiSecret))
-                .build();
+        val validator = CredentialsValidator.create(new Credentials(apiKey, apiSecret));
 
-        // validate credentials
-        val validated = validator.validateCredentials();
-
-        if (validated) {
-            log.info("Credentials are valid.");
-        } else {
-            log.error("Credentials are not valid.");
+        try {
+            // validate credentials
+            if (validator.validateCredentials()) {
+                log.info("Credentials are valid.");
+            } else {
+                log.error("Credentials are not valid.");
+            }
+        } catch (IOException e) {
+            log.error("An error occurred during communicating with API", e);
         }
     }
 }

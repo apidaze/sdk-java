@@ -3,28 +3,54 @@ package com.apidaze.sdk.client.calls;
 import com.apidaze.sdk.client.messages.PhoneNumber;
 import org.mockserver.model.HttpRequest;
 
+import java.util.UUID;
+
 import static com.apidaze.sdk.client.TestUtil.API_KEY;
 import static com.apidaze.sdk.client.TestUtil.API_SECRET;
+import static com.google.common.net.HttpHeaders.CONTENT_TYPE;
+import static io.netty.handler.codec.http.HttpMethod.DELETE;
+import static io.netty.handler.codec.http.HttpMethod.GET;
 import static org.mockserver.model.HttpRequest.request;
 import static org.mockserver.model.Parameter.param;
 import static org.mockserver.model.ParameterBody.params;
-import static org.springframework.http.HttpHeaders.CONTENT_TYPE;
-import static org.springframework.http.HttpMethod.POST;
 
 class CallsRequest {
 
-    static HttpRequest create(PhoneNumber callerId, String origin, String destination, Calls.Type type) {
+    private static final String BASE_PATH = "calls";
+
+    static HttpRequest create(PhoneNumber callerId, String origin, String destination, Calls.Type callType) {
         return request()
-                .withMethod(POST.name())
-                .withHeader(CONTENT_TYPE, "application/x-www-form-urlencoded;charset=utf-8")
-                .withPath("/" + API_KEY + "/calls")
+                .withMethod("POST")
+                .withHeader(CONTENT_TYPE, "application/x-www-form-urlencoded")
+                .withPath("/" + API_KEY + "/" + BASE_PATH)
                 .withQueryStringParameters(param("api_secret", API_SECRET))
                 .withBody(
                         params(
                                 param("callerid", callerId.getNumber()),
                                 param("origin", origin),
                                 param("destination", destination),
-                                param("type", type.getValue())
+                                param("type", callType.getValue())
                         ));
+    }
+
+    static HttpRequest getActiveCalls() {
+        return request()
+                .withMethod(GET.name())
+                .withPath("/" + API_KEY + "/" + BASE_PATH)
+                .withQueryStringParameters(param("api_secret", API_SECRET));
+    }
+
+    static HttpRequest getActiveCall(UUID id) {
+        return request()
+                .withMethod(GET.name())
+                .withPath("/" + API_KEY + "/" + BASE_PATH + "/" + id)
+                .withQueryStringParameters(param("api_secret", API_SECRET));
+    }
+
+    static HttpRequest delete(UUID id) {
+        return request()
+                .withMethod(DELETE.name())
+                .withPath("/" + API_KEY + "/" + BASE_PATH + "/" + id)
+                .withQueryStringParameters(param("api_secret", API_SECRET));
     }
 }

@@ -3,64 +3,65 @@ package com.apidaze.sdk.client.messages;
 import com.apidaze.sdk.client.base.BaseApiClient;
 import com.apidaze.sdk.client.base.Credentials;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
-import org.springframework.util.Assert;
-import org.springframework.web.reactive.function.client.WebClient;
+import lombok.Getter;
+import okhttp3.FormBody;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
-import javax.annotation.Nullable;
-import javax.validation.constraints.NotNull;
+import java.io.IOException;
 
-import static java.util.Objects.isNull;
+import static com.google.common.base.Strings.isNullOrEmpty;
+import static java.util.Objects.requireNonNull;
 import static lombok.AccessLevel.PRIVATE;
-import static org.springframework.web.reactive.function.BodyInserters.fromFormData;
 
 @AllArgsConstructor(access = PRIVATE)
 public class MessageClient extends BaseApiClient implements Message {
 
-    private static final String BASE_PATH = "sms";
-
-    private final WebClient client;
+    @Getter
+    private final String basePath = "sms";
+    @Getter
     private final Credentials credentials;
+    @Getter
+    private final String baseUrl;
 
-    @Builder
-    public static MessageClient create(@NotNull Credentials credentials, @Nullable String baseUrl) {
-        Assert.notNull(credentials, "Credentials must not be null.");
+    public static MessageClient create(Credentials credentials) {
+        return create(credentials, DEFAULT_BASE_URL);
+    }
 
-        if (isNull(baseUrl)) {
-            baseUrl = BASE_URL;
-        }
+    static MessageClient create(Credentials credentials, String baseUrl) {
+        requireNonNull(credentials, "Credentials must not be null.");
+        requireNonNull(baseUrl, "baseUrl must not be null.");
 
-        return new MessageClient(WebClient.create(baseUrl), credentials);
+        return new MessageClient(credentials, baseUrl);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public String send(PhoneNumber from, PhoneNumber to, String body) {
-        Assert.notNull(from, "from must not be null");
-        Assert.notNull(from, "to must not be null");
-        Assert.hasLength(body, "body must not be empty");
+    public String send(PhoneNumber from, PhoneNumber to, String body) throws IOException {
+        requireNonNull(from, "from must not be null");
+        requireNonNull(to, "to must not be null");
 
-        return client
-                .post()
-                .uri(withAuthentication()
-                        .andThen(uriBuilder -> uriBuilder.pathSegment("send").build()))
-                .body(fromFormData("from", from.getNumber())
-                        .with("to", to.getNumber())
-                        .with("body", body))
-                .retrieve()
-                .bodyToMono(String.class)
-                .block();
-    }
+        if (isNullOrEmpty(body)) throw new IllegalArgumentException("body must not be null or empty");
 
-    @Override
-    protected String getBasePath() {
-        return BASE_PATH;
-    }
+        RequestBody formBody = new FormBody.Builder()
+                .add("from", from.getNumber())
+                .add("to", to.getNumber())
+                .add("body", body)
+                .build();
 
-    @Override
-    protected Credentials getCredentials() {
-        return credentials;
+        Request request = new Request.Builder()
+                .url(authenticated().addPathSegment("send").build())
+                .post(formBody)
+                .build();
+
+        try (Response response = client.newCall(request).execute()) {
+            if (!response.isSuccessful()) {
+                throw new IOException("Unexpected code " + response);
+            }
+            return response.body().string();
+        }
     }
 }

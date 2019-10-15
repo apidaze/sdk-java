@@ -2,125 +2,163 @@ package com.apidaze.sdk.client.externalscripts;
 
 import com.apidaze.sdk.client.base.BaseApiClient;
 import com.apidaze.sdk.client.base.Credentials;
+import com.fasterxml.jackson.core.type.TypeReference;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
-import org.springframework.util.Assert;
-import org.springframework.web.reactive.function.client.WebClient;
+import lombok.Getter;
+import okhttp3.FormBody;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nullable;
-import javax.validation.constraints.NotNull;
+import java.io.IOException;
 import java.util.List;
 
-import static java.util.Objects.isNull;
+import static java.util.Objects.requireNonNull;
 import static lombok.AccessLevel.PRIVATE;
-import static org.springframework.web.reactive.function.BodyInserters.fromFormData;
 
 @AllArgsConstructor(access = PRIVATE)
 public class ExternalScriptsClient extends BaseApiClient implements ExternalScripts {
 
     public static final int MAX_NAME_LENGTH = 40;
-
-    private static final String BASE_PATH = "externalscripts";
     private static final String URL = "url";
     private static final String NAME = "name";
 
-    private final WebClient client;
+    @Getter
+    private final String basePath = "externalscripts";
+    @Getter
     private final Credentials credentials;
+    @Getter
+    private final String baseUrl;
 
-    @Builder
-    public static ExternalScriptsClient create(@NotNull Credentials credentials, @Nullable String baseUrl) {
-        Assert.notNull(credentials, "Credentials must not be null.");
+    public static ExternalScriptsClient create(@NotNull Credentials credentials) {
+        return create(credentials, DEFAULT_BASE_URL);
+    }
 
-        if (isNull(baseUrl)) {
-            baseUrl = BASE_URL;
+    static ExternalScriptsClient create(@NotNull Credentials credentials, @NotNull String baseUrl) {
+        requireNonNull(credentials, "Credentials must not be null.");
+        requireNonNull(baseUrl, "baseUrl must not be null.");
+
+        return new ExternalScriptsClient(credentials, baseUrl);
+    }
+
+    @Override
+    public List<ExternalScript> list() throws IOException {
+        Request request = new Request.Builder()
+                .url(authenticatedUrl())
+                .build();
+
+        try (Response response = client.newCall(request).execute()) {
+            if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
+
+            return objectMapper.readValue(response.body().string(), new TypeReference<List<ExternalScript>>() {});
         }
-
-        return new ExternalScriptsClient(WebClient.create(baseUrl), credentials);
     }
 
     @Override
-    public List<ExternalScript> list() {
-        return client.get()
-                .uri(uriWithAuthentication())
-                .retrieve()
-                .bodyToFlux(ExternalScript.class)
-                .collectList()
-                .block();
-    }
-
-    @Override
-    public ExternalScript create(String name, URL url) {
+    public ExternalScript create(String name, URL url) throws IOException {
         validateName(name);
 
-        return client.post()
-                .uri(uriWithAuthentication())
-                .body(fromFormData(NAME, name).with(URL, url.getValue()))
-                .retrieve()
-                .bodyToMono(ExternalScript.class)
-                .block();
+        RequestBody formBody = new FormBody.Builder()
+                .add(NAME, name)
+                .add(URL, url.getValue())
+                .build();
+
+        Request request = new Request.Builder()
+                .url(authenticatedUrl())
+                .post(formBody)
+                .build();
+
+        try (Response response = client.newCall(request).execute()) {
+            if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
+
+            return objectMapper.readValue(response.body().string(), ExternalScript.class);
+        }
     }
 
     @Override
-    public ExternalScript get(Long id) {
-        Assert.notNull(id, "id must not be null");
+    public ExternalScript get(Long id) throws IOException {
+        requireNonNull(id, "id must not be null");
 
-        return client.get()
-                .uri(withAuthentication().andThen(builder -> builder.pathSegment(String.valueOf(id)).build()))
-                .retrieve()
-                .bodyToMono(ExternalScript.class)
-                .block();
+        Request request = new Request.Builder()
+                .url(authenticated()
+                        .addPathSegment(id.toString())
+                        .build())
+                .build();
+
+        try (Response response = client.newCall(request).execute()) {
+            if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
+
+            return objectMapper.readValue(response.body().string(), ExternalScript.class);
+        }
     }
 
     @Override
-    public ExternalScript update(Long id, String name, URL url) {
-        Assert.notNull(id, "id must not be null");
-        Assert.notNull(url, "url must not be null");
+    public ExternalScript update(Long id, String name, URL url) throws IOException {
+        requireNonNull(id, "id must not be null");
+        requireNonNull(url, "url must not be null");
         validateName(name);
 
-        return client.put()
-                .uri(withAuthentication().andThen(builder -> builder.pathSegment(String.valueOf(id)).build()))
-                .body(fromFormData(NAME, name).with(URL, url.getValue()))
-                .retrieve()
-                .bodyToMono(ExternalScript.class)
-                .block();
+        RequestBody formBody = new FormBody.Builder()
+                .add(NAME, name)
+                .add(URL, url.getValue())
+                .build();
+
+        Request request = new Request.Builder()
+                .url(authenticated()
+                        .addPathSegment(id.toString())
+                        .build())
+                .put(formBody)
+                .build();
+
+        try (Response response = client.newCall(request).execute()) {
+            if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
+
+            return objectMapper.readValue(response.body().string(), ExternalScript.class);
+        }
     }
 
     @Override
-    public ExternalScript updateUrl(Long id, URL url) {
-        Assert.notNull(id, "id must not be null");
+    public ExternalScript updateUrl(Long id, URL url) throws IOException {
+        requireNonNull(id, "id must not be null");
 
-        return client.put()
-                .uri(withAuthentication().andThen(builder -> builder.pathSegment(String.valueOf(id)).build()))
-                .body(fromFormData(URL, url.getValue()))
-                .retrieve()
-                .bodyToMono(ExternalScript.class)
-                .block();
+        RequestBody formBody = new FormBody.Builder()
+                .add(URL, url.getValue())
+                .build();
+
+        Request request = new Request.Builder()
+                .url(authenticated()
+                        .addPathSegment(id.toString())
+                        .build())
+                .put(formBody)
+                .build();
+
+        try (Response response = client.newCall(request).execute()) {
+            if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
+
+            return objectMapper.readValue(response.body().string(), ExternalScript.class);
+        }
     }
 
 
     @Override
-    public Void delete(Long id) {
-        Assert.notNull(id, "id must not be null");
+    public void delete(Long id) throws IOException {
+        requireNonNull(id, "id must not be null");
 
-        return client.delete()
-                .uri(withAuthentication().andThen(builder -> builder.pathSegment(String.valueOf(id)).build()))
-                .retrieve()
-                .bodyToMono(Void.class)
-                .block();
-    }
+        Request request = new Request.Builder()
+                .url(authenticated().addPathSegment(id.toString()).build())
+                .delete()
+                .build();
 
-    @Override
-    protected String getBasePath() {
-        return BASE_PATH;
-    }
-
-    @Override
-    protected Credentials getCredentials() {
-        return credentials;
+        try (Response response = client.newCall(request).execute()) {
+            if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
+        }
     }
 
     private static void validateName(String name) {
-        Assert.notNull(name, "name must not be null");
-        Assert.isTrue(name.length() <= MAX_NAME_LENGTH, "name: maximum " + MAX_NAME_LENGTH + " characters long");
+        requireNonNull(name, "name must not be null");
+        if (name.length() > MAX_NAME_LENGTH) {
+            throw new IllegalArgumentException("name: maximum " + MAX_NAME_LENGTH + " characters long");
+        }
     }
 }

@@ -1,5 +1,7 @@
 package com.apidaze.sdk.client.messages;
 
+import java.io.IOException;
+
 public interface Message {
 
     /** Send a text message.
@@ -8,5 +10,5 @@ public interface Message {
      * @param body The message to send. Must not be empty.
      * @return Response returned by API
      */
-    String send(PhoneNumber from, PhoneNumber to, String body);
+    String send(PhoneNumber from, PhoneNumber to, String body) throws IOException;
 }

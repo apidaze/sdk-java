@@ -6,32 +6,36 @@ import com.apidaze.sdk.client.externalscripts.InvalidURLException;
 import com.apidaze.sdk.client.externalscripts.URL;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
-import org.springframework.web.reactive.function.client.WebClientResponseException;
+
+import java.io.IOException;
+
+import static java.util.Objects.isNull;
 
 @Slf4j
 public class CreateExternalScript {
 
     public static void main(String... args) {
 
-        if (args.length < 4) {
-            System.err.println("You must provide: <apiKey> <apiSecret> <scriptName> <scriptUrl> in the  argument list!");
+        val apiKey = System.getenv("API_KEY");
+        val apiSecret = System.getenv("API_SECRET");
+
+        if (isNull(apiKey) || isNull(apiSecret)) {
+            log.error("System environment variables API_KEY and API_SECRET must be set.");
             System.exit(1);
         }
 
-        val apiKey = args[0];
-        val apiSecret = args[1];
-        val scriptName = args[2];
-        val scriptUrl = args[3];
+        val scriptName = "Some cool script";
+        val scriptUrl = "http://cool.script.com";
 
         // initiate the client
-        val externalScripts = ExternalScriptsClient.builder().credentials(new Credentials(apiKey, apiSecret)).build();
+        val externalScripts = ExternalScriptsClient.create(new Credentials(apiKey, apiSecret));
 
         try {
             // create an external script
             val createdScript = externalScripts.create(scriptName, URL.fromString(scriptUrl));
             log.info("Created {}", createdScript);
-        } catch (WebClientResponseException e) {
-            log.error("API returned the response with status code = {} and body = {}", e.getStatusCode(), e.getResponseBodyAsString());
+        } catch (IOException e) {
+            log.error("An error occurred during communicating with API", e);
         } catch (InvalidURLException e) {
             log.error("newScriptUrl is invalid ", e);
         }
