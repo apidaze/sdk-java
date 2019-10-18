@@ -10,6 +10,13 @@ import static org.mockserver.model.Parameter.param;
 
 class RecordingsClientRequest {
 
+    static HttpRequest getAll() {
+        return request()
+                .withMethod(GET.name())
+                .withPath("/" + API_KEY + "/recordings")
+                .withQueryStringParameters(param("api_secret", API_SECRET));
+    }
+
     static HttpRequest download(String fileName) {
         return request()
                 .withMethod(GET.name())

@@ -1,5 +1,6 @@
 package com.apidaze.sdk.client.recordings;
 
+import com.google.common.collect.ImmutableList;
 import lombok.val;
 import org.junit.Before;
 import org.junit.Rule;
@@ -15,6 +16,8 @@ import java.nio.file.Paths;
 
 import static com.apidaze.sdk.client.TestUtil.*;
 import static com.apidaze.sdk.client.recordings.RecordingsClientRequest.download;
+import static com.apidaze.sdk.client.recordings.RecordingsClientRequest.getAll;
+import static com.apidaze.sdk.client.recordings.RecordingsClientResponse.list;
 import static com.apidaze.sdk.client.recordings.RecordingsClientResponse.responseWithFile;
 import static java.nio.file.Files.copy;
 import static java.nio.file.Files.deleteIfExists;
@@ -42,7 +45,21 @@ public class RecordingsClientTest {
     }
 
     @Test
-    public void shouldDownloadAFile() throws IOException {
+    public void shouldReturnListOfRecordingFiles() throws IOException {
+        val files = ImmutableList.of("file1.wav", "file2.wav", "file3.wav");
+
+        mockServer
+                .when(getAll())
+                .respond(list(files));
+
+        val result = client.list();
+
+        mockServer.verify(getAll());
+        assertThat(result).containsExactlyElementsOf(files);
+    }
+
+    @Test
+    public void shouldDownloadFile() throws IOException {
         mockServer
                 .when(download(SOURCE_FILE_NAME))
                 .respond(responseWithFile(SOURCE_FILE));
