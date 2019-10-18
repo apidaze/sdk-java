@@ -13,8 +13,7 @@ import java.time.ZonedDateTime;
 
 import static com.apidaze.sdk.client.TestUtil.*;
 import static com.apidaze.sdk.client.externalscripts.ExternalScriptsRequest.*;
-import static com.apidaze.sdk.client.externalscripts.ExternalScriptsResponse.list;
-import static com.apidaze.sdk.client.externalscripts.ExternalScriptsResponse.one;
+import static com.apidaze.sdk.client.externalscripts.ExternalScriptsResponse.*;
 import static org.assertj.core.api.Assertions.*;
 import static org.mockserver.model.HttpResponse.response;
 
@@ -108,6 +107,19 @@ public class ExternalScriptsClientTest {
                 .isEqualTo(script);
 
         mockServer.verify(create(scriptName, scriptUrl));
+    }
+
+    @Test
+    public void shouldDeleteExternalScript() throws IOException {
+        val id = 1L;
+
+        mockServer
+                .when(delete(id))
+                .respond(ok(""));
+
+        client.delete(id);
+
+        mockServer.verify(delete(id));
     }
 
     @Test

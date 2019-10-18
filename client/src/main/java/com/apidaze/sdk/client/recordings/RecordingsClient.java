@@ -89,6 +89,20 @@ public class RecordingsClient extends BaseApiClient implements Recordings {
         }
     }
 
+    @Override
+    public void delete(String fileName) throws IOException {
+        requireNonNull(fileName, "fileName must not be null");
+
+        Request request = new Request.Builder()
+                .url(authenticated().addPathSegment(fileName).build())
+                .delete()
+                .build();
+
+        try (Response response = client.newCall(request).execute()) {
+            if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
+        }
+    }
+
     private static Path getOrCreateFilePath(Path dir, String fileName) throws IOException {
         if (exists(dir)) {
             if (isDirectory(dir)) {

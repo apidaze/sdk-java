@@ -15,14 +15,15 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import static com.apidaze.sdk.client.TestUtil.*;
-import static com.apidaze.sdk.client.recordings.RecordingsClientRequest.download;
-import static com.apidaze.sdk.client.recordings.RecordingsClientRequest.getAll;
+import static com.apidaze.sdk.client.recordings.RecordingsClientRequest.*;
 import static com.apidaze.sdk.client.recordings.RecordingsClientResponse.list;
 import static com.apidaze.sdk.client.recordings.RecordingsClientResponse.responseWithFile;
 import static java.nio.file.Files.copy;
 import static java.nio.file.Files.deleteIfExists;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import static org.mockserver.model.HttpResponse.response;
+import static org.mockserver.model.HttpStatusCode.NO_CONTENT_204;
 
 public class RecordingsClientTest {
 
@@ -56,6 +57,20 @@ public class RecordingsClientTest {
 
         mockServer.verify(getAll());
         assertThat(result).containsExactlyElementsOf(files);
+    }
+
+    @Test
+    public void shouldDeleteRecordingFile() throws IOException {
+        val fileName = "file1.wav";
+
+        mockServer
+                .when(delete(fileName))
+                .respond(response()
+                        .withStatusCode(NO_CONTENT_204.code()));
+
+        client.delete(fileName);
+
+        mockServer.verify(delete(fileName));
     }
 
     @Test

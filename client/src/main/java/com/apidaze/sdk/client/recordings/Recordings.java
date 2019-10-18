@@ -7,6 +7,10 @@ import java.util.List;
 
 public interface Recordings {
     List<String> list() throws IOException;
+
     File download(final String sourceFileName, final Path targetDir) throws IOException;
+
     File download(final String sourceFileName, final Path targetDir, boolean overwrite) throws IOException;
+
+    void delete(final String fileName) throws IOException;
 }

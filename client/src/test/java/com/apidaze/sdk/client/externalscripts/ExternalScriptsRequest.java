@@ -12,17 +12,19 @@ import static org.mockserver.model.ParameterBody.params;
 
 class ExternalScriptsRequest {
 
+    private static final String BASE_PATH = "externalscripts";
+
     static HttpRequest getAll() {
         return request()
                 .withMethod(GET.name())
-                .withPath("/" + API_KEY + "/externalscripts")
+                .withPath("/" + API_KEY + "/" + BASE_PATH)
                 .withQueryStringParameters(param("api_secret", API_SECRET));
     }
 
     static HttpRequest getById(Long scriptId) {
         return request()
                 .withMethod(GET.name())
-                .withPath("/" + API_KEY + "/externalscripts/" + scriptId)
+                .withPath("/" + API_KEY + "/" + BASE_PATH + "/" + scriptId)
                 .withQueryStringParameters(param("api_secret", API_SECRET));
     }
 
@@ -30,7 +32,7 @@ class ExternalScriptsRequest {
         return request()
                 .withMethod(POST.name())
                 .withHeader(CONTENT_TYPE, "application/x-www-form-urlencoded")
-                .withPath("/" + API_KEY + "/externalscripts")
+                .withPath("/" + API_KEY + "/" + BASE_PATH)
                 .withQueryStringParameters(param("api_secret", API_SECRET))
                 .withBody(
                         params(
@@ -43,7 +45,7 @@ class ExternalScriptsRequest {
         return request()
                 .withMethod(PUT.name())
                 .withHeader(CONTENT_TYPE, "application/x-www-form-urlencoded")
-                .withPath("/" + API_KEY + "/externalscripts/" + id)
+                .withPath("/" + API_KEY + "/" + BASE_PATH + "/" + id)
                 .withQueryStringParameters(param("api_secret", API_SECRET))
                 .withBody(
                         params(
@@ -56,11 +58,18 @@ class ExternalScriptsRequest {
         return request()
                 .withMethod(PUT.name())
                 .withHeader(CONTENT_TYPE, "application/x-www-form-urlencoded")
-                .withPath("/" + API_KEY + "/externalscripts/" + id)
+                .withPath("/" + API_KEY + "/" + BASE_PATH + "/" + id)
                 .withQueryStringParameters(param("api_secret", API_SECRET))
                 .withBody(
                         params(
                                 param("url", newUrl.getValue())
                         ));
+    }
+
+    static HttpRequest delete(Long id) {
+        return request()
+                .withMethod(DELETE.name())
+                .withPath("/" + API_KEY + "/" + BASE_PATH + "/" + id)
+                .withQueryStringParameters(param("api_secret", API_SECRET));
     }
 }
