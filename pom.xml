@@ -18,7 +18,8 @@
         <lombok.version>1.18.10</lombok.version>
         <guava.version>28.1-jre</guava.version>
         <fasterxml.version>2.10.0</fasterxml.version>
-        <commons-validator>1.6</commons-validator>
+        <commons.validator.version>1.6</commons.validator.version>
+        <logback.version>1.2.3</logback.version>
     </properties>
 
     <modules>
@@ -61,7 +62,12 @@
             <dependency>
                 <groupId>commons-validator</groupId>
                 <artifactId>commons-validator</artifactId>
-                <version>${commons-validator}</version>
+                <version>${commons.validator.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>ch.qos.logback</groupId>
+                <artifactId>logback-classic</artifactId>
+                <version>${logback.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
