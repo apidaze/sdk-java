@@ -14,18 +14,19 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.FileAlreadyExistsException;
-import java.nio.file.NotDirectoryException;
-import java.nio.file.Path;
+import java.nio.file.*;
 import java.util.List;
 
 import static java.nio.file.Files.*;
+import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 import static java.util.Objects.requireNonNull;
 import static lombok.AccessLevel.PRIVATE;
 import static lombok.AccessLevel.PROTECTED;
 
 @AllArgsConstructor(access = PRIVATE)
 public class RecordingsClient extends BaseApiClient implements Recordings {
+
+    private static final String TEMP_FILE_PREFIX = "recordings-";
 
     @Getter(PROTECTED)
     private final String basePath = "recordings";
@@ -54,7 +55,8 @@ public class RecordingsClient extends BaseApiClient implements Recordings {
         try (Response response = client.newCall(request).execute()) {
             if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
 
-            return objectMapper.readValue(response.body().string(), new TypeReference<List<String>>() {});
+            return objectMapper.readValue(response.body().string(), new TypeReference<List<String>>() {
+            });
         }
     }
 
@@ -64,20 +66,22 @@ public class RecordingsClient extends BaseApiClient implements Recordings {
     }
 
     @Override
-    public File download(final String sourceFileName, @NotNull final Path targetDir, boolean overwrite) throws IOException {
+    public File download(final String sourceFileName, final Path targetDir, boolean overwrite) throws IOException {
         Request request = new Request.Builder()
                 .url(authenticated()
                         .addPathSegment(sourceFileName)
                         .build())
                 .build();
 
-        File destFile = getOrCreateFilePath(targetDir, sourceFileName).toFile();
-        if (!overwrite && destFile.exists()) {
-            throw new FileAlreadyExistsException(destFile.getAbsolutePath());
+        Path destFile = getOrCreateFilePath(targetDir, sourceFileName);
+
+        if (!overwrite && Files.exists(destFile)) {
+            throw new FileAlreadyExistsException(destFile.toAbsolutePath().toString());
         }
 
+        Path tempFile = createTempFile(targetDir, TEMP_FILE_PREFIX, null);
         try (Response response = client.newCall(request).execute();
-             Sink fileSink = Okio.sink(destFile);
+             Sink fileSink = Okio.sink(tempFile);
              BufferedSink bufferedSink = Okio.buffer(fileSink)) {
 
             if (!response.isSuccessful()) {
@@ -85,7 +89,10 @@ public class RecordingsClient extends BaseApiClient implements Recordings {
             }
 
             bufferedSink.writeAll(response.body().source());
-            return destFile;
+            move(tempFile, destFile, REPLACE_EXISTING);
+            return destFile.toFile();
+        } finally {
+            deleteIfExists(tempFile);
         }
     }
 
