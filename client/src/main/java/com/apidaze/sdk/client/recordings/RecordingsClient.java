@@ -14,6 +14,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.*;
 import java.util.List;
 
@@ -61,12 +62,27 @@ public class RecordingsClient extends BaseApiClient implements Recordings {
     }
 
     @Override
-    public File download(final String sourceFileName, @NotNull final Path targetDir) throws IOException {
-        return download(sourceFileName, targetDir, false);
+    public InputStream download(String sourceFileName) throws IOException {
+        Request request = new Request.Builder()
+                .url(authenticated()
+                        .addPathSegment(sourceFileName)
+                        .build())
+                .build();
+
+        Response response = client.newCall(request).execute();
+
+        if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
+
+        return response.body().byteStream();
     }
 
     @Override
-    public File download(final String sourceFileName, final Path targetDir, boolean overwrite) throws IOException {
+    public File downloadToFile(final String sourceFileName, @NotNull final Path targetDir) throws IOException {
+        return downloadToFile(sourceFileName, targetDir, false);
+    }
+
+    @Override
+    public File downloadToFile(final String sourceFileName, final Path targetDir, boolean replaceExisting) throws IOException {
         Request request = new Request.Builder()
                 .url(authenticated()
                         .addPathSegment(sourceFileName)
@@ -75,7 +91,7 @@ public class RecordingsClient extends BaseApiClient implements Recordings {
 
         Path destFile = getOrCreateFilePath(targetDir, sourceFileName);
 
-        if (!overwrite && Files.exists(destFile)) {
+        if (!replaceExisting && Files.exists(destFile)) {
             throw new FileAlreadyExistsException(destFile.toAbsolutePath().toString());
         }
 
@@ -84,9 +100,7 @@ public class RecordingsClient extends BaseApiClient implements Recordings {
              Sink fileSink = Okio.sink(tempFile);
              BufferedSink bufferedSink = Okio.buffer(fileSink)) {
 
-            if (!response.isSuccessful()) {
-                throw new IOException("Unexpected code " + response);
-            }
+            if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
 
             bufferedSink.writeAll(response.body().source());
             move(tempFile, destFile, REPLACE_EXISTING);

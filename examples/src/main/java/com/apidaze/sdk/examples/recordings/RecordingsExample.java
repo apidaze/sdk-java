@@ -1,4 +1,4 @@
-package com.apidaze.sdk.examples;
+package com.apidaze.sdk.examples.recordings;
 
 import com.apidaze.sdk.client.base.Credentials;
 import com.apidaze.sdk.client.recordings.RecordingsClient;

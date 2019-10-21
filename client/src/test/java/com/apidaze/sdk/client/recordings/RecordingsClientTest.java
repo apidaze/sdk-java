@@ -2,6 +2,7 @@ package com.apidaze.sdk.client.recordings;
 
 import com.google.common.collect.ImmutableList;
 import lombok.val;
+import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -9,6 +10,7 @@ import org.mockserver.client.MockServerClient;
 import org.mockserver.junit.MockServerRule;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Path;
@@ -45,6 +47,11 @@ public class RecordingsClientTest {
         deleteIfExists(TARGET_DIR.resolve(SOURCE_FILE_NAME));
     }
 
+    @AfterClass
+    public static void cleanUp() throws IOException {
+        deleteIfExists(TARGET_DIR.resolve(SOURCE_FILE_NAME));
+    }
+
     @Test
     public void shouldReturnListOfRecordingFiles() throws IOException {
         val files = ImmutableList.of("file1.wav", "file2.wav", "file3.wav");
@@ -74,12 +81,29 @@ public class RecordingsClientTest {
     }
 
     @Test
-    public void shouldDownloadFile() throws IOException {
+    public void shouldReturnInputStreamOfDownloadedFile() throws IOException {
+        val expectedStream = new FileInputStream(SOURCE_FILE);
+
         mockServer
                 .when(download(SOURCE_FILE_NAME))
                 .respond(responseWithFile(SOURCE_FILE));
 
-        val downloadedFile = client.download(SOURCE_FILE_NAME, TARGET_DIR);
+        val resultStream = client.download(SOURCE_FILE_NAME);
+
+        assertThat(resultStream).hasSameContentAs(expectedStream);
+        mockServer.verify(download(SOURCE_FILE_NAME));
+
+        resultStream.close();
+        expectedStream.close();
+    }
+
+    @Test
+    public void shouldDownloadFileDirectlyToLocalFolder() throws IOException {
+        mockServer
+                .when(download(SOURCE_FILE_NAME))
+                .respond(responseWithFile(SOURCE_FILE));
+
+        val downloadedFile = client.downloadToFile(SOURCE_FILE_NAME, TARGET_DIR);
 
         assertThat(downloadedFile)
                 .hasBinaryContent(getBinaryContent(SOURCE_FILE))
@@ -102,7 +126,7 @@ public class RecordingsClientTest {
                 .when(download(SOURCE_FILE_NAME))
                 .respond(responseWithFile(SOURCE_FILE));
 
-        client.download(SOURCE_FILE_NAME, TARGET_DIR, overwrite);
+        client.downloadToFile(SOURCE_FILE_NAME, TARGET_DIR, overwrite);
 
         assertThat(targetFile)
                 .hasBinaryContent(getBinaryContent(SOURCE_FILE))
@@ -122,7 +146,7 @@ public class RecordingsClientTest {
                 .respond(responseWithFile(SOURCE_FILE));
 
         assertThatExceptionOfType(FileAlreadyExistsException.class)
-                .isThrownBy(() -> client.download(SOURCE_FILE_NAME, TARGET_DIR, overwrite))
+                .isThrownBy(() -> client.downloadToFile(SOURCE_FILE_NAME, TARGET_DIR, overwrite))
                 .withMessage(targetFile.getAbsolutePath());
     }
 }
