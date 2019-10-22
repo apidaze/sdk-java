@@ -5,6 +5,7 @@ import com.apidaze.sdk.client.base.Credentials;
 import com.fasterxml.jackson.core.type.TypeReference;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.val;
 import okhttp3.Request;
 import okhttp3.Response;
 import okio.BufferedSink;
@@ -15,7 +16,10 @@ import org.jetbrains.annotations.NotNull;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.*;
+import java.nio.file.FileAlreadyExistsException;
+import java.nio.file.Files;
+import java.nio.file.NotDirectoryException;
+import java.nio.file.Path;
 import java.util.List;
 
 import static java.nio.file.Files.*;
@@ -89,13 +93,9 @@ public class RecordingsClient extends BaseApiClient implements Recordings {
                         .build())
                 .build();
 
-        Path destFile = getOrCreateFilePath(targetDir, sourceFileName);
-
-        if (!replaceExisting && Files.exists(destFile)) {
-            throw new FileAlreadyExistsException(destFile.toAbsolutePath().toString());
-        }
-
+        Path destFile = getOrCreateFilePath(targetDir, sourceFileName, replaceExisting);
         Path tempFile = createTempFile(targetDir, TEMP_FILE_PREFIX, null);
+
         try (Response response = client.newCall(request).execute();
              Sink fileSink = Okio.sink(tempFile);
              BufferedSink bufferedSink = Okio.buffer(fileSink)) {
@@ -124,10 +124,14 @@ public class RecordingsClient extends BaseApiClient implements Recordings {
         }
     }
 
-    private static Path getOrCreateFilePath(Path dir, String fileName) throws IOException {
+    private static Path getOrCreateFilePath(Path dir, String fileName, boolean replaceExisting) throws IOException {
         if (exists(dir)) {
             if (isDirectory(dir)) {
-                return dir.resolve(fileName);
+                val destFile = dir.resolve(fileName);
+                if (!replaceExisting && Files.exists(destFile)) {
+                    throw new FileAlreadyExistsException(destFile.toAbsolutePath().toString());
+                }
+                return destFile;
             } else {
                 throw new NotDirectoryException(dir.toString());
             }
