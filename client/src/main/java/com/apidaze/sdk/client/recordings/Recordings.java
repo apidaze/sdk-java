@@ -11,9 +11,19 @@ public interface Recordings {
 
     InputStream download(final String sourceFileName) throws IOException;
 
+    void downloadToFileAsync(final String sourceFileName, final Path targetDir, final Callback callback);
+
+    void downloadToFileAsync(final String sourceFileName, final Path targetDir, boolean replaceExisting, final Callback callback);
+
     File downloadToFile(final String sourceFileName, final Path targetDir) throws IOException;
 
     File downloadToFile(final String sourceFileName, final Path targetDir, boolean replaceExisting) throws IOException;
 
     void delete(final String fileName) throws IOException;
+
+    interface Callback {
+        void onSuccess(File file);
+
+        void onFailure(Throwable e);
+    }
 }

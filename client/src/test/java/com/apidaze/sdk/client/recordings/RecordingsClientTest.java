@@ -2,10 +2,12 @@ package com.apidaze.sdk.client.recordings;
 
 import com.google.common.collect.ImmutableList;
 import lombok.val;
+import org.assertj.core.api.AbstractFileAssert;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.mockito.ArgumentCaptor;
 import org.mockserver.client.MockServerClient;
 import org.mockserver.junit.MockServerRule;
 
@@ -24,15 +26,20 @@ import static java.nio.file.Files.copy;
 import static java.nio.file.Files.deleteIfExists;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import static org.awaitility.Awaitility.await;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
 import static org.mockserver.model.HttpResponse.response;
-import static org.mockserver.model.HttpStatusCode.NO_CONTENT_204;
+import static org.mockserver.model.HttpStatusCode.*;
 
 public class RecordingsClientTest {
 
     private final static String SOURCE_FILES_DIR = "src/test/resources/data";
     private final static String SOURCE_FILE_NAME = "mediafile.wav";
     private final static File SOURCE_FILE = Paths.get(SOURCE_FILES_DIR, SOURCE_FILE_NAME).toFile();
+    private final static File EMPTY_FILE = Paths.get(SOURCE_FILES_DIR, "empty.wav").toFile();
     private final static Path TARGET_DIR = Paths.get("target");
+    private final static File TARGET_FILE = TARGET_DIR.resolve(SOURCE_FILE_NAME).toFile();
 
     @Rule
     public MockServerRule mockServerRule = new MockServerRule(this, PORT);
@@ -44,12 +51,12 @@ public class RecordingsClientTest {
     @Before
     public void setUp() throws IOException {
         mockServer.reset();
-        deleteIfExists(TARGET_DIR.resolve(SOURCE_FILE_NAME));
+        deleteIfExists(TARGET_FILE.toPath());
     }
 
     @AfterClass
     public static void cleanUp() throws IOException {
-        deleteIfExists(TARGET_DIR.resolve(SOURCE_FILE_NAME));
+        deleteIfExists(TARGET_FILE.toPath());
     }
 
     @Test
@@ -98,6 +105,56 @@ public class RecordingsClientTest {
     }
 
     @Test
+    public void shouldDownloadFileInAsyncMode() throws IOException {
+        val callback = mock(Recordings.Callback.class);
+        val downloadedFile = ArgumentCaptor.forClass(File.class);
+
+        mockServer
+                .when(download(SOURCE_FILE_NAME))
+                .respond(responseWithFile(SOURCE_FILE));
+
+        client.downloadToFileAsync(SOURCE_FILE_NAME, TARGET_DIR, callback);
+
+        await().untilAsserted(() -> verify(callback).onSuccess(downloadedFile.capture()));
+        verify(callback, never()).onFailure(any());
+        verifyDownloadedFile(downloadedFile.getValue());
+        mockServer.verify(download(SOURCE_FILE_NAME));
+    }
+
+    @Test
+    public void shouldInvokeOnFailureMethodInAsyncMode_ifFileAlreadyExistsAndOverwriteModeIsDisabled() throws IOException {
+        val callback = mock(Recordings.Callback.class);
+        val overwrite = false;
+
+        copy(EMPTY_FILE.toPath(), TARGET_FILE.toPath());
+
+        mockServer
+                .when(download(SOURCE_FILE_NAME))
+                .respond(responseWithFile(SOURCE_FILE));
+
+        client.downloadToFileAsync(SOURCE_FILE_NAME, TARGET_DIR, overwrite, callback);
+
+        await().untilAsserted(() -> verify(callback).onFailure(any(FileAlreadyExistsException.class)));
+        verify(callback, never()).onSuccess(any());
+        mockServer.verifyZeroInteractions();
+    }
+
+    @Test
+    public void shouldInvokeOnFailureMethodInAsyncMode_ifApiReturnsError() throws IOException {
+        val callback = mock(Recordings.Callback.class);
+
+        mockServer
+                .when(download(SOURCE_FILE_NAME))
+                .respond(response().withStatusCode(INTERNAL_SERVER_ERROR_500.code()));
+
+        client.downloadToFileAsync(SOURCE_FILE_NAME, TARGET_DIR, callback);
+
+        await().untilAsserted(() -> verify(callback).onFailure(any(IOException.class)));
+        verify(callback, never()).onSuccess(any());
+        mockServer.verify(download(SOURCE_FILE_NAME));
+    }
+
+    @Test
     public void shouldDownloadFileDirectlyToLocalFolder() throws IOException {
         mockServer
                 .when(download(SOURCE_FILE_NAME))
@@ -105,41 +162,34 @@ public class RecordingsClientTest {
 
         val downloadedFile = client.downloadToFile(SOURCE_FILE_NAME, TARGET_DIR);
 
-        assertThat(downloadedFile)
-                .hasBinaryContent(getBinaryContent(SOURCE_FILE))
-                .hasName(SOURCE_FILE_NAME);
-
+        verifyDownloadedFile(downloadedFile);
         mockServer.verify(download(SOURCE_FILE_NAME));
     }
 
     @Test
     public void shouldOverwriteExistingFile_ifOverwriteModeIsEnabled() throws IOException {
-        val targetFile = TARGET_DIR.resolve(SOURCE_FILE_NAME).toFile();
         val overwrite = true;
 
-        copy(Paths.get(SOURCE_FILES_DIR, "empty.wav"), targetFile.toPath());
+        copy(EMPTY_FILE.toPath(), TARGET_FILE.toPath());
 
-        assertThat(getBinaryContent(targetFile).length)
+        assertThat(getBinaryContent(TARGET_FILE).length)
                 .isNotEqualTo(getBinaryContent(SOURCE_FILE).length);
 
         mockServer
                 .when(download(SOURCE_FILE_NAME))
                 .respond(responseWithFile(SOURCE_FILE));
 
-        client.downloadToFile(SOURCE_FILE_NAME, TARGET_DIR, overwrite);
+        val downloadedFile = client.downloadToFile(SOURCE_FILE_NAME, TARGET_DIR, overwrite);
 
-        assertThat(targetFile)
-                .hasBinaryContent(getBinaryContent(SOURCE_FILE))
-                .hasName(SOURCE_FILE_NAME);
+        verifyDownloadedFile(downloadedFile);
         mockServer.verify(download(SOURCE_FILE_NAME));
     }
 
     @Test
     public void shouldThrowException_ifFileAlreadyExistsAndOverwriteModeIsDisabled() throws IOException {
-        val targetFile = TARGET_DIR.resolve(SOURCE_FILE_NAME).toFile();
         val overwrite = false;
 
-        copy(Paths.get(SOURCE_FILES_DIR, "empty.wav"), targetFile.toPath());
+        copy(EMPTY_FILE.toPath(), TARGET_FILE.toPath());
 
         mockServer
                 .when(download(SOURCE_FILE_NAME))
@@ -147,6 +197,14 @@ public class RecordingsClientTest {
 
         assertThatExceptionOfType(FileAlreadyExistsException.class)
                 .isThrownBy(() -> client.downloadToFile(SOURCE_FILE_NAME, TARGET_DIR, overwrite))
-                .withMessage(targetFile.getAbsolutePath());
+                .withMessage(TARGET_FILE.getAbsolutePath());
+        mockServer.verifyZeroInteractions();
+    }
+
+    private static AbstractFileAssert<?> verifyDownloadedFile(File file) throws IOException {
+        return assertThat(file)
+                .hasBinaryContent(getBinaryContent(SOURCE_FILE))
+                .hasParent(TARGET_DIR.toFile())
+                .hasName(SOURCE_FILE_NAME);
     }
 }
