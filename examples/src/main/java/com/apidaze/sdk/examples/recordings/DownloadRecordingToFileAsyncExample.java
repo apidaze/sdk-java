@@ -36,7 +36,7 @@ public class DownloadRecordingToFileAsyncExample {
         recordings.downloadToFileAsync(sourceFileName, targetDir, new Recordings.Callback() {
             @Override
             public void onSuccess(File file) {
-                log.info("File {} has been downloaded to {}", sourceFileName, file);
+                log.info("The {} file has been downloaded to {}", sourceFileName, file);
                 System.exit(0);
             }
 

@@ -20,7 +20,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
-import java.nio.file.NotDirectoryException;
 import java.nio.file.Path;
 import java.util.List;
 
@@ -33,7 +32,7 @@ import static lombok.AccessLevel.PROTECTED;
 @AllArgsConstructor(access = PRIVATE)
 public class RecordingsClient extends BaseApiClient implements Recordings {
 
-    private static final String TEMP_FILE_PREFIX = "recordings-";
+    private static final String TEMP_FILE_PREFIX = "apidaze-sdk-recordings-";
 
     @Getter(PROTECTED)
     private final String basePath = "recordings";
@@ -78,23 +77,23 @@ public class RecordingsClient extends BaseApiClient implements Recordings {
     }
 
     @Override
-    public void downloadToFileAsync(String sourceFileName, Path targetDir, Callback callback) {
-        downloadToFileAsync(sourceFileName, targetDir, false, callback);
+    public void downloadToFileAsync(String sourceFileName, Path target, Callback callback) {
+        downloadToFileAsync(sourceFileName, target, false, callback);
     }
 
     @Override
-    public void downloadToFileAsync(String sourceFileName, Path targetDir, boolean replaceExisting, Callback callback) {
+    public void downloadToFileAsync(String sourceFileName, Path target, boolean replaceExisting, Callback callback) {
         try {
-            downloadToFileAsyncInternal(sourceFileName, targetDir, replaceExisting, callback);
+            downloadToFileAsyncInternal(sourceFileName, target, replaceExisting, callback);
         } catch (Throwable e) {
             callback.onFailure(e);
         }
     }
 
-    private void downloadToFileAsyncInternal(String sourceFileName, Path targetDir, boolean replaceExisting, Callback callback) throws IOException {
+    private void downloadToFileAsyncInternal(String sourceFileName, Path target, boolean replaceExisting, Callback callback) throws IOException {
         Request request = downloadRequest(sourceFileName);
-        Path destFile = getOrCreateFilePath(targetDir, sourceFileName, replaceExisting);
-        Path tempFile = createTempFile(targetDir, TEMP_FILE_PREFIX, null);
+        Path destFile = getOrCreateFilePath(target, sourceFileName, replaceExisting);
+        Path tempFile = createTempFile(destFile.toAbsolutePath().getParent(), TEMP_FILE_PREFIX, null);
 
         client.newCall(request).enqueue(new okhttp3.Callback() {
             @Override
@@ -123,15 +122,15 @@ public class RecordingsClient extends BaseApiClient implements Recordings {
     }
 
     @Override
-    public File downloadToFile(final String sourceFileName, @NotNull final Path targetDir) throws IOException {
-        return downloadToFile(sourceFileName, targetDir, false);
+    public File downloadToFile(final String sourceFileName, @NotNull final Path target) throws IOException {
+        return downloadToFile(sourceFileName, target, false);
     }
 
     @Override
-    public File downloadToFile(final String sourceFileName, final Path targetDir, boolean replaceExisting) throws IOException {
+    public File downloadToFile(final String sourceFileName, final Path target, boolean replaceExisting) throws IOException {
         Request request = downloadRequest(sourceFileName);
-        Path destFile = getOrCreateFilePath(targetDir, sourceFileName, replaceExisting);
-        Path tempFile = createTempFile(targetDir, TEMP_FILE_PREFIX, null);
+        Path destFile = getOrCreateFilePath(target, sourceFileName, replaceExisting);
+        Path tempFile = createTempFile(destFile.toAbsolutePath().getParent(), TEMP_FILE_PREFIX, null);
 
         try (Response response = client.newCall(request).execute();
              Sink fileSink = Okio.sink(tempFile);
@@ -161,19 +160,37 @@ public class RecordingsClient extends BaseApiClient implements Recordings {
         }
     }
 
-    private static Path getOrCreateFilePath(Path dir, String fileName, boolean replaceExisting) throws IOException {
-        if (exists(dir)) {
-            if (isDirectory(dir)) {
-                val destFile = dir.resolve(fileName);
-                if (!replaceExisting && Files.exists(destFile)) {
-                    throw new FileAlreadyExistsException(destFile.toAbsolutePath().toString());
-                }
-                return destFile;
+    private static Path getOrCreateFilePath(Path target, String sourceFile, boolean replaceExisting) throws IOException {
+        if (isRegularFile(target)) {
+            return getPathForRegularFile(target, replaceExisting);
+        } else if (isDirectory(target)) {
+            return getPathForDirectory(target, sourceFile, replaceExisting);
+        } else if (target.getFileName().toString().contains(".")) {
+            createDirectories(target.toAbsolutePath().getParent());
+            return target;
+        } else {
+            return createDirectories(target).resolve(sourceFile);
+        }
+    }
+
+    private static Path getPathForRegularFile(Path target, boolean replaceExisting) throws FileAlreadyExistsException {
+        if (replaceExisting) {
+            return target;
+        } else {
+            throw new FileAlreadyExistsException(target.toAbsolutePath().toString());
+        }
+    }
+
+    private static Path getPathForDirectory(Path target, String sourceFile, boolean replaceExisting) throws FileAlreadyExistsException {
+        val desFile = target.resolve(sourceFile);
+        if (Files.exists(desFile)) {
+            if (replaceExisting) {
+                return desFile;
             } else {
-                throw new NotDirectoryException(dir.toString());
+                throw new FileAlreadyExistsException(desFile.toAbsolutePath().toString());
             }
         } else {
-            return createDirectories(dir).resolve(fileName);
+            return desFile;
         }
     }
 

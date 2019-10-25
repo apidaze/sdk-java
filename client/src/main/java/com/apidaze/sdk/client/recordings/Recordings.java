@@ -11,13 +11,13 @@ public interface Recordings {
 
     InputStream download(final String sourceFileName) throws IOException;
 
-    void downloadToFileAsync(final String sourceFileName, final Path targetDir, final Callback callback);
+    void downloadToFileAsync(final String sourceFileName, final Path target, final Callback callback);
 
-    void downloadToFileAsync(final String sourceFileName, final Path targetDir, boolean replaceExisting, final Callback callback);
+    void downloadToFileAsync(final String sourceFileName, final Path target, boolean replaceExisting, final Callback callback);
 
-    File downloadToFile(final String sourceFileName, final Path targetDir) throws IOException;
+    File downloadToFile(final String sourceFileName, final Path target) throws IOException;
 
-    File downloadToFile(final String sourceFileName, final Path targetDir, boolean replaceExisting) throws IOException;
+    File downloadToFile(final String sourceFileName, final Path target, boolean replaceExisting) throws IOException;
 
     void delete(final String fileName) throws IOException;
 

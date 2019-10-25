@@ -40,6 +40,7 @@ public class RecordingsClientTest {
     private final static File EMPTY_FILE = Paths.get(SOURCE_FILES_DIR, "empty.wav").toFile();
     private final static Path TARGET_DIR = Paths.get("target");
     private final static File TARGET_FILE = TARGET_DIR.resolve(SOURCE_FILE_NAME).toFile();
+    private final static File TARGET_FILE_WITH_CHANGED_NAME = TARGET_DIR.resolve("new-file.wav").toFile();
 
     @Rule
     public MockServerRule mockServerRule = new MockServerRule(this, PORT);
@@ -52,11 +53,13 @@ public class RecordingsClientTest {
     public void setUp() throws IOException {
         mockServer.reset();
         deleteIfExists(TARGET_FILE.toPath());
+        deleteIfExists(TARGET_FILE_WITH_CHANGED_NAME.toPath());
     }
 
     @AfterClass
     public static void cleanUp() throws IOException {
         deleteIfExists(TARGET_FILE.toPath());
+        deleteIfExists(TARGET_FILE_WITH_CHANGED_NAME.toPath());
     }
 
     @Test
@@ -140,7 +143,7 @@ public class RecordingsClientTest {
     }
 
     @Test
-    public void shouldInvokeOnFailureMethodInAsyncMode_ifApiReturnsError() throws IOException {
+    public void shouldInvokeOnFailureMethodInAsyncMode_ifApiReturnsAnError() throws IOException {
         val callback = mock(Recordings.Callback.class);
 
         mockServer
@@ -155,7 +158,7 @@ public class RecordingsClientTest {
     }
 
     @Test
-    public void shouldDownloadFileDirectlyToLocalFolder() throws IOException {
+    public void shouldDownloadFileToLocalFolderWithOriginalName() throws IOException {
         mockServer
                 .when(download(SOURCE_FILE_NAME))
                 .respond(responseWithFile(SOURCE_FILE));
@@ -163,6 +166,18 @@ public class RecordingsClientTest {
         val downloadedFile = client.downloadToFile(SOURCE_FILE_NAME, TARGET_DIR);
 
         verifyDownloadedFile(downloadedFile);
+        mockServer.verify(download(SOURCE_FILE_NAME));
+    }
+
+    @Test
+    public void shouldDownloadFileToLocalFolderWithChangedName() throws IOException {
+        mockServer
+                .when(download(SOURCE_FILE_NAME))
+                .respond(responseWithFile(SOURCE_FILE));
+
+        val downloadedFile = client.downloadToFile(SOURCE_FILE_NAME, TARGET_FILE_WITH_CHANGED_NAME.toPath());
+
+        verifyDownloadedFile(downloadedFile, TARGET_FILE_WITH_CHANGED_NAME.getName());
         mockServer.verify(download(SOURCE_FILE_NAME));
     }
 
@@ -202,9 +217,13 @@ public class RecordingsClientTest {
     }
 
     private static AbstractFileAssert<?> verifyDownloadedFile(File file) throws IOException {
+        return verifyDownloadedFile(file, SOURCE_FILE_NAME);
+    }
+
+    private static AbstractFileAssert<?> verifyDownloadedFile(File file, String expectedName) throws IOException {
         return assertThat(file)
                 .hasBinaryContent(getBinaryContent(SOURCE_FILE))
                 .hasParent(TARGET_DIR.toFile())
-                .hasName(SOURCE_FILE_NAME);
+                .hasName(expectedName);
     }
 }

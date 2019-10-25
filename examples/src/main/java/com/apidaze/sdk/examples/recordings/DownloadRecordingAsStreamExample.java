@@ -37,7 +37,7 @@ public class DownloadRecordingAsStreamExample {
         // Remember to close the stream, the following example uses try-with-resources which automatically closes the stream
         try (InputStream inputStream = recordings.download(sourceFileName)) {
             Files.copy(inputStream, targetFilePath, StandardCopyOption.REPLACE_EXISTING);
-            log.info("File {} has been downloaded to {}", sourceFileName, targetFilePath);
+            log.info("The {} file has been downloaded to {}", sourceFileName, targetFilePath);
         }
     }
 }

@@ -28,11 +28,17 @@ public class DownloadRecordingToFileExample {
         // the name of the file to be downloaded
         val sourceFileName = "example1.wav";
 
-        // local directory where the files should be stored
+
+        // 1. download a file to local directory without changing the name of the file
         val targetDir = Paths.get("foo");
 
-        // download the file with 'replaceExisting' mode enabled
-        val downloadedFile = recordings.downloadToFile(sourceFileName, targetDir, true);
-        log.info("File {} has been downloaded to file to {}", sourceFileName, downloadedFile);
+        val downloadedFile1 = recordings.downloadToFile(sourceFileName, targetDir);
+        log.info("The {} file has been downloaded to {}", sourceFileName, downloadedFile1);
+
+        // 2. download a file to local directory and change the name of target file
+        val targetFile = Paths.get("foo/my-cool-recoding.wav");
+
+        val downloadedFile2 = recordings.downloadToFile(sourceFileName, targetFile);
+        log.info("The {} file has been downloaded to {}", sourceFileName, downloadedFile2);
     }
 }
