@@ -32,3 +32,6 @@ hs_err_pid*
 ### Maven ###
 dependency-reduced-pom.xml
 **/target
+
+### Directory for downloaded files ###
+foo

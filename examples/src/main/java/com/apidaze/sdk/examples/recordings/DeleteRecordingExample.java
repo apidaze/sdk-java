@@ -1,4 +1,4 @@
-package com.apidaze.sdk.examples;
+package com.apidaze.sdk.examples.recordings;
 
 import com.apidaze.sdk.client.base.Credentials;
 import com.apidaze.sdk.client.recordings.RecordingsClient;
@@ -10,7 +10,7 @@ import java.io.IOException;
 import static java.util.Objects.isNull;
 
 @Slf4j
-public class RecordingsExample {
+public class DeleteRecordingExample {
 
     public static void main(String... args) {
 
@@ -22,13 +22,15 @@ public class RecordingsExample {
             System.exit(1);
         }
 
-        // initiate the client using create method
+        // initiate the client
         val recordings = RecordingsClient.create(new Credentials(apiKey, apiSecret));
 
-        // get recordings list
+        // the name of the file to be deleted
+        val fileName = "example1.wav";
+
         try {
-            val response = recordings.list();
-            log.info("Recordings: {}", response);
+            recordings.delete(fileName);
+            log.info("File {} has been deleted", fileName);
         } catch (IOException e) {
             log.error("An error occurred during communicating with API", e);
         }

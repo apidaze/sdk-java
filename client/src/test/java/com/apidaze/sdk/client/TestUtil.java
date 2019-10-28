@@ -5,10 +5,15 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import org.apache.commons.io.IOUtils;
 import org.mockserver.logging.MockServerLogger;
 import org.mockserver.model.JsonBody;
 import org.mockserver.serialization.ObjectMapperFactory;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.time.ZonedDateTime;
 import java.util.Comparator;
 
@@ -43,5 +48,11 @@ public class TestUtil {
             new MockServerLogger(JsonBody.class).error("error mapping object for json body to JSON", e);
         }
         return json;
+    }
+
+    public static byte[] getBinaryContent(File file) throws IOException {
+        try (InputStream inputStream = new FileInputStream(file)) {
+            return IOUtils.toByteArray(inputStream);
+        }
     }
 }
