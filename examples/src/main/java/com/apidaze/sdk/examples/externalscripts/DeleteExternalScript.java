@@ -1,7 +1,7 @@
 package com.apidaze.sdk.examples.externalscripts;
 
+import com.apidaze.sdk.client.ApplicationAction;
 import com.apidaze.sdk.client.base.Credentials;
-import com.apidaze.sdk.client.externalscripts.ExternalScriptsClient;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 
@@ -22,15 +22,15 @@ public class DeleteExternalScript {
             System.exit(1);
         }
 
+        // initiate ApplicationAction
+        val applicationAction = ApplicationAction.create(new Credentials(apiKey, apiSecret));
+
         // script id to be deleted
         val id = 1L;
 
-        // initiate the client
-        val externalScripts = ExternalScriptsClient.create(new Credentials(apiKey, apiSecret));
-
         // delete an external script
         try {
-            externalScripts.deleteExternalScript(id);
+            applicationAction.deleteExternalScript(id);
             log.info("ExternalScript with id = {} has been deleted.", id);
         } catch (IOException e) {
             log.error("An error occurred during communicating with API", e);

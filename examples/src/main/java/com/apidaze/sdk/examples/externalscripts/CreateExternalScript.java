@@ -1,7 +1,7 @@
 package com.apidaze.sdk.examples.externalscripts;
 
+import com.apidaze.sdk.client.ApplicationAction;
 import com.apidaze.sdk.client.base.Credentials;
-import com.apidaze.sdk.client.externalscripts.ExternalScriptsClient;
 import com.apidaze.sdk.client.externalscripts.InvalidURLException;
 import com.apidaze.sdk.client.externalscripts.URL;
 import lombok.extern.slf4j.Slf4j;
@@ -27,12 +27,12 @@ public class CreateExternalScript {
         val scriptName = "Some cool script";
         val scriptUrl = "http://cool.script.com";
 
-        // initiate the client
-        val externalScripts = ExternalScriptsClient.create(new Credentials(apiKey, apiSecret));
+        // initiate ApplicationAction
+        val applicationAction = ApplicationAction.create(new Credentials(apiKey, apiSecret));
 
         try {
             // create an external script
-            val createdScript = externalScripts.createExternalScript(scriptName, URL.fromString(scriptUrl));
+            val createdScript = applicationAction.createExternalScript(scriptName, URL.fromString(scriptUrl));
             log.info("Created {}", createdScript);
         } catch (IOException e) {
             log.error("An error occurred during communicating with API", e);

@@ -1,8 +1,8 @@
 package com.apidaze.sdk.examples.recordings;
 
+import com.apidaze.sdk.client.ApplicationAction;
 import com.apidaze.sdk.client.base.Credentials;
 import com.apidaze.sdk.client.recordings.Recordings;
-import com.apidaze.sdk.client.recordings.RecordingsClient;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 
@@ -25,7 +25,8 @@ public class DownloadRecordingToFileAsyncExample {
             System.exit(1);
         }
 
-        val recordings = RecordingsClient.create(new Credentials(apiKey, apiSecret));
+        // initiate ApplicationAction
+        val applicationAction = ApplicationAction.create(new Credentials(apiKey, apiSecret));
 
         // the name of the file to be downloaded
         val sourceFileName = "example1.wav";
@@ -50,9 +51,9 @@ public class DownloadRecordingToFileAsyncExample {
         val targetFile2 = targetDir.resolve("file2.wav");
 
         log.info("Starting downloading the file  {} to target path {}", sourceFileName, targetFile1);
-        recordings.downloadRecordingToFileAsync(sourceFileName, targetFile1, callback);
+        applicationAction.downloadRecordingToFileAsync(sourceFileName, targetFile1, callback);
 
         log.info("Starting downloading the file {} to target path {}", sourceFileName, targetFile2);
-        recordings.downloadRecordingToFileAsync(sourceFileName, targetFile2, callback);
+        applicationAction.downloadRecordingToFileAsync(sourceFileName, targetFile2, callback);
     }
 }

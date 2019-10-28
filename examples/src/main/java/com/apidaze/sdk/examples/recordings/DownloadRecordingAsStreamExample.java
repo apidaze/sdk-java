@@ -1,7 +1,7 @@
 package com.apidaze.sdk.examples.recordings;
 
+import com.apidaze.sdk.client.ApplicationAction;
 import com.apidaze.sdk.client.base.Credentials;
-import com.apidaze.sdk.client.recordings.RecordingsClient;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 
@@ -26,7 +26,8 @@ public class DownloadRecordingAsStreamExample {
             System.exit(1);
         }
 
-        val recordings = RecordingsClient.create(new Credentials(apiKey, apiSecret));
+        // initiate ApplicationAction
+        val applicationAction = ApplicationAction.create(new Credentials(apiKey, apiSecret));
 
         // the name of the file to be downloaded
         val sourceFileName = "example1.wav";
@@ -35,7 +36,7 @@ public class DownloadRecordingAsStreamExample {
         val targetFilePath = Paths.get("foo/fileFromStream.wav");
 
         // Remember to close the stream, the following example uses try-with-resources which automatically closes the stream
-        try (InputStream inputStream = recordings.downloadRecording(sourceFileName)) {
+        try (InputStream inputStream = applicationAction.downloadRecording(sourceFileName)) {
             Files.copy(inputStream, targetFilePath, StandardCopyOption.REPLACE_EXISTING);
             log.info("The {} file has been downloaded to {}", sourceFileName, targetFilePath);
         }

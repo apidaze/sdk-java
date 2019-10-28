@@ -1,7 +1,7 @@
 package com.apidaze.sdk.examples.calls;
 
+import com.apidaze.sdk.client.ApplicationAction;
 import com.apidaze.sdk.client.base.Credentials;
-import com.apidaze.sdk.client.calls.CallsClient;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 
@@ -22,11 +22,11 @@ public class ActiveCallsExample {
             System.exit(1);
         }
 
-        // initiate the client
-        val calls = CallsClient.create(new Credentials(apiKey, apiSecret));
+        // initiate ApplicationAction
+        val appAction = ApplicationAction.create(new Credentials(apiKey, apiSecret));
 
         try {
-            val response = calls.getActiveCalls();
+            val response = appAction.getActiveCalls();
             log.info("Active calls: {}", response);
         } catch (IOException e) {
             log.error("An error occurred during communicating with API", e);
