@@ -2,13 +2,11 @@ package com.apidaze.sdk.client.externalscripts;
 
 import com.apidaze.sdk.client.base.BaseApiClient;
 import com.apidaze.sdk.client.base.Credentials;
+import com.apidaze.sdk.client.http.HttpClient;
 import com.fasterxml.jackson.core.type.TypeReference;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import okhttp3.FormBody;
-import okhttp3.Request;
-import okhttp3.RequestBody;
-import okhttp3.Response;
+import okhttp3.*;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
@@ -31,6 +29,8 @@ public class ExternalScriptsClient extends BaseApiClient implements ExternalScri
     @Getter
     private final String baseUrl;
 
+    private final OkHttpClient client;
+
     public static ExternalScriptsClient create(@NotNull Credentials credentials) {
         return create(credentials, DEFAULT_BASE_URL);
     }
@@ -39,11 +39,11 @@ public class ExternalScriptsClient extends BaseApiClient implements ExternalScri
         requireNonNull(credentials, "Credentials must not be null.");
         requireNonNull(baseUrl, "baseUrl must not be null.");
 
-        return new ExternalScriptsClient(credentials, baseUrl);
+        return new ExternalScriptsClient(credentials, baseUrl, HttpClient.getClientInstance());
     }
 
     @Override
-    public List<ExternalScript> list() throws IOException {
+    public List<ExternalScript> getExternalScripts() throws IOException {
         Request request = new Request.Builder()
                 .url(authenticatedUrl())
                 .build();
@@ -56,7 +56,7 @@ public class ExternalScriptsClient extends BaseApiClient implements ExternalScri
     }
 
     @Override
-    public ExternalScript create(String name, URL url) throws IOException {
+    public ExternalScript createExternalScript(String name, URL url) throws IOException {
         validateName(name);
 
         RequestBody formBody = new FormBody.Builder()
@@ -77,7 +77,7 @@ public class ExternalScriptsClient extends BaseApiClient implements ExternalScri
     }
 
     @Override
-    public ExternalScript get(Long id) throws IOException {
+    public ExternalScript getExternalScript(Long id) throws IOException {
         requireNonNull(id, "id must not be null");
 
         Request request = new Request.Builder()
@@ -94,7 +94,7 @@ public class ExternalScriptsClient extends BaseApiClient implements ExternalScri
     }
 
     @Override
-    public ExternalScript update(Long id, String name, URL url) throws IOException {
+    public ExternalScript updateExternalScript(Long id, String name, URL url) throws IOException {
         requireNonNull(id, "id must not be null");
         requireNonNull(url, "url must not be null");
         validateName(name);
@@ -119,7 +119,7 @@ public class ExternalScriptsClient extends BaseApiClient implements ExternalScri
     }
 
     @Override
-    public ExternalScript updateUrl(Long id, URL url) throws IOException {
+    public ExternalScript updateExternalScriptUrl(Long id, URL url) throws IOException {
         requireNonNull(id, "id must not be null");
 
         RequestBody formBody = new FormBody.Builder()
@@ -142,7 +142,7 @@ public class ExternalScriptsClient extends BaseApiClient implements ExternalScri
 
 
     @Override
-    public void delete(Long id) throws IOException {
+    public void deleteExternalScript(Long id) throws IOException {
         requireNonNull(id, "id must not be null");
 
         Request request = new Request.Builder()

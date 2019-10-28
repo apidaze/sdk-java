@@ -18,7 +18,7 @@ public class ActiveCall {
     String callerIdName;
     String callerIdNumber;
     String destination;
-    Calls.State callState;
+    Calls.CallState callState;
     String callUuid;
     String callerId;
     String url;
@@ -30,7 +30,7 @@ public class ActiveCall {
                       @JsonProperty("cid_name") String callerIdName,
                       @JsonProperty("cid_num") String callerIdNumber,
                       @JsonProperty("dest") String destination,
-                      @JsonProperty("callstate") Calls.State callState,
+                      @JsonProperty("callstate") Calls.CallState callState,
                       @JsonProperty("call_uuid") String callUuid,
                       @JsonProperty("callerid") String callerId,
                       @JsonProperty("URL") String url,

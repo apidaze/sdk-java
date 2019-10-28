@@ -18,7 +18,7 @@ class CallsRequest {
 
     private static final String BASE_PATH = "calls";
 
-    static HttpRequest create(PhoneNumber callerId, String origin, String destination, Calls.Type callType) {
+    static HttpRequest create(PhoneNumber callerId, String origin, String destination, Calls.CallType callType) {
         return request()
                 .withMethod("POST")
                 .withHeader(CONTENT_TYPE, "application/x-www-form-urlencoded")

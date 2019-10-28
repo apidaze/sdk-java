@@ -30,7 +30,7 @@ public class DeleteExternalScript {
 
         // delete an external script
         try {
-            externalScripts.delete(id);
+            externalScripts.deleteExternalScript(id);
             log.info("ExternalScript with id = {} has been deleted.", id);
         } catch (IOException e) {
             log.error("An error occurred during communicating with API", e);

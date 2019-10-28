@@ -34,7 +34,7 @@ public class MessageExample {
 
         try {
             // send a message
-            val response = message.send(PhoneNumber.of(from), PhoneNumber.of(to), messageBody);
+            val response = message.sendTextMessage(PhoneNumber.of(from), PhoneNumber.of(to), messageBody);
             log.info(response);
         } catch (IOException e) {
             log.error("An error occurred during communicating with API", e);

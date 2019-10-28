@@ -5,15 +5,15 @@ import java.util.List;
 
 public interface ExternalScripts {
 
-    List<ExternalScript> list() throws IOException;
+    List<ExternalScript> getExternalScripts() throws IOException;
 
-    ExternalScript create(String name, URL url) throws IOException;
+    ExternalScript createExternalScript(String name, URL url) throws IOException;
 
-    ExternalScript get(Long id) throws IOException;
+    ExternalScript getExternalScript(Long id) throws IOException;
 
-    ExternalScript update(Long id, String name, URL url) throws IOException;
+    ExternalScript updateExternalScript(Long id, String name, URL url) throws IOException;
 
-    ExternalScript updateUrl(Long id, URL url) throws IOException;
+    ExternalScript updateExternalScriptUrl(Long id, URL url) throws IOException;
 
-    void delete(Long id) throws IOException;
+    void deleteExternalScript(Long id) throws IOException;
 }

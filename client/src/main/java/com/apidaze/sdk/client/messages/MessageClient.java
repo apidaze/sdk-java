@@ -2,12 +2,10 @@ package com.apidaze.sdk.client.messages;
 
 import com.apidaze.sdk.client.base.BaseApiClient;
 import com.apidaze.sdk.client.base.Credentials;
+import com.apidaze.sdk.client.http.HttpClient;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import okhttp3.FormBody;
-import okhttp3.Request;
-import okhttp3.RequestBody;
-import okhttp3.Response;
+import okhttp3.*;
 
 import java.io.IOException;
 
@@ -25,6 +23,8 @@ public class MessageClient extends BaseApiClient implements Message {
     @Getter
     private final String baseUrl;
 
+    private final OkHttpClient client;
+
     public static MessageClient create(Credentials credentials) {
         return create(credentials, DEFAULT_BASE_URL);
     }
@@ -33,14 +33,14 @@ public class MessageClient extends BaseApiClient implements Message {
         requireNonNull(credentials, "Credentials must not be null.");
         requireNonNull(baseUrl, "baseUrl must not be null.");
 
-        return new MessageClient(credentials, baseUrl);
+        return new MessageClient(credentials, baseUrl, HttpClient.getClientInstance());
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public String send(PhoneNumber from, PhoneNumber to, String body) throws IOException {
+    public String sendTextMessage(PhoneNumber from, PhoneNumber to, String body) throws IOException {
         requireNonNull(from, "from must not be null");
         requireNonNull(to, "to must not be null");
 

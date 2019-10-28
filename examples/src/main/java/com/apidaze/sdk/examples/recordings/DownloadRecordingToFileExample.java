@@ -32,13 +32,13 @@ public class DownloadRecordingToFileExample {
         // 1. download a file to local directory without changing the name of the file
         val targetDir = Paths.get("foo");
 
-        val downloadedFile1 = recordings.downloadToFile(sourceFileName, targetDir);
+        val downloadedFile1 = recordings.downloadRecordingToFile(sourceFileName, targetDir);
         log.info("The {} file has been downloaded to {}", sourceFileName, downloadedFile1);
 
         // 2. download a file to local directory and change the name of target file
         val targetFile = Paths.get("foo/my-cool-recoding.wav");
 
-        val downloadedFile2 = recordings.downloadToFile(sourceFileName, targetFile);
+        val downloadedFile2 = recordings.downloadRecordingToFile(sourceFileName, targetFile);
         log.info("The {} file has been downloaded to {}", sourceFileName, downloadedFile2);
     }
 }

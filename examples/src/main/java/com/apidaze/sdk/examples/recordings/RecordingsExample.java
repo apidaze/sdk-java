@@ -27,7 +27,7 @@ public class RecordingsExample {
 
         // get recordings list
         try {
-            val response = recordings.list();
+            val response = recordings.getRecordingsList();
             log.info("Recordings: {}", response);
         } catch (IOException e) {
             log.error("An error occurred during communicating with API", e);

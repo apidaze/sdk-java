@@ -33,14 +33,14 @@ public class CallsClientTest {
         val callerId = PhoneNumber.of("14123456789");
         val origin = "48123456789";
         val destination = "48987654321";
-        val callType = Calls.Type.NUMBER;
+        val callType = Calls.CallType.NUMBER;
         val callId = UUID.fromString("d64baf26-b116-4478-97b5-899de580461f");
 
         mockServer
                 .when(create(callerId, origin, destination, callType))
                 .respond(ok(callId.toString()));
 
-        val result = client.create(callerId, origin, destination, callType);
+        val result = client.createCall(callerId, origin, destination, callType);
 
         mockServer.verify(create(callerId, origin, destination, callType));
         assertThat(result).isEqualTo(callId);
@@ -51,14 +51,14 @@ public class CallsClientTest {
         val callerId = PhoneNumber.of("14123456789");
         val origin = "sip-account-origin";
         val destination = "sip-account-destination";
-        val callType = Calls.Type.SIP_ACCOUNT;
+        val callType = Calls.CallType.SIP_ACCOUNT;
         val callId = UUID.fromString("d64baf26-b116-4478-97b5-899de580461f");
 
         mockServer
                 .when(create(callerId, origin, destination, callType))
                 .respond(ok(callId.toString()));
 
-        val result = client.create(callerId, origin, destination, callType);
+        val result = client.createCall(callerId, origin, destination, callType);
 
         mockServer.verify(create(callerId, origin, destination, callType));
         assertThat(result).isEqualTo(callId);
@@ -69,7 +69,7 @@ public class CallsClientTest {
         val callerId = PhoneNumber.of("14123456789");
         val origin = "48123456789";
         val destination = "48987654321";
-        val callType = Calls.Type.NUMBER;
+        val callType = Calls.CallType.NUMBER;
         val failureMessage = "NORMAL TEMPORARY_FAILURE";
 
         mockServer
@@ -77,7 +77,7 @@ public class CallsClientTest {
                 .respond(failed(failureMessage));
 
         assertThatExceptionOfType(CallsClient.CreateResponseException.class)
-                .isThrownBy(() -> client.create(callerId, origin, destination, callType))
+                .isThrownBy(() -> client.createCall(callerId, origin, destination, callType))
                 .withMessage(failureMessage);
 
         mockServer.verify(create(callerId, origin, destination, callType));
@@ -88,14 +88,14 @@ public class CallsClientTest {
         val callerId = PhoneNumber.of("14123456789");
         val origin = "48123456789";
         val destination = "48987654321";
-        val callType = Calls.Type.NUMBER;
+        val callType = Calls.CallType.NUMBER;
 
         mockServer
                 .when(create(callerId, origin, destination, callType))
                 .respond(emptyJson());
 
         assertThatExceptionOfType(CallsClient.CreateResponseException.class)
-                .isThrownBy(() -> client.create(callerId, origin, destination, callType))
+                .isThrownBy(() -> client.createCall(callerId, origin, destination, callType))
                 .withMessage("missing call id in the response body");
 
         mockServer.verify(create(callerId, origin, destination, callType));
@@ -168,7 +168,7 @@ public class CallsClientTest {
                         .callerIdName("Outbound Call")
                         .callerIdNumber("123456789")
                         .destination("123456789")
-                        .callState(Calls.State.ACTIVE)
+                        .callState(Calls.CallState.ACTIVE)
                         .callUuid("cd79587d-c71e-4bb0-9fdc-244bf9a95538")
                         .build(),
                 ActiveCall.builder()
@@ -177,7 +177,7 @@ public class CallsClientTest {
                         .callerIdName("Outbound Call")
                         .callerIdNumber("987654321")
                         .destination("987654321")
-                        .callState(Calls.State.ACTIVE)
+                        .callState(Calls.CallState.ACTIVE)
                         .callUuid("fa67a5f3-bac4-48bb-ade7-efa19cd99938")
                         .build()
         );

@@ -19,7 +19,7 @@ public interface Calls {
      * @param callType    The type of the terminal to ring first.
      * @return Call id
      */
-    UUID create(PhoneNumber callerId, String origin, String destination, Type callType) throws IOException;
+    UUID createCall(PhoneNumber callerId, String origin, String destination, CallType callType) throws IOException;
 
     List<ActiveCall> getActiveCalls() throws IOException;
 
@@ -28,7 +28,7 @@ public interface Calls {
     void deleteActiveCall(UUID id) throws IOException;
 
     @AllArgsConstructor
-    enum Type {
+    enum CallType {
         NUMBER("number"),
         SIP_ACCOUNT("sipaccount");
 
@@ -36,7 +36,7 @@ public interface Calls {
         private final String value;
     }
 
-    enum State {
+    enum CallState {
         DOWN,
         DIALING,
         RINGING,

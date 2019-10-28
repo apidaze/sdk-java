@@ -34,7 +34,7 @@ public class UpdateExternalScriptUrl {
 
         // create external script
         try {
-            val script = externalScripts.updateUrl(id, URL.fromString(newScriptUrl));
+            val script = externalScripts.updateExternalScriptUrl(id, URL.fromString(newScriptUrl));
             log.info("Updated {}", script);
         } catch (IOException e) {
             log.error("An error occurred during communicating with API", e);

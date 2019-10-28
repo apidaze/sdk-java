@@ -32,7 +32,7 @@ public class CreateExternalScript {
 
         try {
             // create an external script
-            val createdScript = externalScripts.create(scriptName, URL.fromString(scriptUrl));
+            val createdScript = externalScripts.createExternalScript(scriptName, URL.fromString(scriptUrl));
             log.info("Created {}", createdScript);
         } catch (IOException e) {
             log.error("An error occurred during communicating with API", e);

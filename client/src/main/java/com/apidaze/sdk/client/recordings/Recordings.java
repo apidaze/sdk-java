@@ -7,23 +7,23 @@ import java.nio.file.Path;
 import java.util.List;
 
 public interface Recordings {
-    List<String> list() throws IOException;
+    List<String> getRecordingsList() throws IOException;
 
-    InputStream download(final String sourceFileName) throws IOException;
+    InputStream downloadRecording(final String sourceFileName) throws IOException;
 
-    void downloadToFileAsync(final String sourceFileName, final Path target, final Callback callback);
+    void downloadRecordingToFileAsync(final String sourceFileName, final Path target, final DownloadCallback downloadCallback);
 
-    void downloadToFileAsync(final String sourceFileName, final Path target, boolean replaceExisting, final Callback callback);
+    void downloadRecordingToFileAsync(final String sourceFileName, final Path target, boolean replaceExisting, final DownloadCallback downloadCallback);
 
-    File downloadToFile(final String sourceFileName, final Path target) throws IOException;
+    File downloadRecordingToFile(final String sourceFileName, final Path target) throws IOException;
 
-    File downloadToFile(final String sourceFileName, final Path target, boolean replaceExisting) throws IOException;
+    File downloadRecordingToFile(final String sourceFileName, final Path target, boolean replaceExisting) throws IOException;
 
-    void delete(final String fileName) throws IOException;
+    void deleteRecording(final String fileName) throws IOException;
 
-    interface Callback {
+    interface DownloadCallback {
         void onSuccess(File file);
 
-        void onFailure(Throwable e);
+        void onFailure(String sourceFileName, Path target, Throwable e);
     }
 }

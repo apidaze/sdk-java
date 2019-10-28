@@ -40,7 +40,7 @@ public class MessageClientTest {
                 .when(send(from, to, messageBody))
                 .respond(ok(responseBody));
 
-        val response = client.send(from, to, messageBody);
+        val response = client.sendTextMessage(from, to, messageBody);
 
         assertThat(response).isEqualTo(responseBody);
 
@@ -54,7 +54,7 @@ public class MessageClientTest {
         val emptyBody = "";
 
         assertThatIllegalArgumentException()
-                .isThrownBy(() -> client.send(from, to, emptyBody))
+                .isThrownBy(() -> client.sendTextMessage(from, to, emptyBody))
                 .withMessage("body must not be null or empty");
 
         mockServer.verifyZeroInteractions();
@@ -71,7 +71,7 @@ public class MessageClientTest {
                 .respond(response().withStatusCode(500));
 
         assertThatIOException()
-                .isThrownBy(() -> client.send(from, to, messageBody))
+                .isThrownBy(() -> client.sendTextMessage(from, to, messageBody))
                 .withMessageContainingAll("500", "Internal Server Error");
     }
 }

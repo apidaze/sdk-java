@@ -37,7 +37,7 @@ public class ActiveCallsAllInOneExample {
 
         try {
             // place a call
-            val callId = calls.create(PhoneNumber.of(callerId), origin, destination, Calls.Type.NUMBER);
+            val callId = calls.createCall(PhoneNumber.of(callerId), origin, destination, Calls.CallType.NUMBER);
             log.info("Call with id = {} has been initiated.", callId);
 
             // get active call details

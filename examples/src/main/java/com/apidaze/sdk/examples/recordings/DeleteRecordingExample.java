@@ -29,7 +29,7 @@ public class DeleteRecordingExample {
         val fileName = "example1.wav";
 
         try {
-            recordings.delete(fileName);
+            recordings.deleteRecording(fileName);
             log.info("File {} has been deleted", fileName);
         } catch (IOException e) {
             log.error("An error occurred during communicating with API", e);

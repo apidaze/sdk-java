@@ -30,7 +30,7 @@ public class GetExternalScript {
 
         try {
             // get an external script
-            val script = externalScripts.get(id);
+            val script = externalScripts.getExternalScript(id);
             log.info("Retrieved {}", script);
         } catch (IOException e) {
             log.error("An error occurred during communicating with API", e);

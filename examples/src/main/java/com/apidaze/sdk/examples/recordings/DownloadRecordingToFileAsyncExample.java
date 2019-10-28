@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 
 import java.io.File;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import static java.util.Objects.isNull;
@@ -32,19 +33,26 @@ public class DownloadRecordingToFileAsyncExample {
         // local directory where the files should be stored
         val targetDir = Paths.get("foo");
 
-        // download the file in async mode
-        recordings.downloadToFileAsync(sourceFileName, targetDir, new Recordings.Callback() {
+        val callback = new Recordings.DownloadCallback() {
             @Override
             public void onSuccess(File file) {
                 log.info("The {} file has been downloaded to {}", sourceFileName, file);
-                System.exit(0);
             }
 
             @Override
-            public void onFailure(Throwable e) {
-                log.error("An error occurred during downloading the file.", e);
-                System.exit(1);
+            public void onFailure(String sourceFileName, Path target, Throwable e) {
+                log.error("An error occurred during downloading the file {} to target path {}.", sourceFileName, target, e);
             }
-        });
+        };
+
+        // download two file in async mode
+        val targetFile1 = targetDir.resolve("file1.wav");
+        val targetFile2 = targetDir.resolve("file2.wav");
+
+        log.info("Starting downloading the file  {} to target path {}", sourceFileName, targetFile1);
+        recordings.downloadRecordingToFileAsync(sourceFileName, targetFile1, callback);
+
+        log.info("Starting downloading the file {} to target path {}", sourceFileName, targetFile2);
+        recordings.downloadRecordingToFileAsync(sourceFileName, targetFile2, callback);
     }
 }

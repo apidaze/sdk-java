@@ -10,5 +10,5 @@ public interface Message {
      * @param body The message to send. Must not be empty.
      * @return Response returned by API
      */
-    String send(PhoneNumber from, PhoneNumber to, String body) throws IOException;
+    String sendTextMessage(PhoneNumber from, PhoneNumber to, String body) throws IOException;
 }

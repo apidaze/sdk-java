@@ -35,7 +35,7 @@ public class DownloadRecordingAsStreamExample {
         val targetFilePath = Paths.get("foo/fileFromStream.wav");
 
         // Remember to close the stream, the following example uses try-with-resources which automatically closes the stream
-        try (InputStream inputStream = recordings.download(sourceFileName)) {
+        try (InputStream inputStream = recordings.downloadRecording(sourceFileName)) {
             Files.copy(inputStream, targetFilePath, StandardCopyOption.REPLACE_EXISTING);
             log.info("The {} file has been downloaded to {}", sourceFileName, targetFilePath);
         }

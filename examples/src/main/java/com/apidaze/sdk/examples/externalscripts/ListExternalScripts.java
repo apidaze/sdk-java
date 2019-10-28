@@ -27,7 +27,7 @@ public class ListExternalScripts {
 
         try {
             // get external scripts list
-            val list = externalScripts.list();
+            val list = externalScripts.getExternalScripts();
             log.info("ExternalScripts list: {}", list);
         } catch (IOException e) {
             log.error("An error occurred during communicating with API", e);
