@@ -4,6 +4,9 @@ import com.apidaze.sdk.client.base.Credentials;
 import com.apidaze.sdk.client.calls.ActiveCall;
 import com.apidaze.sdk.client.calls.Calls;
 import com.apidaze.sdk.client.calls.CallsClient;
+import com.apidaze.sdk.client.cdrhttphandlers.CdrHttpHandler;
+import com.apidaze.sdk.client.cdrhttphandlers.CdrHttpHandlers;
+import com.apidaze.sdk.client.cdrhttphandlers.CdrHttpHandlersClient;
 import com.apidaze.sdk.client.externalscripts.ExternalScript;
 import com.apidaze.sdk.client.externalscripts.ExternalScripts;
 import com.apidaze.sdk.client.externalscripts.ExternalScriptsClient;
@@ -28,13 +31,14 @@ import static java.util.Objects.requireNonNull;
 import static lombok.AccessLevel.PRIVATE;
 
 @AllArgsConstructor(access = PRIVATE)
-public class ApplicationAction implements Calls, Message, ExternalScripts, Recordings, CredentialsValidator {
+public class ApplicationAction implements Calls, Message, ExternalScripts, Recordings, CredentialsValidator, CdrHttpHandlers {
 
     private final Calls calls;
     private final ExternalScripts externalScripts;
     private final Message message;
     private final Recordings recordings;
     private final CredentialsValidator credentialsValidator;
+    private final CdrHttpHandlers cdrHttpHandlers;
 
     public static ApplicationAction create(Credentials credentials) {
         requireNonNull(credentials, "Credentials must not be null.");
@@ -43,7 +47,8 @@ public class ApplicationAction implements Calls, Message, ExternalScripts, Recor
                 ExternalScriptsClient.create(credentials),
                 MessageClient.create(credentials),
                 RecordingsClient.create(credentials),
-                CredentialsValidatorClient.create(credentials));
+                CredentialsValidatorClient.create(credentials),
+                CdrHttpHandlersClient.create(credentials));
     }
 
     @Override
@@ -139,5 +144,10 @@ public class ApplicationAction implements Calls, Message, ExternalScripts, Recor
     @Override
     public boolean validateCredentials() throws IOException {
         return credentialsValidator.validateCredentials();
+    }
+
+    @Override
+    public List<CdrHttpHandler> getCdrHttpHandlers() throws IOException {
+        return cdrHttpHandlers.getCdrHttpHandlers();
     }
 }
