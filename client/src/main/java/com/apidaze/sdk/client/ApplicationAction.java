@@ -13,6 +13,8 @@ import com.apidaze.sdk.client.messages.MessageClient;
 import com.apidaze.sdk.client.messages.PhoneNumber;
 import com.apidaze.sdk.client.recordings.Recordings;
 import com.apidaze.sdk.client.recordings.RecordingsClient;
+import com.apidaze.sdk.client.validates.CredentialsValidator;
+import com.apidaze.sdk.client.validates.CredentialsValidatorClient;
 import lombok.AllArgsConstructor;
 
 import java.io.File;
@@ -26,12 +28,13 @@ import static java.util.Objects.requireNonNull;
 import static lombok.AccessLevel.PRIVATE;
 
 @AllArgsConstructor(access = PRIVATE)
-public class ApplicationAction implements Calls, Message, ExternalScripts, Recordings {
+public class ApplicationAction implements Calls, Message, ExternalScripts, Recordings, CredentialsValidator {
 
     private final Calls calls;
     private final ExternalScripts externalScripts;
     private final Message message;
     private final Recordings recordings;
+    private final CredentialsValidator credentialsValidator;
 
     public static ApplicationAction create(Credentials credentials) {
         requireNonNull(credentials, "Credentials must not be null.");
@@ -39,7 +42,8 @@ public class ApplicationAction implements Calls, Message, ExternalScripts, Recor
                 CallsClient.create(credentials),
                 ExternalScriptsClient.create(credentials),
                 MessageClient.create(credentials),
-                RecordingsClient.create(credentials));
+                RecordingsClient.create(credentials),
+                CredentialsValidatorClient.create(credentials));
     }
 
     @Override
@@ -130,5 +134,10 @@ public class ApplicationAction implements Calls, Message, ExternalScripts, Recor
     @Override
     public void deleteRecording(String fileName) throws IOException {
         recordings.deleteRecording(fileName);
+    }
+
+    @Override
+    public boolean validateCredentials() throws IOException {
+        return credentialsValidator.validateCredentials();
     }
 }

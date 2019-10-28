@@ -1,7 +1,7 @@
 package com.apidaze.sdk.examples.validates;
 
 import com.apidaze.sdk.client.base.Credentials;
-import com.apidaze.sdk.client.validates.CredentialsValidator;
+import com.apidaze.sdk.client.validates.CredentialsValidatorClient;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 
@@ -23,7 +23,7 @@ public class CredentialsValidationExample {
         }
 
         // initiate the client
-        val validator = CredentialsValidator.create(new Credentials(apiKey, apiSecret));
+        val validator = CredentialsValidatorClient.create(new Credentials(apiKey, apiSecret));
 
         try {
             // validate credentials
