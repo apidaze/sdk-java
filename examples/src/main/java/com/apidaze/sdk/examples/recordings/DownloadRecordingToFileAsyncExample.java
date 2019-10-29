@@ -50,7 +50,7 @@ public class DownloadRecordingToFileAsyncExample {
         val targetFile1 = targetDir.resolve("file1.wav");
         val targetFile2 = targetDir.resolve("file2.wav");
 
-        log.info("Starting downloading the file  {} to target path {}", sourceFileName, targetFile1);
+        log.info("Starting downloading the file {} to target path {}", sourceFileName, targetFile1);
         applicationAction.downloadRecordingToFileAsync(sourceFileName, targetFile1, callback);
 
         log.info("Starting downloading the file {} to target path {}", sourceFileName, targetFile2);
