@@ -4,8 +4,8 @@ import com.apidaze.sdk.client.ApplicationAction;
 import com.apidaze.sdk.client.base.Credentials;
 import com.apidaze.sdk.client.calls.Calls;
 import com.apidaze.sdk.client.calls.CallsClient;
-import com.apidaze.sdk.client.messages.InvalidPhoneNumberException;
-import com.apidaze.sdk.client.messages.PhoneNumber;
+import com.apidaze.sdk.client.common.InvalidPhoneNumberException;
+import com.apidaze.sdk.client.common.PhoneNumber;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 

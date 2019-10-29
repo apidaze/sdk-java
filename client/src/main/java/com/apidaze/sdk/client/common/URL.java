@@ -1,4 +1,4 @@
-package com.apidaze.sdk.client.externalscripts;
+package com.apidaze.sdk.client.common;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;

@@ -2,6 +2,7 @@ package com.apidaze.sdk.client.messages;
 
 import com.apidaze.sdk.client.base.BaseApiClient;
 import com.apidaze.sdk.client.base.Credentials;
+import com.apidaze.sdk.client.common.PhoneNumber;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import okhttp3.FormBody;

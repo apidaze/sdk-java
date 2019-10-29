@@ -1,5 +1,6 @@
 package com.apidaze.sdk.client.externalscripts;
 
+import com.apidaze.sdk.client.common.URL;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;

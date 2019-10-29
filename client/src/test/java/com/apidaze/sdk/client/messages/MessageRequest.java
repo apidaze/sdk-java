@@ -1,5 +1,6 @@
 package com.apidaze.sdk.client.messages;
 
+import com.apidaze.sdk.client.common.PhoneNumber;
 import io.netty.handler.codec.http.HttpMethod;
 import org.mockserver.model.HttpRequest;
 

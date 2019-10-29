@@ -1,5 +1,6 @@
 package com.apidaze.sdk.client.externalscripts;
 
+import com.apidaze.sdk.client.common.URL;
 import org.mockserver.model.HttpRequest;
 
 import static com.apidaze.sdk.client.TestUtil.API_KEY;
