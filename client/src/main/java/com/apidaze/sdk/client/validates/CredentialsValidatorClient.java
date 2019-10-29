@@ -2,10 +2,8 @@ package com.apidaze.sdk.client.validates;
 
 import com.apidaze.sdk.client.base.BaseApiClient;
 import com.apidaze.sdk.client.base.Credentials;
-import com.apidaze.sdk.client.http.HttpClient;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
@@ -24,8 +22,6 @@ public class CredentialsValidatorClient extends BaseApiClient implements Credent
     @Getter
     private final String baseUrl;
 
-    private final OkHttpClient client;
-
     public static CredentialsValidatorClient create(Credentials credentials) {
         return create(credentials, DEFAULT_BASE_URL);
     }
@@ -34,7 +30,7 @@ public class CredentialsValidatorClient extends BaseApiClient implements Credent
         requireNonNull(credentials, "Credentials must not be null.");
         requireNonNull(baseUrl, "baseUrl must not be null.");
 
-        return new CredentialsValidatorClient(credentials, baseUrl, HttpClient.getClientInstance());
+        return new CredentialsValidatorClient(credentials, baseUrl);
     }
 
     @Override

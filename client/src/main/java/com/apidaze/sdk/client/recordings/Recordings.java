@@ -7,6 +7,7 @@ import java.nio.file.Path;
 import java.util.List;
 
 public interface Recordings {
+
     List<String> getRecordingsList() throws IOException;
 
     InputStream downloadRecording(final String sourceFileName) throws IOException;
