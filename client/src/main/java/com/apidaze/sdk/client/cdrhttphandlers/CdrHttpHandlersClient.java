@@ -21,7 +21,7 @@ import static java.util.Objects.requireNonNull;
 public class CdrHttpHandlersClient extends BaseApiClient implements CdrHttpHandlers {
 
     @Getter
-    private final String basePath = "externalscripts";
+    private final String basePath = "cdrhttphandlers";
     @Getter
     private final Credentials credentials;
     @Getter

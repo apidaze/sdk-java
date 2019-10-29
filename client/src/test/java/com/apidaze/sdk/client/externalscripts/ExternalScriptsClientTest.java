@@ -26,7 +26,7 @@ public class ExternalScriptsClientTest {
 
     private ExternalScripts client = ExternalScriptsClient.create(CREDENTIALS, BASE_URL);
 
-    private ExternalScript script1 = ExternalScript.builder()
+    private final ExternalScript script1 = ExternalScript.builder()
             .id(1L)
             .name("The name of the first script")
             .url(URL.fromString("https://my.first.application.com"))
@@ -37,7 +37,7 @@ public class ExternalScriptsClientTest {
             .updatedAt(ZonedDateTime.parse("2019-09-20T13:44:18.123Z"))
             .build();
 
-    private ExternalScript script2 = ExternalScript.builder()
+    private final ExternalScript script2 = ExternalScript.builder()
             .id(2L)
             .name("The name of the second script")
             .url(URL.fromString("https://my.second.application.com"))
