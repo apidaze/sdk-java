@@ -1,6 +1,6 @@
 package com.apidaze.sdk.client.calls;
 
-import com.apidaze.sdk.client.messages.PhoneNumber;
+import com.apidaze.sdk.client.common.PhoneNumber;
 import org.mockserver.model.HttpRequest;
 
 import java.util.UUID;

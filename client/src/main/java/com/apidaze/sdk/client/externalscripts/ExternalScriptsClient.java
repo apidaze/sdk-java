@@ -2,6 +2,7 @@ package com.apidaze.sdk.client.externalscripts;
 
 import com.apidaze.sdk.client.base.BaseApiClient;
 import com.apidaze.sdk.client.base.Credentials;
+import com.apidaze.sdk.client.common.URL;
 import com.google.common.collect.ImmutableMap;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -17,9 +18,9 @@ import static lombok.AccessLevel.PRIVATE;
 @AllArgsConstructor(access = PRIVATE)
 public class ExternalScriptsClient extends BaseApiClient<ExternalScript> implements ExternalScripts {
 
-    public static final int MAX_NAME_LENGTH = 40;
-    private static final String URL = "url";
-    private static final String NAME = "name";
+    static final int MAX_NAME_LENGTH = 40;
+    private static final String URL_PARAM = "url";
+    private static final String NAME_PARAM = "name";
 
     @Getter
     private final String basePath = "externalscripts";
@@ -48,7 +49,7 @@ public class ExternalScriptsClient extends BaseApiClient<ExternalScript> impleme
     public ExternalScript createExternalScript(String name, URL url) throws IOException {
         validateName(name);
 
-        val params = ImmutableMap.of(NAME, name, URL, url.getValue());
+        val params = ImmutableMap.of(NAME_PARAM, name, URL_PARAM, url.getValue());
 
         return create(params, ExternalScript.class);
     }
@@ -65,7 +66,7 @@ public class ExternalScriptsClient extends BaseApiClient<ExternalScript> impleme
         requireNonNull(url, "url must not be null");
         validateName(name);
 
-        val params = ImmutableMap.of(NAME, name, URL, url.getValue());
+        val params = ImmutableMap.of(NAME_PARAM, name, URL_PARAM, url.getValue());
 
         return update(id.toString(), params, ExternalScript.class);
     }
@@ -75,7 +76,7 @@ public class ExternalScriptsClient extends BaseApiClient<ExternalScript> impleme
         requireNonNull(id, "id must not be null");
         requireNonNull(url, "url must not be null");
 
-        val params = ImmutableMap.of(URL, url.getValue());
+        val params = ImmutableMap.of(URL_PARAM, url.getValue());
 
         return update(id.toString(), params, ExternalScript.class);
     }

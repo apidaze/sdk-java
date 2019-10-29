@@ -2,8 +2,8 @@ package com.apidaze.sdk.examples.externalscripts;
 
 import com.apidaze.sdk.client.ApplicationAction;
 import com.apidaze.sdk.client.base.Credentials;
-import com.apidaze.sdk.client.externalscripts.InvalidURLException;
-import com.apidaze.sdk.client.externalscripts.URL;
+import com.apidaze.sdk.client.common.InvalidURLException;
+import com.apidaze.sdk.client.common.URL;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 

@@ -10,10 +10,10 @@ import com.apidaze.sdk.client.cdrhttphandlers.CdrHttpHandlersClient;
 import com.apidaze.sdk.client.externalscripts.ExternalScript;
 import com.apidaze.sdk.client.externalscripts.ExternalScripts;
 import com.apidaze.sdk.client.externalscripts.ExternalScriptsClient;
-import com.apidaze.sdk.client.externalscripts.URL;
+import com.apidaze.sdk.client.common.URL;
 import com.apidaze.sdk.client.messages.Message;
 import com.apidaze.sdk.client.messages.MessageClient;
-import com.apidaze.sdk.client.messages.PhoneNumber;
+import com.apidaze.sdk.client.common.PhoneNumber;
 import com.apidaze.sdk.client.recordings.Recordings;
 import com.apidaze.sdk.client.recordings.RecordingsClient;
 import com.apidaze.sdk.client.validates.CredentialsValidator;
@@ -149,5 +149,10 @@ public class ApplicationAction implements Calls, Message, ExternalScripts, Recor
     @Override
     public List<CdrHttpHandler> getCdrHttpHandlers() throws IOException {
         return cdrHttpHandlers.getCdrHttpHandlers();
+    }
+
+    @Override
+    public CdrHttpHandler createCdrHttpHandler(String name, URL url) throws IOException {
+        return cdrHttpHandlers.createCdrHttpHandler(name, url);
     }
 }

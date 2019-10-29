@@ -1,5 +1,7 @@
 package com.apidaze.sdk.client.externalscripts;
 
+import com.apidaze.sdk.client.common.URL;
+
 import java.io.IOException;
 import java.util.List;
 

@@ -1,5 +1,6 @@
 package com.apidaze.sdk.client.externalscripts;
 
+import com.apidaze.sdk.client.common.URL;
 import com.google.common.collect.ImmutableList;
 import lombok.val;
 import org.junit.Before;

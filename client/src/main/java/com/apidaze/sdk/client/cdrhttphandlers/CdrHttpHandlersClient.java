@@ -2,9 +2,12 @@ package com.apidaze.sdk.client.cdrhttphandlers;
 
 import com.apidaze.sdk.client.base.BaseApiClient;
 import com.apidaze.sdk.client.base.Credentials;
+import com.apidaze.sdk.client.common.URL;
+import com.google.common.collect.ImmutableMap;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.val;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
@@ -37,5 +40,14 @@ public class CdrHttpHandlersClient extends BaseApiClient<CdrHttpHandler> impleme
     @Override
     public List<CdrHttpHandler> getCdrHttpHandlers() throws IOException {
         return findAll(CdrHttpHandler.class);
+    }
+
+    @Override
+    public CdrHttpHandler createCdrHttpHandler(String name, URL url) throws IOException {
+        requireNonNull(name, "name must not be null");
+        requireNonNull(url, "url must not be null");
+
+        val params = ImmutableMap.of("name", name, "url", url.getValue());
+        return create(params, CdrHttpHandler.class);
     }
 }
