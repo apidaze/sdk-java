@@ -91,13 +91,13 @@ public abstract class BaseApiClient<T> {
         }
     }
 
-    protected T update(Long id, Map<String, String> params, Class<T> clazz) throws IOException {
+    protected T update(String id, Map<String, String> params, Class<T> clazz) throws IOException {
         val formBody = new FormBody.Builder();
         params.forEach(formBody::add);
 
         Request request = new Request.Builder()
                 .url(authenticated()
-                        .addPathSegment(id.toString())
+                        .addPathSegment(id)
                         .build())
                 .put(formBody.build())
                 .build();

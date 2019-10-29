@@ -67,7 +67,7 @@ public class ExternalScriptsClient extends BaseApiClient<ExternalScript> impleme
 
         val params = ImmutableMap.of(NAME, name, URL, url.getValue());
 
-        return update(id, params, ExternalScript.class);
+        return update(id.toString(), params, ExternalScript.class);
     }
 
     @Override
@@ -77,7 +77,7 @@ public class ExternalScriptsClient extends BaseApiClient<ExternalScript> impleme
 
         val params = ImmutableMap.of(URL, url.getValue());
 
-        return update(id, params, ExternalScript.class);
+        return update(id.toString(), params, ExternalScript.class);
     }
 
 
