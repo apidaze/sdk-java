@@ -20,6 +20,7 @@ public class HttpClient {
                 .readTimeout(ofSeconds(READ_TIMEOUT_SECONDS))
                 .writeTimeout(ofSeconds(WRITE_TIMEOUT_SECONDS))
                 .callTimeout(ofSeconds(CALL_TIMEOUT_SECONDS))
+                .addInterceptor(new HttpErrorHandler())
                 .build();
     }
 

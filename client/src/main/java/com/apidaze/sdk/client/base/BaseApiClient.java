@@ -57,8 +57,6 @@ public abstract class BaseApiClient<T> {
                 .build();
 
         try (Response response = client.newCall(request).execute()) {
-            if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
-
             return mapper.readValue(response.body().string(), mapper.constructType(clazz));
         }
     }
@@ -69,8 +67,6 @@ public abstract class BaseApiClient<T> {
                 .build();
 
         try (Response response = client.newCall(request).execute()) {
-            if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
-
             return mapper.readValue(response.body().string(), listType(clazz));
         }
     }
@@ -85,8 +81,6 @@ public abstract class BaseApiClient<T> {
                 .build();
 
         try (Response response = client.newCall(request).execute()) {
-            if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
-
             return mapper.readValue(response.body().string(), mapper.constructType(clazz));
         }
     }
@@ -103,8 +97,6 @@ public abstract class BaseApiClient<T> {
                 .build();
 
         try (Response response = client.newCall(request).execute()) {
-            if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
-
             return mapper.readValue(response.body().string(), mapper.constructType(clazz));
         }
     }
@@ -115,9 +107,7 @@ public abstract class BaseApiClient<T> {
                 .delete()
                 .build();
 
-        try (Response response = client.newCall(request).execute()) {
-            if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
-        }
+        try (Response ignored = client.newCall(request).execute()) {}
     }
 
     private JavaType listType(Class<T> clazz) {

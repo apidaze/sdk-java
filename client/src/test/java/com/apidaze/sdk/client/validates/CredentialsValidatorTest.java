@@ -36,43 +36,47 @@ public class CredentialsValidatorTest {
         val responseBody = "\"status\": { \"global\": \"Authentication succeeded\" }";
 
         mockServer
-                .when(validateCredentialRequest())
+                .when(validateCredentialsRequest())
                 .respond(response(responseBody));
 
         val result = validator.validateCredentials();
 
-        mockServer.verify(validateCredentialRequest());
+        mockServer.verify(validateCredentialsRequest());
         assertThat(result).isTrue();
     }
 
     @Test
     public void shouldReturnFalse_ifApiReturnsStatusCode401() throws IOException {
         mockServer
-                .when(validateCredentialRequest())
+                .when(validateCredentialsRequest())
                 .respond(response().withStatusCode(401));
 
         val result = validator.validateCredentials();
 
-        mockServer.verify(validateCredentialRequest());
+        mockServer.verify(validateCredentialsRequest());
         assertThat(result).isFalse();
     }
 
     @Test
-    public void shouldReturnFalse_ifApiReturnsStatusCode404() throws IOException {
+    public void shouldReturnFalse_ifApiReturnsStatusCode404AndSpecificErrorMessage() throws IOException {
+        val responseBody = "{\"code\": \"E_NOT_FOUND\", \"message\": \"api secret and api key are not a pair\"}";
+
         mockServer
-                .when(validateCredentialRequest())
-                .respond(response().withStatusCode(404));
+                .when(validateCredentialsRequest())
+                .respond(response()
+                        .withStatusCode(404)
+                        .withBody(responseBody));
 
         val result = validator.validateCredentials();
 
-        mockServer.verify(validateCredentialRequest());
+        mockServer.verify(validateCredentialsRequest());
         assertThat(result).isFalse();
     }
 
     @Test
     public void shouldThrowIOException_ifApiReturnsStatusCode500() {
         mockServer
-                .when(validateCredentialRequest())
+                .when(validateCredentialsRequest())
                 .respond(response().withStatusCode(500));
 
         assertThatIOException()
@@ -80,7 +84,7 @@ public class CredentialsValidatorTest {
                 .withMessageContainingAll("500", "Internal Server Error");
     }
 
-    private static HttpRequest validateCredentialRequest() {
+    private static HttpRequest validateCredentialsRequest() {
         return request()
                 .withMethod("GET")
                 .withPath("/" + API_KEY + "/validates")

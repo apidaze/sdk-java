@@ -64,8 +64,6 @@ public class CallsClient extends BaseApiClient<ActiveCall> implements Calls {
 
 
         try (Response response = client.newCall(request).execute()) {
-            if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
-
             val responseBody = mapper.readValue(response.body().string(), GenericResponse.class);
 
             return requireNonNull(responseBody, "API returned empty response body")
@@ -95,8 +93,6 @@ public class CallsClient extends BaseApiClient<ActiveCall> implements Calls {
                 .build();
 
         try (Response response = client.newCall(request).execute()) {
-            if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
-
             val responseBody = mapper.readValue(response.body().string(), GenericResponse.class);
 
             if (responseBody != null) {
