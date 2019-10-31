@@ -64,11 +64,8 @@ public class RecordingsClient extends BaseApiClient<String> implements Recording
 
     @Override
     public InputStream downloadRecording(String sourceFileName) throws IOException {
-        Request request = downloadRequest(sourceFileName);
-        Response response = client.newCall(request).execute();
-
-        if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
-
+        val request = downloadRequest(sourceFileName);
+        val response = client.newCall(request).execute();
         return response.body().byteStream();
     }
 
@@ -101,12 +98,8 @@ public class RecordingsClient extends BaseApiClient<String> implements Recording
             public void onResponse(@NotNull Call call, @NotNull Response response) {
                 try (ResponseBody responseBody = response.body();
                      Sink fileSink = Okio.sink(tempFile);
-                     BufferedSink bufferedSink = Okio.buffer(fileSink)) {
-
-                    if (!response.isSuccessful()) {
-                        throw new IOException("Unexpected code " + response);
-                    }
-
+                     BufferedSink bufferedSink = Okio.buffer(fileSink)
+                ) {
                     bufferedSink.writeAll(responseBody.source());
                     move(tempFile, destFile, REPLACE_EXISTING);
                     callback.onSuccess(destFile.toFile());
@@ -130,10 +123,8 @@ public class RecordingsClient extends BaseApiClient<String> implements Recording
 
         try (Response response = client.newCall(request).execute();
              Sink fileSink = Okio.sink(tempFile);
-             BufferedSink bufferedSink = Okio.buffer(fileSink)) {
-
-            if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
-
+             BufferedSink bufferedSink = Okio.buffer(fileSink)
+        ) {
             bufferedSink.writeAll(response.body().source());
             move(tempFile, destFile, REPLACE_EXISTING);
             return destFile.toFile();
