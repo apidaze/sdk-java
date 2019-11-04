@@ -1,4 +1,4 @@
-package com.apidaze.sdk.client.cdrhttphandlers;
+package com.apidaze.sdk.client;
 
 import org.mockserver.model.HttpResponse;
 
@@ -10,12 +10,19 @@ import static com.google.common.net.HttpHeaders.CONTENT_TYPE;
 import static org.mockserver.model.HttpResponse.response;
 import static org.mockserver.model.HttpStatusCode.OK_200;
 
-class CdrHttpHandlersResponse {
+public class GenericResponse {
 
-    static HttpResponse list(List<CdrHttpHandler> cdrHttpHandlers) {
+    public static HttpResponse one(Object object) {
         return response()
                 .withStatusCode(OK_200.code())
                 .withHeader(CONTENT_TYPE, APPLICATION_JSON_UTF8_VALUE)
-                .withBody(json(cdrHttpHandlers));
+                .withBody(json(object));
+    }
+
+    public static HttpResponse list(List objects) {
+        return response()
+                .withStatusCode(OK_200.code())
+                .withHeader(CONTENT_TYPE, APPLICATION_JSON_UTF8_VALUE)
+                .withBody(json(objects));
     }
 }

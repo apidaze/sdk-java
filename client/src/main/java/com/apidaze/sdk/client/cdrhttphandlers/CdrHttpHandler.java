@@ -1,5 +1,6 @@
 package com.apidaze.sdk.client.cdrhttphandlers;
 
+import com.apidaze.sdk.client.common.URL;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
@@ -15,7 +16,7 @@ public class CdrHttpHandler {
     Long id;
     String name;
     Format format;
-    String url;
+    URL url;
     CallLeg callLeg;
     ZonedDateTime createdAt;
     ZonedDateTime updatedAt;
@@ -24,7 +25,7 @@ public class CdrHttpHandler {
     public CdrHttpHandler(@JsonProperty("id") Long id,
                           @JsonProperty("name") String name,
                           @JsonProperty("format") Format format,
-                          @JsonProperty("url") String url,
+                          @JsonProperty("url") URL url,
                           @JsonProperty("call_leg") CallLeg callLeg,
                           @JsonProperty("created_at") ZonedDateTime createdAt,
                           @JsonProperty("updated_at") ZonedDateTime updatedAt) {
