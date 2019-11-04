@@ -1,25 +1,33 @@
 package com.apidaze.sdk.client.calls;
 
+import com.apidaze.sdk.client.GenericRequest;
 import com.apidaze.sdk.client.common.PhoneNumber;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
+import lombok.Getter;
 import lombok.val;
 import org.junit.Rule;
 import org.junit.Test;
 import org.mockserver.client.MockServerClient;
 import org.mockserver.junit.MockServerRule;
+import org.mockserver.model.HttpRequest;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
+import static com.apidaze.sdk.client.GenericResponse.list;
+import static com.apidaze.sdk.client.GenericResponse.one;
 import static com.apidaze.sdk.client.TestUtil.*;
-import static com.apidaze.sdk.client.calls.CallsRequest.*;
 import static com.apidaze.sdk.client.calls.CallsResponse.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
-public class CallsClientTest {
+public class CallsClientTest extends GenericRequest {
+
+    @Getter
+    private final String basePath = "calls";
 
     @Rule
     public MockServerRule mockServerRule = new MockServerRule(this, PORT);
@@ -107,12 +115,12 @@ public class CallsClientTest {
         val id = UUID.fromString("d64baf26-b116-4478-97b5-899de580461f");
 
         mockServer
-                .when(delete(id))
+                .when(delete(id.toString()))
                 .respond(ok(""));
 
         client.deleteActiveCall(id);
 
-        mockServer.verify(delete(id));
+        mockServer.verify(delete(id.toString()));
     }
 
     @Test
@@ -121,7 +129,7 @@ public class CallsClientTest {
         val failureMessage = "NORMAL TEMPORARY_FAILURE";
 
         mockServer
-                .when(delete(id))
+                .when(delete(id.toString()))
                 .respond(failed(failureMessage));
 
         assertThatExceptionOfType(CallsClient.DeleteResponseException.class)
@@ -181,5 +189,22 @@ public class CallsClientTest {
                         .callUuid("fa67a5f3-bac4-48bb-ade7-efa19cd99938")
                         .build()
         );
+    }
+
+    private HttpRequest create(PhoneNumber callerId, String origin, String destination, Calls.CallType callType) {
+        return create(ImmutableMap.of(
+                "callerid", callerId.getNumber(),
+                "origin", origin,
+                "destination", destination,
+                "type", callType.getValue()
+        ));
+    }
+
+    private HttpRequest getActiveCalls() {
+        return getAll();
+    }
+
+    private HttpRequest getActiveCall(UUID id) {
+        return getById(id.toString());
     }
 }

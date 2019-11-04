@@ -1,22 +1,28 @@
 package com.apidaze.sdk.client.messages;
 
+import com.apidaze.sdk.client.GenericRequest;
 import com.apidaze.sdk.client.common.PhoneNumber;
+import com.google.common.collect.ImmutableMap;
+import lombok.Getter;
 import lombok.val;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.mockserver.client.MockServerClient;
 import org.mockserver.junit.MockServerRule;
+import org.mockserver.model.HttpRequest;
 
 import java.io.IOException;
 
 import static com.apidaze.sdk.client.TestUtil.*;
-import static com.apidaze.sdk.client.messages.MessageRequest.send;
 import static com.apidaze.sdk.client.messages.MessageResponse.ok;
 import static org.assertj.core.api.Assertions.*;
 import static org.mockserver.model.HttpResponse.response;
 
-public class MessageClientTest {
+public class MessageClientTest extends GenericRequest {
+
+    @Getter
+    private final String basePath = "sms/send";
 
     @Rule
     public MockServerRule mockServerRule = new MockServerRule(this, PORT);
@@ -74,5 +80,12 @@ public class MessageClientTest {
         assertThatIOException()
                 .isThrownBy(() -> client.sendTextMessage(from, to, messageBody))
                 .withMessageContainingAll("500", "Internal Server Error");
+    }
+
+    private HttpRequest send(PhoneNumber from, PhoneNumber to, String body) {
+        return create(ImmutableMap.of(
+                "from", from.getNumber(),
+                "to", to.getNumber(),
+                "body", body));
     }
 }

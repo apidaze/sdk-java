@@ -1,7 +1,9 @@
 package com.apidaze.sdk.client.externalscripts;
 
+import com.apidaze.sdk.client.GenericRequest;
 import com.apidaze.sdk.client.common.URL;
 import com.google.common.collect.ImmutableList;
+import lombok.Getter;
 import lombok.val;
 import org.junit.Before;
 import org.junit.Rule;
@@ -12,13 +14,17 @@ import org.mockserver.junit.MockServerRule;
 import java.io.IOException;
 import java.time.ZonedDateTime;
 
+import static com.apidaze.sdk.client.GenericResponse.list;
+import static com.apidaze.sdk.client.GenericResponse.one;
 import static com.apidaze.sdk.client.TestUtil.*;
-import static com.apidaze.sdk.client.externalscripts.ExternalScriptsRequest.*;
-import static com.apidaze.sdk.client.externalscripts.ExternalScriptsResponse.*;
+import static com.apidaze.sdk.client.externalscripts.ExternalScriptsResponse.ok;
 import static org.assertj.core.api.Assertions.*;
 import static org.mockserver.model.HttpResponse.response;
 
-public class ExternalScriptsClientTest {
+public class ExternalScriptsClientTest extends GenericRequest {
+
+    @Getter
+    private final String basePath = "externalscripts";
 
     @Rule
     public MockServerRule mockServerRule = new MockServerRule(this, PORT);
@@ -26,28 +32,6 @@ public class ExternalScriptsClientTest {
     private MockServerClient mockServer;
 
     private ExternalScripts client = ExternalScriptsClient.create(CREDENTIALS, BASE_URL);
-
-    private final ExternalScript script1 = ExternalScript.builder()
-            .id(1L)
-            .name("The name of the first script")
-            .url(URL.fromString("https://my.first.application.com"))
-            .smsUrl(URL.fromString("https://my.first.sms.application.com"))
-            .resellerCustomerId(5L)
-            .devCustomerId(6L)
-            .createdAt(ZonedDateTime.parse("2019-09-19T11:20:18.123Z"))
-            .updatedAt(ZonedDateTime.parse("2019-09-20T13:44:18.123Z"))
-            .build();
-
-    private final ExternalScript script2 = ExternalScript.builder()
-            .id(2L)
-            .name("The name of the second script")
-            .url(URL.fromString("https://my.second.application.com"))
-            .smsUrl(URL.fromString("https://my.second.sms.application.com"))
-            .resellerCustomerId(12L)
-            .devCustomerId(34L)
-            .createdAt(ZonedDateTime.parse("2019-10-14T09:20:18.123Z"))
-            .updatedAt(ZonedDateTime.parse("2019-12-09T13:44:18.123Z"))
-            .build();
 
     @Before
     public void setUp() {
@@ -75,19 +59,20 @@ public class ExternalScriptsClientTest {
     @Test
     public void shouldReturnExternalScriptById() throws IOException {
         val script = script1;
+        val id = script.getId();
 
         mockServer
-                .when(getById(script.getId()))
+                .when(getById(id))
                 .respond(one(script));
 
-        val response = client.getExternalScript(script.getId());
+        val response = client.getExternalScript(id);
 
         assertThat(response)
                 .usingRecursiveComparison()
                 .withComparatorForType(dateTimeComparator, ZonedDateTime.class)
                 .isEqualTo(script);
 
-        mockServer.verify(getById(script.getId()));
+        mockServer.verify(getById(id));
     }
 
     @Test
@@ -207,6 +192,29 @@ public class ExternalScriptsClientTest {
 
         assertThatIOException()
                 .isThrownBy(() -> client.updateExternalScriptUrl(scriptId, scriptUrl))
-                .withMessageContainingAll("500","Internal Server Error");
+                .withMessageContainingAll("500", "Internal Server Error");
     }
+
+    private final ExternalScript script1 = ExternalScript.builder()
+            .id(1L)
+            .name("The name of the first script")
+            .url(URL.fromString("https://my.first.application.com"))
+            .smsUrl(URL.fromString("https://my.first.sms.application.com"))
+            .resellerCustomerId(5L)
+            .devCustomerId(6L)
+            .createdAt(ZonedDateTime.parse("2019-09-19T11:20:18.123Z"))
+            .updatedAt(ZonedDateTime.parse("2019-09-20T13:44:18.123Z"))
+            .build();
+
+    private final ExternalScript script2 = ExternalScript.builder()
+            .id(2L)
+            .name("The name of the second script")
+            .url(URL.fromString("https://my.second.application.com"))
+            .smsUrl(URL.fromString("https://my.second.sms.application.com"))
+            .resellerCustomerId(12L)
+            .devCustomerId(34L)
+            .createdAt(ZonedDateTime.parse("2019-10-14T09:20:18.123Z"))
+            .updatedAt(ZonedDateTime.parse("2019-12-09T13:44:18.123Z"))
+            .build();
+
 }

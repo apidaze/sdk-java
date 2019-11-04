@@ -1,6 +1,8 @@
 package com.apidaze.sdk.client.recordings;
 
+import com.apidaze.sdk.client.GenericRequest;
 import com.google.common.collect.ImmutableList;
+import lombok.Getter;
 import lombok.val;
 import org.assertj.core.api.AbstractFileAssert;
 import org.junit.AfterClass;
@@ -18,9 +20,8 @@ import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import static com.apidaze.sdk.client.GenericResponse.list;
 import static com.apidaze.sdk.client.TestUtil.*;
-import static com.apidaze.sdk.client.recordings.RecordingsClientRequest.*;
-import static com.apidaze.sdk.client.recordings.RecordingsClientResponse.list;
 import static com.apidaze.sdk.client.recordings.RecordingsClientResponse.responseWithFile;
 import static java.nio.file.Files.copy;
 import static java.nio.file.Files.deleteIfExists;
@@ -30,9 +31,10 @@ import static org.awaitility.Awaitility.await;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.mockserver.model.HttpResponse.response;
-import static org.mockserver.model.HttpStatusCode.*;
+import static org.mockserver.model.HttpStatusCode.INTERNAL_SERVER_ERROR_500;
+import static org.mockserver.model.HttpStatusCode.NO_CONTENT_204;
 
-public class RecordingsClientTest {
+public class RecordingsClientTest extends GenericRequest {
 
     private final static String SOURCE_FILES_DIR = "src/test/resources/data";
     private final static String SOURCE_FILE_NAME = "mediafile.wav";
@@ -41,6 +43,9 @@ public class RecordingsClientTest {
     private final static Path TARGET_DIR = Paths.get("target");
     private final static File TARGET_FILE = TARGET_DIR.resolve(SOURCE_FILE_NAME).toFile();
     private final static File TARGET_FILE_WITH_CHANGED_NAME = TARGET_DIR.resolve("new-file.wav").toFile();
+
+    @Getter
+    private final String basePath = "recordings";
 
     @Rule
     public MockServerRule mockServerRule = new MockServerRule(this, PORT);
@@ -95,13 +100,13 @@ public class RecordingsClientTest {
         val expectedStream = new FileInputStream(SOURCE_FILE);
 
         mockServer
-                .when(download(SOURCE_FILE_NAME))
+                .when(getById(SOURCE_FILE_NAME))
                 .respond(responseWithFile(SOURCE_FILE));
 
         val resultStream = client.downloadRecording(SOURCE_FILE_NAME);
 
         assertThat(resultStream).hasSameContentAs(expectedStream);
-        mockServer.verify(download(SOURCE_FILE_NAME));
+        mockServer.verify(getById(SOURCE_FILE_NAME));
 
         resultStream.close();
         expectedStream.close();
@@ -113,7 +118,7 @@ public class RecordingsClientTest {
         val downloadedFile = ArgumentCaptor.forClass(File.class);
 
         mockServer
-                .when(download(SOURCE_FILE_NAME))
+                .when(getById(SOURCE_FILE_NAME))
                 .respond(responseWithFile(SOURCE_FILE));
 
         client.downloadRecordingToFileAsync(SOURCE_FILE_NAME, TARGET_DIR, callback);
@@ -121,7 +126,7 @@ public class RecordingsClientTest {
         await().untilAsserted(() -> verify(callback).onSuccess(downloadedFile.capture()));
         verify(callback, never()).onFailure(anyString(), any(), any());
         verifyDownloadedFile(downloadedFile.getValue());
-        mockServer.verify(download(SOURCE_FILE_NAME));
+        mockServer.verify(getById(SOURCE_FILE_NAME));
     }
 
     @Test
@@ -132,7 +137,7 @@ public class RecordingsClientTest {
         copy(EMPTY_FILE.toPath(), TARGET_FILE.toPath());
 
         mockServer
-                .when(download(SOURCE_FILE_NAME))
+                .when(getById(SOURCE_FILE_NAME))
                 .respond(responseWithFile(SOURCE_FILE));
 
         client.downloadRecordingToFileAsync(SOURCE_FILE_NAME, TARGET_DIR, overwrite, callback);
@@ -150,7 +155,7 @@ public class RecordingsClientTest {
         val callback = mock(Recordings.DownloadCallback.class);
 
         mockServer
-                .when(download(SOURCE_FILE_NAME))
+                .when(getById(SOURCE_FILE_NAME))
                 .respond(response().withStatusCode(INTERNAL_SERVER_ERROR_500.code()));
 
         client.downloadRecordingToFileAsync(SOURCE_FILE_NAME, TARGET_DIR, callback);
@@ -160,31 +165,31 @@ public class RecordingsClientTest {
                 eq(TARGET_DIR),
                 any(IOException.class)));
         verify(callback, never()).onSuccess(any());
-        mockServer.verify(download(SOURCE_FILE_NAME));
+        mockServer.verify(getById(SOURCE_FILE_NAME));
     }
 
     @Test
     public void shouldDownloadFileToLocalFolderWithOriginalName() throws IOException {
         mockServer
-                .when(download(SOURCE_FILE_NAME))
+                .when(getById(SOURCE_FILE_NAME))
                 .respond(responseWithFile(SOURCE_FILE));
 
         val downloadedFile = client.downloadRecordingToFile(SOURCE_FILE_NAME, TARGET_DIR);
 
         verifyDownloadedFile(downloadedFile);
-        mockServer.verify(download(SOURCE_FILE_NAME));
+        mockServer.verify(getById(SOURCE_FILE_NAME));
     }
 
     @Test
     public void shouldDownloadFileToLocalFolderWithChangedName() throws IOException {
         mockServer
-                .when(download(SOURCE_FILE_NAME))
+                .when(getById(SOURCE_FILE_NAME))
                 .respond(responseWithFile(SOURCE_FILE));
 
         val downloadedFile = client.downloadRecordingToFile(SOURCE_FILE_NAME, TARGET_FILE_WITH_CHANGED_NAME.toPath());
 
         verifyDownloadedFile(downloadedFile, TARGET_FILE_WITH_CHANGED_NAME.getName());
-        mockServer.verify(download(SOURCE_FILE_NAME));
+        mockServer.verify(getById(SOURCE_FILE_NAME));
     }
 
     @Test
@@ -197,13 +202,13 @@ public class RecordingsClientTest {
                 .isNotEqualTo(getBinaryContent(SOURCE_FILE).length);
 
         mockServer
-                .when(download(SOURCE_FILE_NAME))
+                .when(getById(SOURCE_FILE_NAME))
                 .respond(responseWithFile(SOURCE_FILE));
 
         val downloadedFile = client.downloadRecordingToFile(SOURCE_FILE_NAME, TARGET_DIR, overwrite);
 
         verifyDownloadedFile(downloadedFile);
-        mockServer.verify(download(SOURCE_FILE_NAME));
+        mockServer.verify(getById(SOURCE_FILE_NAME));
     }
 
     @Test
@@ -213,7 +218,7 @@ public class RecordingsClientTest {
         copy(EMPTY_FILE.toPath(), TARGET_FILE.toPath());
 
         mockServer
-                .when(download(SOURCE_FILE_NAME))
+                .when(getById(SOURCE_FILE_NAME))
                 .respond(responseWithFile(SOURCE_FILE));
 
         assertThatExceptionOfType(FileAlreadyExistsException.class)
