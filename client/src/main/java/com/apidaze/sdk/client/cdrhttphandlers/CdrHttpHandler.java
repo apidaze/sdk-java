@@ -41,7 +41,8 @@ public class CdrHttpHandler {
     @AllArgsConstructor(access = PRIVATE)
     public enum CallLeg {
         INBOUND("inbound"),
-        OUTBOUND("outbound");
+        OUTBOUND("outbound"),
+        BOTH("both");
 
         @JsonValue
         @Getter
@@ -51,9 +52,8 @@ public class CdrHttpHandler {
     @AllArgsConstructor(access = PRIVATE)
     public enum Format {
         REGULAR("regular"),
-        CSV("csv"),
-        XML("xml"),
-        JSON("json");
+        JSON("json"),
+        XML("xml");
 
         @JsonValue
         @Getter
