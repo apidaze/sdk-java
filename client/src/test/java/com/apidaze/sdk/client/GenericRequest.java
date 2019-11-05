@@ -9,6 +9,7 @@ import org.mockserver.model.Parameter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import static com.apidaze.sdk.client.TestUtil.API_KEY;
 import static com.apidaze.sdk.client.TestUtil.API_SECRET;
@@ -27,6 +28,10 @@ public abstract class GenericRequest {
                 .withMethod(GET.name())
                 .withPath("/" + API_KEY + "/" + getBasePath())
                 .withQueryStringParameters(param("api_secret", API_SECRET));
+    }
+
+    protected HttpRequest getById(@NotNull UUID id) {
+        return getById(id.toString());
     }
 
     protected HttpRequest getById(@NotNull Long id) {

@@ -43,7 +43,11 @@ public class ActiveCallsAllInOneExample {
 
             // get active call details
             val activeCall = applicationAction.getActiveCall(callId);
-            log.info("Initiated call details = {}", activeCall);
+            if (activeCall.isPresent()) {
+                log.info("Initiated call details = {}", activeCall);
+            } else {
+                log.warn("There is no active call with id = {}", callId);
+            }
 
             // get full list of active calls
             val activeCalls = applicationAction.getActiveCalls();

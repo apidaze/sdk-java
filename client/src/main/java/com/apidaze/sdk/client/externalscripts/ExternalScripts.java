@@ -4,6 +4,7 @@ import com.apidaze.sdk.client.common.URL;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 
 public interface ExternalScripts {
 
@@ -11,7 +12,7 @@ public interface ExternalScripts {
 
     ExternalScript createExternalScript(String name, URL url) throws IOException;
 
-    ExternalScript getExternalScript(Long id) throws IOException;
+    Optional<ExternalScript> getExternalScript(Long id) throws IOException;
 
     ExternalScript updateExternalScript(Long id, String name, URL url) throws IOException;
 

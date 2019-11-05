@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import static java.util.Objects.requireNonNull;
@@ -62,7 +63,7 @@ public class ApplicationAction implements Calls, Message, ExternalScripts, Recor
     }
 
     @Override
-    public ActiveCall getActiveCall(UUID id) throws IOException {
+    public Optional<ActiveCall> getActiveCall(UUID id) throws IOException {
         return calls.getActiveCall(id);
     }
 
@@ -87,7 +88,7 @@ public class ApplicationAction implements Calls, Message, ExternalScripts, Recor
     }
 
     @Override
-    public ExternalScript getExternalScript(Long id) throws IOException {
+    public Optional<ExternalScript> getExternalScript(Long id) throws IOException {
         return externalScripts.getExternalScript(id);
     }
 

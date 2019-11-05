@@ -23,6 +23,7 @@ import static com.apidaze.sdk.client.TestUtil.*;
 import static com.apidaze.sdk.client.calls.CallsResponse.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import static org.mockserver.model.HttpResponse.response;
 
 public class CallsClientTest extends GenericRequest {
 
@@ -165,7 +166,23 @@ public class CallsClientTest extends GenericRequest {
         val result = client.getActiveCall(id);
 
         mockServer.verify(getActiveCall(id));
-        assertThat(result).isEqualTo(activeCall);
+
+        assertThat(result).isPresent();
+        assertThat(result.get()).isEqualTo(activeCall);
+    }
+
+    @Test
+    public void getActiveCallShouldReturnEmpty_ifApiReturnsNotFound() throws IOException {
+        val id = UUID.randomUUID();
+
+        mockServer
+                .when(getById(id))
+                .respond(response().withStatusCode(404));
+
+        val response = client.getActiveCall(id);
+
+        assertThat(response).isEmpty();
+        mockServer.verify(getById(id));
     }
 
     private List<ActiveCall> generateActiveCallsList() {

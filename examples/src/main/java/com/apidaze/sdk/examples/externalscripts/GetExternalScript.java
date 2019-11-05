@@ -31,7 +31,12 @@ public class GetExternalScript {
         try {
             // get an external script
             val script = applicationAction.getExternalScript(id);
-            log.info("Retrieved {}", script);
+
+            if (script.isPresent()) {
+                log.info("Retrieved {}", script);
+            } else {
+                log.error("External script with id = {} not found.", id);
+            }
         } catch (IOException e) {
             log.error("An error occurred during communicating with API", e);
         }

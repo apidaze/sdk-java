@@ -80,13 +80,15 @@ public class CallsClient extends BaseApiClient<ActiveCall> implements Calls {
     }
 
     @Override
-    public ActiveCall getActiveCall(UUID id) throws IOException {
-        requireNonNull(id, "id must no be null");
+    public Optional<ActiveCall> getActiveCall(UUID id) throws IOException {
+        requireNonNull(id, "id must not be null");
         return findById(id.toString(), ActiveCall.class);
     }
 
     @Override
     public void deleteActiveCall(UUID id) throws IOException {
+        requireNonNull(id, "id must not be null");
+
         Request request = new Request.Builder()
                 .url(authenticated().addPathSegment(id.toString()).build())
                 .delete()
