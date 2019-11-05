@@ -1,7 +1,5 @@
-package com.apidaze.sdk.client.externalscripts;
+package com.apidaze.sdk.client.common;
 
-import com.apidaze.sdk.client.common.InvalidURLException;
-import com.apidaze.sdk.client.common.URL;
 import lombok.val;
 import org.junit.Test;
 

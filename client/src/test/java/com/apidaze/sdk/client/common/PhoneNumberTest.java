@@ -1,7 +1,5 @@
-package com.apidaze.sdk.client.messages;
+package com.apidaze.sdk.client.common;
 
-import com.apidaze.sdk.client.common.InvalidPhoneNumberException;
-import com.apidaze.sdk.client.common.PhoneNumber;
 import lombok.val;
 import org.junit.Test;
 
