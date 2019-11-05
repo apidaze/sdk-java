@@ -6,6 +6,7 @@ import lombok.Getter;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 public interface Calls {
@@ -23,7 +24,7 @@ public interface Calls {
 
     List<ActiveCall> getActiveCalls() throws IOException;
 
-    ActiveCall getActiveCall(UUID id) throws IOException;
+    Optional<ActiveCall> getActiveCall(UUID id) throws IOException;
 
     void deleteActiveCall(UUID id) throws IOException;
 

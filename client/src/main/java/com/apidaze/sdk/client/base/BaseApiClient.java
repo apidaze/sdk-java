@@ -1,6 +1,7 @@
 package com.apidaze.sdk.client.base;
 
 import com.apidaze.sdk.client.http.HttpClient;
+import com.apidaze.sdk.client.http.HttpResponseException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -12,8 +13,7 @@ import okhttp3.*;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
-
-import static java.util.Objects.requireNonNull;
+import java.util.Optional;
 
 
 public abstract class BaseApiClient<T> {
@@ -71,9 +71,7 @@ public abstract class BaseApiClient<T> {
         }
     }
 
-    protected T findById(String id, Class<T> clazz) throws IOException {
-        requireNonNull(id, "id must not be null");
-
+    protected Optional<T> findById(String id, Class<T> clazz) throws IOException {
         Request request = new Request.Builder()
                 .url(authenticated()
                         .addPathSegment(id)
@@ -81,7 +79,9 @@ public abstract class BaseApiClient<T> {
                 .build();
 
         try (Response response = client.newCall(request).execute()) {
-            return mapper.readValue(response.body().string(), mapper.constructType(clazz));
+            return Optional.of(mapper.readValue(response.body().string(), mapper.constructType(clazz)));
+        } catch (HttpResponseException.NotFound e) {
+            return Optional.empty();
         }
     }
 

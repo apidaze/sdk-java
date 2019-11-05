@@ -67,13 +67,29 @@ public class ExternalScriptsClientTest extends GenericRequest {
 
         val response = client.getExternalScript(id);
 
-        assertThat(response)
+        assertThat(response).isPresent();
+        assertThat(response.get())
                 .usingRecursiveComparison()
                 .withComparatorForType(dateTimeComparator, ZonedDateTime.class)
                 .isEqualTo(script);
 
         mockServer.verify(getById(id));
     }
+
+    @Test
+    public void getExternalScriptByIdShouldReturnEmpty_ifApiReturnsNotFound() throws IOException {
+        val id = 1L;
+
+        mockServer
+                .when(getById(id))
+                .respond(response().withStatusCode(404));
+
+        val response = client.getExternalScript(id);
+
+        assertThat(response).isEmpty();
+        mockServer.verify(getById(id));
+    }
+
 
     @Test
     public void shouldCreateExternalScript() throws IOException {

@@ -27,10 +27,13 @@ public class HttpResponseException extends IOException {
     }
 
     public static HttpResponseException create(int statusCode, String statusMessage, @Nullable String responseBody) {
-        if (statusCode == 401) {
-            return new Unauthorized(statusMessage, responseBody);
-        } else {
-            return new HttpResponseException(statusCode, statusMessage, responseBody);
+        switch (statusCode) {
+            case 401:
+                return new Unauthorized(statusMessage, responseBody);
+            case 404:
+                return new NotFound(statusMessage, responseBody);
+            default:
+                return new HttpResponseException(statusCode, statusMessage, responseBody);
         }
     }
 
@@ -38,6 +41,13 @@ public class HttpResponseException extends IOException {
 
         Unauthorized(String statusMessage, @Nullable String responseBody) {
             super(401, statusMessage, responseBody);
+        }
+    }
+
+    public static class NotFound extends HttpResponseException {
+
+        NotFound(String statusMessage, @Nullable String responseBody) {
+            super(404, statusMessage, responseBody);
         }
     }
 }

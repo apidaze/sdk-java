@@ -11,6 +11,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 
 import static java.util.Objects.requireNonNull;
 import static lombok.AccessLevel.PRIVATE;
@@ -55,7 +56,7 @@ public class ExternalScriptsClient extends BaseApiClient<ExternalScript> impleme
     }
 
     @Override
-    public ExternalScript getExternalScript(Long id) throws IOException {
+    public Optional<ExternalScript> getExternalScript(Long id) throws IOException {
         requireNonNull(id, "id must not be null");
         return findById(id.toString(), ExternalScript.class);
     }
