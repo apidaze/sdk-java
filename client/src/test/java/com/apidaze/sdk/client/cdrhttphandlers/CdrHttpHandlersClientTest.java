@@ -77,6 +77,67 @@ public class CdrHttpHandlersClientTest extends GenericRequest {
         mockServer.verify(create(name, url));
     }
 
+    @Test
+    public void shouldUpdateCdrHttpHandlerNameAndUrl() throws IOException {
+        val cdrHttpHandler = getCdrHttpHandlerList(1).get(0);
+        val id = cdrHttpHandler.getId();
+        val name = cdrHttpHandler.getName();
+        val url = cdrHttpHandler.getUrl();
+
+        mockServer
+                .when(update(id, name, url))
+                .respond(one(cdrHttpHandler).withStatusCode(202));
+
+        val response = client.updateCdrHttpHandler(id, name, url);
+
+        assertThat(response)
+                .usingRecursiveComparison()
+                .withComparatorForType(dateTimeComparator, ZonedDateTime.class)
+                .isEqualTo(cdrHttpHandler);
+
+        mockServer.verify(update(id, name, url));
+    }
+
+    @Test
+    public void shouldUpdateCdrHttpHandlerName() throws IOException {
+        val cdrHttpHandler = getCdrHttpHandlerList(1).get(0);
+        val id = cdrHttpHandler.getId();
+        val name = cdrHttpHandler.getName();
+
+        mockServer
+                .when(updateName(id, name))
+                .respond(one(cdrHttpHandler).withStatusCode(202));
+
+        val response = client.updateCdrHttpHandlerName(id, name);
+
+        assertThat(response)
+                .usingRecursiveComparison()
+                .withComparatorForType(dateTimeComparator, ZonedDateTime.class)
+                .isEqualTo(cdrHttpHandler);
+
+        mockServer.verify(updateName(id, name));
+    }
+
+    @Test
+    public void shouldUpdateCdrHttpHandlerUrl() throws IOException {
+        val cdrHttpHandler = getCdrHttpHandlerList(1).get(0);
+        val id = cdrHttpHandler.getId();
+        val url = cdrHttpHandler.getUrl();
+
+        mockServer
+                .when(updateUrl(id, url))
+                .respond(one(cdrHttpHandler).withStatusCode(202));
+
+        val response = client.updateCdrHttpHandlerUrl(id, url);
+
+        assertThat(response)
+                .usingRecursiveComparison()
+                .withComparatorForType(dateTimeComparator, ZonedDateTime.class)
+                .isEqualTo(cdrHttpHandler);
+
+        mockServer.verify(updateUrl(id, url));
+    }
+
 
     private List<CdrHttpHandler> getCdrHttpHandlerList(int size) {
         return IntStream.range(0, size)

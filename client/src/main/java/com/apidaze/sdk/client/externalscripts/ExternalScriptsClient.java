@@ -20,8 +20,8 @@ import static lombok.AccessLevel.PRIVATE;
 public class ExternalScriptsClient extends BaseApiClient<ExternalScript> implements ExternalScripts {
 
     static final int MAX_NAME_LENGTH = 40;
-    private static final String URL_PARAM = "url";
-    private static final String NAME_PARAM = "name";
+    private static final String PARAM_URL = "url";
+    private static final String PARAM_NAME = "name";
 
     @Getter
     private final String basePath = "externalscripts";
@@ -50,8 +50,7 @@ public class ExternalScriptsClient extends BaseApiClient<ExternalScript> impleme
     public ExternalScript createExternalScript(String name, URL url) throws IOException {
         validateName(name);
 
-        val params = ImmutableMap.of(NAME_PARAM, name, URL_PARAM, url.getValue());
-
+        val params = ImmutableMap.of(PARAM_NAME, name, PARAM_URL, url.getValue());
         return create(params, ExternalScript.class);
     }
 
@@ -67,8 +66,7 @@ public class ExternalScriptsClient extends BaseApiClient<ExternalScript> impleme
         requireNonNull(url, "url must not be null");
         validateName(name);
 
-        val params = ImmutableMap.of(NAME_PARAM, name, URL_PARAM, url.getValue());
-
+        val params = ImmutableMap.of(PARAM_NAME, name, PARAM_URL, url.getValue());
         return update(id.toString(), params, ExternalScript.class);
     }
 
@@ -77,9 +75,7 @@ public class ExternalScriptsClient extends BaseApiClient<ExternalScript> impleme
         requireNonNull(id, "id must not be null");
         requireNonNull(url, "url must not be null");
 
-        val params = ImmutableMap.of(URL_PARAM, url.getValue());
-
-        return update(id.toString(), params, ExternalScript.class);
+        return update(id.toString(), ImmutableMap.of(PARAM_URL, url.getValue()), ExternalScript.class);
     }
 
 
