@@ -156,4 +156,19 @@ public class ApplicationAction implements Calls, Message, ExternalScripts, Recor
     public CdrHttpHandler createCdrHttpHandler(String name, URL url) throws IOException {
         return cdrHttpHandlers.createCdrHttpHandler(name, url);
     }
+
+    @Override
+    public CdrHttpHandler updateCdrHttpHandler(Long id, String name, URL url) throws IOException {
+        return cdrHttpHandlers.updateCdrHttpHandler(id, name, url);
+    }
+
+    @Override
+    public CdrHttpHandler updateCdrHttpHandlerName(Long id, String name) throws IOException {
+        return cdrHttpHandlers.updateCdrHttpHandlerName(id, name);
+    }
+
+    @Override
+    public CdrHttpHandler updateCdrHttpHandlerUrl(Long id, URL url) throws IOException {
+        return cdrHttpHandlers.updateCdrHttpHandlerUrl(id, url);
+    }
 }

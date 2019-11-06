@@ -21,13 +21,18 @@ import static org.mockserver.model.ParameterBody.params;
 
 public abstract class GenericRequest {
 
+    private static final String PARAM_NAME = "name";
+    private static final String PARAM_URL = "url";
+    private static final String PARAM_API_SECRET = "api_secret";
+    private static final String APPLICATION_FORM_URLENCODED = "application/x-www-form-urlencoded";
+
     protected abstract String getBasePath();
 
     protected HttpRequest getAll() {
         return request()
                 .withMethod(GET.name())
                 .withPath("/" + API_KEY + "/" + getBasePath())
-                .withQueryStringParameters(param("api_secret", API_SECRET));
+                .withQueryStringParameters(param(PARAM_API_SECRET, API_SECRET));
     }
 
     protected HttpRequest getById(@NotNull UUID id) {
@@ -42,7 +47,7 @@ public abstract class GenericRequest {
         return request()
                 .withMethod(GET.name())
                 .withPath("/" + API_KEY + "/" + getBasePath() + "/" + id)
-                .withQueryStringParameters(param("api_secret", API_SECRET));
+                .withQueryStringParameters(param(PARAM_API_SECRET, API_SECRET));
     }
 
     protected HttpRequest create(@NotNull Map<String, String> params) {
@@ -51,9 +56,9 @@ public abstract class GenericRequest {
 
         return request()
                 .withMethod(POST.name())
-                .withHeader(CONTENT_TYPE, "application/x-www-form-urlencoded")
+                .withHeader(CONTENT_TYPE, APPLICATION_FORM_URLENCODED)
                 .withPath("/" + API_KEY + "/" + getBasePath())
-                .withQueryStringParameters(param("api_secret", API_SECRET))
+                .withQueryStringParameters(param(PARAM_API_SECRET, API_SECRET))
                 .withBody(params(parameters));
     }
 
@@ -67,9 +72,9 @@ public abstract class GenericRequest {
 
         return request()
                 .withMethod(PUT.name())
-                .withHeader(CONTENT_TYPE, "application/x-www-form-urlencoded")
+                .withHeader(CONTENT_TYPE, APPLICATION_FORM_URLENCODED)
                 .withPath("/" + API_KEY + "/" + getBasePath() + "/" + id)
-                .withQueryStringParameters(param("api_secret", API_SECRET))
+                .withQueryStringParameters(param(PARAM_API_SECRET, API_SECRET))
                 .withBody(params(parameters));
     }
 
@@ -81,18 +86,22 @@ public abstract class GenericRequest {
         return request()
                 .withMethod(DELETE.name())
                 .withPath("/" + API_KEY + "/" + getBasePath() + "/" + id)
-                .withQueryStringParameters(param("api_secret", API_SECRET));
+                .withQueryStringParameters(param(PARAM_API_SECRET, API_SECRET));
     }
 
     protected HttpRequest create(String name, URL url) {
-        return create(ImmutableMap.of("name", name, "url", url.getValue()));
+        return create(ImmutableMap.of(PARAM_NAME, name, PARAM_URL, url.getValue()));
     }
 
     protected HttpRequest update(@NotNull Long id, String newName,@NotNull URL newUrl) {
-        return update(id, ImmutableMap.of("name", newName, "url", newUrl.getValue()));
+        return update(id, ImmutableMap.of(PARAM_NAME, newName, PARAM_URL, newUrl.getValue()));
     }
 
     protected HttpRequest updateUrl(@NotNull Long id,@NotNull URL newUrl) {
-        return update(id, ImmutableMap.of("url", newUrl.getValue()));
+        return update(id, ImmutableMap.of(PARAM_URL, newUrl.getValue()));
+    }
+
+    protected HttpRequest updateName(@NotNull Long id,@NotNull String newName) {
+        return update(id, ImmutableMap.of(PARAM_NAME, newName));
     }
 }
