@@ -79,4 +79,10 @@ public class CdrHttpHandlersClient extends BaseApiClient<CdrHttpHandler> impleme
 
         return update(id.toString(), ImmutableMap.of(PARAM_URL, url.getValue()), CdrHttpHandler.class);
     }
+
+    @Override
+    public void deleteCdrHttpHandler(Long id) throws IOException {
+        requireNonNull(id, "id must not be null");
+        delete(id.toString());
+    }
 }
