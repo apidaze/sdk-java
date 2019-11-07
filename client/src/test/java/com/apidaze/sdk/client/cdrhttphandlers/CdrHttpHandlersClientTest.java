@@ -20,6 +20,7 @@ import static com.apidaze.sdk.client.GenericResponse.list;
 import static com.apidaze.sdk.client.GenericResponse.one;
 import static com.apidaze.sdk.client.TestUtil.*;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockserver.model.HttpResponse.response;
 
 public class CdrHttpHandlersClientTest extends GenericRequest {
 
@@ -136,6 +137,19 @@ public class CdrHttpHandlersClientTest extends GenericRequest {
                 .isEqualTo(cdrHttpHandler);
 
         mockServer.verify(updateUrl(id, url));
+    }
+
+    @Test
+    public void shouldDeleteCdrHttpHandler() throws IOException {
+        val id = 1L;
+
+        mockServer
+                .when(delete(id))
+                .respond(response().withStatusCode(204));
+
+        client.deleteCdrHttpHandler(id);
+
+        mockServer.verify(delete(id));
     }
 
 

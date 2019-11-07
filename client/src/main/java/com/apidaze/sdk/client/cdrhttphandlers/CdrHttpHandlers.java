@@ -16,4 +16,6 @@ public interface CdrHttpHandlers {
     CdrHttpHandler updateCdrHttpHandlerName(Long id, String name) throws IOException;
 
     CdrHttpHandler updateCdrHttpHandlerUrl(Long id, URL url) throws IOException;
+
+    void deleteCdrHttpHandler(Long id) throws IOException;
 }
