@@ -1,7 +1,7 @@
 package com.apidaze.sdk.examples.recordings;
 
+import com.apidaze.sdk.client.ApplicationAction;
 import com.apidaze.sdk.client.base.Credentials;
-import com.apidaze.sdk.client.recordings.RecordingsClient;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 
@@ -22,12 +22,12 @@ public class RecordingsExample {
             System.exit(1);
         }
 
-        // initiate the client using create method
-        val recordings = RecordingsClient.create(new Credentials(apiKey, apiSecret));
+        // initiate ApplicationAction
+        val applicationAction = ApplicationAction.create(new Credentials(apiKey, apiSecret));
 
-        // get recordings list
         try {
-            val response = recordings.list();
+            // get recordings list
+            val response = applicationAction.getRecordingsList();
             log.info("Recordings: {}", response);
         } catch (IOException e) {
             log.error("An error occurred during communicating with API", e);

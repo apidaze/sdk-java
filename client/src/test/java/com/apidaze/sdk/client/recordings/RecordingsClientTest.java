@@ -70,7 +70,7 @@ public class RecordingsClientTest {
                 .when(getAll())
                 .respond(list(files));
 
-        val result = client.list();
+        val result = client.getRecordingsList();
 
         mockServer.verify(getAll());
         assertThat(result).containsExactlyElementsOf(files);
@@ -85,7 +85,7 @@ public class RecordingsClientTest {
                 .respond(response()
                         .withStatusCode(NO_CONTENT_204.code()));
 
-        client.delete(fileName);
+        client.deleteRecording(fileName);
 
         mockServer.verify(delete(fileName));
     }
@@ -98,7 +98,7 @@ public class RecordingsClientTest {
                 .when(download(SOURCE_FILE_NAME))
                 .respond(responseWithFile(SOURCE_FILE));
 
-        val resultStream = client.download(SOURCE_FILE_NAME);
+        val resultStream = client.downloadRecording(SOURCE_FILE_NAME);
 
         assertThat(resultStream).hasSameContentAs(expectedStream);
         mockServer.verify(download(SOURCE_FILE_NAME));
@@ -109,24 +109,24 @@ public class RecordingsClientTest {
 
     @Test
     public void shouldDownloadFileInAsyncMode() throws IOException {
-        val callback = mock(Recordings.Callback.class);
+        val callback = mock(Recordings.DownloadCallback.class);
         val downloadedFile = ArgumentCaptor.forClass(File.class);
 
         mockServer
                 .when(download(SOURCE_FILE_NAME))
                 .respond(responseWithFile(SOURCE_FILE));
 
-        client.downloadToFileAsync(SOURCE_FILE_NAME, TARGET_DIR, callback);
+        client.downloadRecordingToFileAsync(SOURCE_FILE_NAME, TARGET_DIR, callback);
 
         await().untilAsserted(() -> verify(callback).onSuccess(downloadedFile.capture()));
-        verify(callback, never()).onFailure(any());
+        verify(callback, never()).onFailure(anyString(), any(), any());
         verifyDownloadedFile(downloadedFile.getValue());
         mockServer.verify(download(SOURCE_FILE_NAME));
     }
 
     @Test
     public void shouldInvokeOnFailureMethodInAsyncMode_ifFileAlreadyExistsAndOverwriteModeIsDisabled() throws IOException {
-        val callback = mock(Recordings.Callback.class);
+        val callback = mock(Recordings.DownloadCallback.class);
         val overwrite = false;
 
         copy(EMPTY_FILE.toPath(), TARGET_FILE.toPath());
@@ -135,24 +135,30 @@ public class RecordingsClientTest {
                 .when(download(SOURCE_FILE_NAME))
                 .respond(responseWithFile(SOURCE_FILE));
 
-        client.downloadToFileAsync(SOURCE_FILE_NAME, TARGET_DIR, overwrite, callback);
+        client.downloadRecordingToFileAsync(SOURCE_FILE_NAME, TARGET_DIR, overwrite, callback);
 
-        await().untilAsserted(() -> verify(callback).onFailure(any(FileAlreadyExistsException.class)));
+        await().untilAsserted(() -> verify(callback).onFailure(
+                eq(SOURCE_FILE_NAME),
+                eq(TARGET_DIR),
+                any(FileAlreadyExistsException.class)));
         verify(callback, never()).onSuccess(any());
         mockServer.verifyZeroInteractions();
     }
 
     @Test
-    public void shouldInvokeOnFailureMethodInAsyncMode_ifApiReturnsAnError() throws IOException {
-        val callback = mock(Recordings.Callback.class);
+    public void shouldInvokeOnFailureMethodInAsyncMode_ifApiReturnsAnError() {
+        val callback = mock(Recordings.DownloadCallback.class);
 
         mockServer
                 .when(download(SOURCE_FILE_NAME))
                 .respond(response().withStatusCode(INTERNAL_SERVER_ERROR_500.code()));
 
-        client.downloadToFileAsync(SOURCE_FILE_NAME, TARGET_DIR, callback);
+        client.downloadRecordingToFileAsync(SOURCE_FILE_NAME, TARGET_DIR, callback);
 
-        await().untilAsserted(() -> verify(callback).onFailure(any(IOException.class)));
+        await().untilAsserted(() -> verify(callback).onFailure(
+                eq(SOURCE_FILE_NAME),
+                eq(TARGET_DIR),
+                any(IOException.class)));
         verify(callback, never()).onSuccess(any());
         mockServer.verify(download(SOURCE_FILE_NAME));
     }
@@ -163,7 +169,7 @@ public class RecordingsClientTest {
                 .when(download(SOURCE_FILE_NAME))
                 .respond(responseWithFile(SOURCE_FILE));
 
-        val downloadedFile = client.downloadToFile(SOURCE_FILE_NAME, TARGET_DIR);
+        val downloadedFile = client.downloadRecordingToFile(SOURCE_FILE_NAME, TARGET_DIR);
 
         verifyDownloadedFile(downloadedFile);
         mockServer.verify(download(SOURCE_FILE_NAME));
@@ -175,7 +181,7 @@ public class RecordingsClientTest {
                 .when(download(SOURCE_FILE_NAME))
                 .respond(responseWithFile(SOURCE_FILE));
 
-        val downloadedFile = client.downloadToFile(SOURCE_FILE_NAME, TARGET_FILE_WITH_CHANGED_NAME.toPath());
+        val downloadedFile = client.downloadRecordingToFile(SOURCE_FILE_NAME, TARGET_FILE_WITH_CHANGED_NAME.toPath());
 
         verifyDownloadedFile(downloadedFile, TARGET_FILE_WITH_CHANGED_NAME.getName());
         mockServer.verify(download(SOURCE_FILE_NAME));
@@ -194,7 +200,7 @@ public class RecordingsClientTest {
                 .when(download(SOURCE_FILE_NAME))
                 .respond(responseWithFile(SOURCE_FILE));
 
-        val downloadedFile = client.downloadToFile(SOURCE_FILE_NAME, TARGET_DIR, overwrite);
+        val downloadedFile = client.downloadRecordingToFile(SOURCE_FILE_NAME, TARGET_DIR, overwrite);
 
         verifyDownloadedFile(downloadedFile);
         mockServer.verify(download(SOURCE_FILE_NAME));
@@ -211,7 +217,7 @@ public class RecordingsClientTest {
                 .respond(responseWithFile(SOURCE_FILE));
 
         assertThatExceptionOfType(FileAlreadyExistsException.class)
-                .isThrownBy(() -> client.downloadToFile(SOURCE_FILE_NAME, TARGET_DIR, overwrite))
+                .isThrownBy(() -> client.downloadRecordingToFile(SOURCE_FILE_NAME, TARGET_DIR, overwrite))
                 .withMessage(TARGET_FILE.getAbsolutePath());
         mockServer.verifyZeroInteractions();
     }

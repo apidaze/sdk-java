@@ -2,16 +2,14 @@ package com.apidaze.sdk.client.calls;
 
 import com.apidaze.sdk.client.base.BaseApiClient;
 import com.apidaze.sdk.client.base.Credentials;
+import com.apidaze.sdk.client.http.HttpClient;
 import com.apidaze.sdk.client.messages.PhoneNumber;
 import com.fasterxml.jackson.core.type.TypeReference;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Getter;
 import lombok.val;
-import okhttp3.FormBody;
-import okhttp3.Request;
-import okhttp3.RequestBody;
-import okhttp3.Response;
+import okhttp3.*;
 
 import java.io.IOException;
 import java.util.List;
@@ -32,6 +30,8 @@ public class CallsClient extends BaseApiClient implements Calls {
     @Getter
     private final String baseUrl;
 
+    private final OkHttpClient client;
+
     public static CallsClient create(Credentials credentials) {
         return create(credentials, DEFAULT_BASE_URL);
     }
@@ -40,17 +40,16 @@ public class CallsClient extends BaseApiClient implements Calls {
         requireNonNull(credentials, "Credentials must not be null.");
         requireNonNull(baseUrl, "baseUrl must not be null.");
 
-        return new CallsClient(credentials, baseUrl);
+        return new CallsClient(credentials, baseUrl, HttpClient.getClientInstance());
     }
 
     @Override
-    public UUID create(PhoneNumber callerId, String origin, String destination, Type callType) throws IOException {
+    public UUID createCall(PhoneNumber callerId, String origin, String destination, CallType callType) throws IOException {
         requireNonNull(callerId, "callerId must not be null");
         requireNonNull(callType, "type must not be null");
 
         if (isNullOrEmpty(origin)) throw new IllegalArgumentException("origin must not be null or empty");
         if (isNullOrEmpty(destination)) throw new IllegalArgumentException("destination must not be null or empty");
-
 
         RequestBody formBody = new FormBody.Builder()
                 .add("callerid", callerId.getNumber())

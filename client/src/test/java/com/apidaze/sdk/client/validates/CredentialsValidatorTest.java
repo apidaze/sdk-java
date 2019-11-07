@@ -24,7 +24,7 @@ public class CredentialsValidatorTest {
 
     private MockServerClient mockServer;
 
-    private CredentialsValidator validator = CredentialsValidator.create(CREDENTIALS, BASE_URL);
+    private CredentialsValidator validator = CredentialsValidatorClient.create(CREDENTIALS, BASE_URL);
 
     @Before
     public void before() {

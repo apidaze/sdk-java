@@ -1,8 +1,8 @@
 package com.apidaze.sdk.examples.messages;
 
+import com.apidaze.sdk.client.ApplicationAction;
 import com.apidaze.sdk.client.base.Credentials;
 import com.apidaze.sdk.client.messages.InvalidPhoneNumberException;
-import com.apidaze.sdk.client.messages.MessageClient;
 import com.apidaze.sdk.client.messages.PhoneNumber;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
@@ -24,8 +24,8 @@ public class MessageExample {
             System.exit(1);
         }
 
-        // initiate the client
-        val message = MessageClient.create(new Credentials(apiKey, apiSecret));
+        // initiate ApplicationAction
+        val applicationAction = ApplicationAction.create(new Credentials(apiKey, apiSecret));
 
         // phone numbers and message body
         val from = "123456789";
@@ -34,7 +34,7 @@ public class MessageExample {
 
         try {
             // send a message
-            val response = message.send(PhoneNumber.of(from), PhoneNumber.of(to), messageBody);
+            val response = applicationAction.sendTextMessage(PhoneNumber.of(from), PhoneNumber.of(to), messageBody);
             log.info(response);
         } catch (IOException e) {
             log.error("An error occurred during communicating with API", e);

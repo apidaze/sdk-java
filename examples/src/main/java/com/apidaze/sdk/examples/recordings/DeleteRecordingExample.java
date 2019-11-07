@@ -1,7 +1,7 @@
 package com.apidaze.sdk.examples.recordings;
 
+import com.apidaze.sdk.client.ApplicationAction;
 import com.apidaze.sdk.client.base.Credentials;
-import com.apidaze.sdk.client.recordings.RecordingsClient;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 
@@ -22,14 +22,14 @@ public class DeleteRecordingExample {
             System.exit(1);
         }
 
-        // initiate the client
-        val recordings = RecordingsClient.create(new Credentials(apiKey, apiSecret));
+        // initiate ApplicationAction
+        val applicationAction = ApplicationAction.create(new Credentials(apiKey, apiSecret));
 
         // the name of the file to be deleted
         val fileName = "example1.wav";
 
         try {
-            recordings.delete(fileName);
+            applicationAction.deleteRecording(fileName);
             log.info("File {} has been deleted", fileName);
         } catch (IOException e) {
             log.error("An error occurred during communicating with API", e);

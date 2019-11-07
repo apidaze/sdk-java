@@ -2,14 +2,12 @@ package com.apidaze.sdk.client.recordings;
 
 import com.apidaze.sdk.client.base.BaseApiClient;
 import com.apidaze.sdk.client.base.Credentials;
+import com.apidaze.sdk.client.http.HttpClient;
 import com.fasterxml.jackson.core.type.TypeReference;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.val;
-import okhttp3.Call;
-import okhttp3.Request;
-import okhttp3.Response;
-import okhttp3.ResponseBody;
+import okhttp3.*;
 import okio.BufferedSink;
 import okio.Okio;
 import okio.Sink;
@@ -41,6 +39,8 @@ public class RecordingsClient extends BaseApiClient implements Recordings {
     @Getter(PROTECTED)
     private final String baseUrl;
 
+    private final OkHttpClient client;
+
     public static RecordingsClient create(Credentials credentials) {
         return create(credentials, DEFAULT_BASE_URL);
     }
@@ -49,11 +49,11 @@ public class RecordingsClient extends BaseApiClient implements Recordings {
         requireNonNull(credentials, "Credentials must not be null.");
         requireNonNull(baseUrl, "baseUrl must not be null.");
 
-        return new RecordingsClient(credentials, baseUrl);
+        return new RecordingsClient(credentials, baseUrl, HttpClient.getClientInstance());
     }
 
     @Override
-    public List<String> list() throws IOException {
+    public List<String> getRecordingsList() throws IOException {
         Request request = new Request.Builder()
                 .url(authenticatedUrl())
                 .build();
@@ -67,7 +67,7 @@ public class RecordingsClient extends BaseApiClient implements Recordings {
     }
 
     @Override
-    public InputStream download(String sourceFileName) throws IOException {
+    public InputStream downloadRecording(String sourceFileName) throws IOException {
         Request request = downloadRequest(sourceFileName);
         Response response = client.newCall(request).execute();
 
@@ -77,20 +77,20 @@ public class RecordingsClient extends BaseApiClient implements Recordings {
     }
 
     @Override
-    public void downloadToFileAsync(String sourceFileName, Path target, Callback callback) {
-        downloadToFileAsync(sourceFileName, target, false, callback);
+    public void downloadRecordingToFileAsync(String sourceFileName, Path target, DownloadCallback callback) {
+        downloadRecordingToFileAsync(sourceFileName, target, false, callback);
     }
 
     @Override
-    public void downloadToFileAsync(String sourceFileName, Path target, boolean replaceExisting, Callback callback) {
+    public void downloadRecordingToFileAsync(String sourceFileName, Path target, boolean replaceExisting, DownloadCallback callback) {
         try {
             downloadToFileAsyncInternal(sourceFileName, target, replaceExisting, callback);
         } catch (Throwable e) {
-            callback.onFailure(e);
+            callback.onFailure(sourceFileName, target, e);
         }
     }
 
-    private void downloadToFileAsyncInternal(String sourceFileName, Path target, boolean replaceExisting, Callback callback) throws IOException {
+    private void downloadToFileAsyncInternal(String sourceFileName, Path target, boolean replaceExisting, DownloadCallback callback) throws IOException {
         Request request = downloadRequest(sourceFileName);
         Path destFile = getOrCreateFilePath(target, sourceFileName, replaceExisting);
         Path tempFile = createTempFile(destFile.toAbsolutePath().getParent(), TEMP_FILE_PREFIX, null);
@@ -98,7 +98,7 @@ public class RecordingsClient extends BaseApiClient implements Recordings {
         client.newCall(request).enqueue(new okhttp3.Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                handleDownloadToFileError(e, callback, tempFile);
+                handleDownloadToFileError(sourceFileName, target, e, callback, tempFile);
             }
 
             @Override
@@ -115,19 +115,19 @@ public class RecordingsClient extends BaseApiClient implements Recordings {
                     move(tempFile, destFile, REPLACE_EXISTING);
                     callback.onSuccess(destFile.toFile());
                 } catch (Throwable e) {
-                    handleDownloadToFileError(e, callback, tempFile);
+                    handleDownloadToFileError(sourceFileName, target, e, callback, tempFile);
                 }
             }
         });
     }
 
     @Override
-    public File downloadToFile(final String sourceFileName, @NotNull final Path target) throws IOException {
-        return downloadToFile(sourceFileName, target, false);
+    public File downloadRecordingToFile(final String sourceFileName, @NotNull final Path target) throws IOException {
+        return downloadRecordingToFile(sourceFileName, target, false);
     }
 
     @Override
-    public File downloadToFile(final String sourceFileName, final Path target, boolean replaceExisting) throws IOException {
+    public File downloadRecordingToFile(final String sourceFileName, final Path target, boolean replaceExisting) throws IOException {
         Request request = downloadRequest(sourceFileName);
         Path destFile = getOrCreateFilePath(target, sourceFileName, replaceExisting);
         Path tempFile = createTempFile(destFile.toAbsolutePath().getParent(), TEMP_FILE_PREFIX, null);
@@ -147,7 +147,7 @@ public class RecordingsClient extends BaseApiClient implements Recordings {
     }
 
     @Override
-    public void delete(String fileName) throws IOException {
+    public void deleteRecording(String fileName) throws IOException {
         requireNonNull(fileName, "fileName must not be null");
 
         Request request = new Request.Builder()
@@ -194,12 +194,12 @@ public class RecordingsClient extends BaseApiClient implements Recordings {
         }
     }
 
-    private static void handleDownloadToFileError(Throwable e, Callback callback, Path tempFile) {
+    private static void handleDownloadToFileError(String sourceFileName, Path target, Throwable e, DownloadCallback downloadCallback, Path tempFile) {
         try {
             deleteIfExists(tempFile);
-            callback.onFailure(e);
+            downloadCallback.onFailure(sourceFileName, target, e);
         } catch (IOException ex) {
-            callback.onFailure(ex.initCause(e));
+            downloadCallback.onFailure(sourceFileName, target, ex.initCause(e));
         }
     }
 

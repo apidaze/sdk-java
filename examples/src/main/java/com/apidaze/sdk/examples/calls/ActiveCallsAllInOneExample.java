@@ -1,5 +1,6 @@
 package com.apidaze.sdk.examples.calls;
 
+import com.apidaze.sdk.client.ApplicationAction;
 import com.apidaze.sdk.client.base.Credentials;
 import com.apidaze.sdk.client.calls.Calls;
 import com.apidaze.sdk.client.calls.CallsClient;
@@ -27,8 +28,8 @@ public class ActiveCallsAllInOneExample {
             System.exit(1);
         }
 
-        // initiate the client
-        val calls = CallsClient.create(new Credentials(apiKey, apiSecret));
+        // initiate ApplicationAction
+        val applicationAction = ApplicationAction.create(new Credentials(apiKey, apiSecret));
 
         // call details
         val callerId = "14123456789";
@@ -37,22 +38,22 @@ public class ActiveCallsAllInOneExample {
 
         try {
             // place a call
-            val callId = calls.create(PhoneNumber.of(callerId), origin, destination, Calls.Type.NUMBER);
+            val callId = applicationAction.createCall(PhoneNumber.of(callerId), origin, destination, Calls.CallType.NUMBER);
             log.info("Call with id = {} has been initiated.", callId);
 
             // get active call details
-            val activeCall = calls.getActiveCall(callId);
+            val activeCall = applicationAction.getActiveCall(callId);
             log.info("Initiated call details = {}", activeCall);
 
             // get full list of active calls
-            val activeCalls = calls.getActiveCalls();
+            val activeCalls = applicationAction.getActiveCalls();
             log.info("Active calls list = {}", activeCalls);
 
             // hung up the active call
             log.info("Press RETURN to hung up the call...");
             new BufferedReader(new InputStreamReader(System.in)).readLine();
 
-            calls.deleteActiveCall(callId);
+            applicationAction.deleteActiveCall(callId);
             log.info("Call with id = {} has been deleted.", callId);
 
         } catch (IOException e) {

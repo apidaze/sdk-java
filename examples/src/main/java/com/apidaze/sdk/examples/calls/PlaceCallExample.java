@@ -1,5 +1,6 @@
 package com.apidaze.sdk.examples.calls;
 
+import com.apidaze.sdk.client.ApplicationAction;
 import com.apidaze.sdk.client.base.Credentials;
 import com.apidaze.sdk.client.calls.Calls;
 import com.apidaze.sdk.client.calls.CallsClient;
@@ -25,8 +26,8 @@ public class PlaceCallExample {
             System.exit(1);
         }
 
-        // initiate the client
-        val calls = CallsClient.create(new Credentials(apiKey, apiSecret));
+        // initiate ApplicationAction
+        val applicationAction = ApplicationAction.create(new Credentials(apiKey, apiSecret));
 
         // call details
         val callerId = "14123456789";
@@ -35,7 +36,7 @@ public class PlaceCallExample {
 
         try {
             // place a call
-            val callId = calls.create(PhoneNumber.of(callerId), origin, destination, Calls.Type.NUMBER);
+            val callId = applicationAction.createCall(PhoneNumber.of(callerId), origin, destination, Calls.CallType.NUMBER);
             log.info("Call with id = {} has been initiated.", callId);
         } catch (IOException e) {
             log.error("An error occurred during communicating with API", e);

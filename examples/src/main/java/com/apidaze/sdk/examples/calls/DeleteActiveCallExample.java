@@ -1,5 +1,6 @@
 package com.apidaze.sdk.examples.calls;
 
+import com.apidaze.sdk.client.ApplicationAction;
 import com.apidaze.sdk.client.base.Credentials;
 import com.apidaze.sdk.client.calls.CallsClient;
 import lombok.extern.slf4j.Slf4j;
@@ -23,15 +24,15 @@ public class DeleteActiveCallExample {
             System.exit(1);
         }
 
-        // initiate the client
-        val calls = CallsClient.create(new Credentials(apiKey, apiSecret));
+        // initiate ApplicationAction
+        val applicationAction = ApplicationAction.create(new Credentials(apiKey, apiSecret));
 
         // call id to be deleted
         val callId = UUID.fromString("3691360b-412c-4a9a-aea7-e9f089851c8b");
 
         // delete a call
         try {
-            calls.deleteActiveCall(callId);
+            applicationAction.deleteActiveCall(callId);
             log.info("Call with id = {} has been deleted.", callId);
         } catch (IOException e) {
             log.error("An error occurred during communicating with API", e);
