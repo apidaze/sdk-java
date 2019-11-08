@@ -106,18 +106,6 @@ public class CallsClient extends BaseApiClient<ActiveCall> implements Calls {
         }
     }
 
-    public static class CreateResponseException extends RuntimeException {
-        CreateResponseException(String message) {
-            super(message);
-        }
-    }
-
-    public static class DeleteResponseException extends RuntimeException {
-        DeleteResponseException(String message) {
-            super(message);
-        }
-    }
-
     @Data
     private static class GenericResponse {
         private Optional<String> ok = Optional.empty();
