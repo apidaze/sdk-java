@@ -30,7 +30,7 @@ public interface Calls {
 
     /**
      * Get active calls list.
-     * @return List of active calls.
+     * @return list of active calls.
      * @throws IOException           if the request could not be executed due to a connectivity problem or timeout.
      * @throws HttpResponseException if REST API returned an unhappy HTTP response code like 404 or 500.
      */
