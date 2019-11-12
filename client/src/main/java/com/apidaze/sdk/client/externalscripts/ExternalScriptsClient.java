@@ -2,25 +2,26 @@ package com.apidaze.sdk.client.externalscripts;
 
 import com.apidaze.sdk.client.base.BaseApiClient;
 import com.apidaze.sdk.client.base.Credentials;
-import com.apidaze.sdk.client.http.HttpClient;
-import com.fasterxml.jackson.core.type.TypeReference;
+import com.apidaze.sdk.client.common.URL;
+import com.google.common.collect.ImmutableMap;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import okhttp3.*;
+import lombok.val;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 
 import static java.util.Objects.requireNonNull;
 import static lombok.AccessLevel.PRIVATE;
 
 @AllArgsConstructor(access = PRIVATE)
-public class ExternalScriptsClient extends BaseApiClient implements ExternalScripts {
+public class ExternalScriptsClient extends BaseApiClient<ExternalScript> implements ExternalScripts {
 
-    public static final int MAX_NAME_LENGTH = 40;
-    private static final String URL = "url";
-    private static final String NAME = "name";
+    static final int MAX_NAME_LENGTH = 40;
+    private static final String PARAM_URL = "url";
+    private static final String PARAM_NAME = "name";
 
     @Getter
     private final String basePath = "externalscripts";
@@ -28,8 +29,6 @@ public class ExternalScriptsClient extends BaseApiClient implements ExternalScri
     private final Credentials credentials;
     @Getter
     private final String baseUrl;
-
-    private final OkHttpClient client;
 
     public static ExternalScriptsClient create(@NotNull Credentials credentials) {
         return create(credentials, DEFAULT_BASE_URL);
@@ -39,58 +38,26 @@ public class ExternalScriptsClient extends BaseApiClient implements ExternalScri
         requireNonNull(credentials, "Credentials must not be null.");
         requireNonNull(baseUrl, "baseUrl must not be null.");
 
-        return new ExternalScriptsClient(credentials, baseUrl, HttpClient.getClientInstance());
+        return new ExternalScriptsClient(credentials, baseUrl);
     }
 
     @Override
     public List<ExternalScript> getExternalScripts() throws IOException {
-        Request request = new Request.Builder()
-                .url(authenticatedUrl())
-                .build();
-
-        try (Response response = client.newCall(request).execute()) {
-            if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
-
-            return objectMapper.readValue(response.body().string(), new TypeReference<List<ExternalScript>>() {});
-        }
+        return findAll(ExternalScript.class);
     }
 
     @Override
     public ExternalScript createExternalScript(String name, URL url) throws IOException {
         validateName(name);
 
-        RequestBody formBody = new FormBody.Builder()
-                .add(NAME, name)
-                .add(URL, url.getValue())
-                .build();
-
-        Request request = new Request.Builder()
-                .url(authenticatedUrl())
-                .post(formBody)
-                .build();
-
-        try (Response response = client.newCall(request).execute()) {
-            if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
-
-            return objectMapper.readValue(response.body().string(), ExternalScript.class);
-        }
+        val params = ImmutableMap.of(PARAM_NAME, name, PARAM_URL, url.getValue());
+        return create(params, ExternalScript.class);
     }
 
     @Override
-    public ExternalScript getExternalScript(Long id) throws IOException {
+    public Optional<ExternalScript> getExternalScript(Long id) throws IOException {
         requireNonNull(id, "id must not be null");
-
-        Request request = new Request.Builder()
-                .url(authenticated()
-                        .addPathSegment(id.toString())
-                        .build())
-                .build();
-
-        try (Response response = client.newCall(request).execute()) {
-            if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
-
-            return objectMapper.readValue(response.body().string(), ExternalScript.class);
-        }
+        return findById(id.toString(), ExternalScript.class);
     }
 
     @Override
@@ -99,60 +66,23 @@ public class ExternalScriptsClient extends BaseApiClient implements ExternalScri
         requireNonNull(url, "url must not be null");
         validateName(name);
 
-        RequestBody formBody = new FormBody.Builder()
-                .add(NAME, name)
-                .add(URL, url.getValue())
-                .build();
-
-        Request request = new Request.Builder()
-                .url(authenticated()
-                        .addPathSegment(id.toString())
-                        .build())
-                .put(formBody)
-                .build();
-
-        try (Response response = client.newCall(request).execute()) {
-            if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
-
-            return objectMapper.readValue(response.body().string(), ExternalScript.class);
-        }
+        val params = ImmutableMap.of(PARAM_NAME, name, PARAM_URL, url.getValue());
+        return update(id.toString(), params, ExternalScript.class);
     }
 
     @Override
     public ExternalScript updateExternalScriptUrl(Long id, URL url) throws IOException {
         requireNonNull(id, "id must not be null");
+        requireNonNull(url, "url must not be null");
 
-        RequestBody formBody = new FormBody.Builder()
-                .add(URL, url.getValue())
-                .build();
-
-        Request request = new Request.Builder()
-                .url(authenticated()
-                        .addPathSegment(id.toString())
-                        .build())
-                .put(formBody)
-                .build();
-
-        try (Response response = client.newCall(request).execute()) {
-            if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
-
-            return objectMapper.readValue(response.body().string(), ExternalScript.class);
-        }
+        return update(id.toString(), ImmutableMap.of(PARAM_URL, url.getValue()), ExternalScript.class);
     }
 
 
     @Override
     public void deleteExternalScript(Long id) throws IOException {
         requireNonNull(id, "id must not be null");
-
-        Request request = new Request.Builder()
-                .url(authenticated().addPathSegment(id.toString()).build())
-                .delete()
-                .build();
-
-        try (Response response = client.newCall(request).execute()) {
-            if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
-        }
+        delete(id.toString());
     }
 
     private static void validateName(String name) {

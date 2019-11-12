@@ -4,13 +4,16 @@ import com.apidaze.sdk.client.base.Credentials;
 import com.apidaze.sdk.client.calls.ActiveCall;
 import com.apidaze.sdk.client.calls.Calls;
 import com.apidaze.sdk.client.calls.CallsClient;
+import com.apidaze.sdk.client.cdrhttphandlers.CdrHttpHandler;
+import com.apidaze.sdk.client.cdrhttphandlers.CdrHttpHandlers;
+import com.apidaze.sdk.client.cdrhttphandlers.CdrHttpHandlersClient;
+import com.apidaze.sdk.client.common.PhoneNumber;
+import com.apidaze.sdk.client.common.URL;
 import com.apidaze.sdk.client.externalscripts.ExternalScript;
 import com.apidaze.sdk.client.externalscripts.ExternalScripts;
 import com.apidaze.sdk.client.externalscripts.ExternalScriptsClient;
-import com.apidaze.sdk.client.externalscripts.URL;
 import com.apidaze.sdk.client.messages.Message;
 import com.apidaze.sdk.client.messages.MessageClient;
-import com.apidaze.sdk.client.messages.PhoneNumber;
 import com.apidaze.sdk.client.recordings.Recordings;
 import com.apidaze.sdk.client.recordings.RecordingsClient;
 import com.apidaze.sdk.client.validates.CredentialsValidator;
@@ -22,19 +25,21 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import static java.util.Objects.requireNonNull;
 import static lombok.AccessLevel.PRIVATE;
 
 @AllArgsConstructor(access = PRIVATE)
-public class ApplicationAction implements Calls, Message, ExternalScripts, Recordings, CredentialsValidator {
+public class ApplicationAction implements Calls, Message, ExternalScripts, Recordings, CredentialsValidator, CdrHttpHandlers {
 
     private final Calls calls;
     private final ExternalScripts externalScripts;
     private final Message message;
     private final Recordings recordings;
     private final CredentialsValidator credentialsValidator;
+    private final CdrHttpHandlers cdrHttpHandlers;
 
     public static ApplicationAction create(Credentials credentials) {
         requireNonNull(credentials, "Credentials must not be null.");
@@ -43,7 +48,8 @@ public class ApplicationAction implements Calls, Message, ExternalScripts, Recor
                 ExternalScriptsClient.create(credentials),
                 MessageClient.create(credentials),
                 RecordingsClient.create(credentials),
-                CredentialsValidatorClient.create(credentials));
+                CredentialsValidatorClient.create(credentials),
+                CdrHttpHandlersClient.create(credentials));
     }
 
     @Override
@@ -57,7 +63,7 @@ public class ApplicationAction implements Calls, Message, ExternalScripts, Recor
     }
 
     @Override
-    public ActiveCall getActiveCall(UUID id) throws IOException {
+    public Optional<ActiveCall> getActiveCall(UUID id) throws IOException {
         return calls.getActiveCall(id);
     }
 
@@ -82,7 +88,7 @@ public class ApplicationAction implements Calls, Message, ExternalScripts, Recor
     }
 
     @Override
-    public ExternalScript getExternalScript(Long id) throws IOException {
+    public Optional<ExternalScript> getExternalScript(Long id) throws IOException {
         return externalScripts.getExternalScript(id);
     }
 
@@ -139,5 +145,35 @@ public class ApplicationAction implements Calls, Message, ExternalScripts, Recor
     @Override
     public boolean validateCredentials() throws IOException {
         return credentialsValidator.validateCredentials();
+    }
+
+    @Override
+    public List<CdrHttpHandler> getCdrHttpHandlers() throws IOException {
+        return cdrHttpHandlers.getCdrHttpHandlers();
+    }
+
+    @Override
+    public CdrHttpHandler createCdrHttpHandler(String name, URL url) throws IOException {
+        return cdrHttpHandlers.createCdrHttpHandler(name, url);
+    }
+
+    @Override
+    public CdrHttpHandler updateCdrHttpHandler(Long id, String name, URL url) throws IOException {
+        return cdrHttpHandlers.updateCdrHttpHandler(id, name, url);
+    }
+
+    @Override
+    public CdrHttpHandler updateCdrHttpHandlerName(Long id, String name) throws IOException {
+        return cdrHttpHandlers.updateCdrHttpHandlerName(id, name);
+    }
+
+    @Override
+    public CdrHttpHandler updateCdrHttpHandlerUrl(Long id, URL url) throws IOException {
+        return cdrHttpHandlers.updateCdrHttpHandlerUrl(id, url);
+    }
+
+    @Override
+    public void deleteCdrHttpHandler(Long id) throws IOException {
+        cdrHttpHandlers.deleteCdrHttpHandler(id);
     }
 }

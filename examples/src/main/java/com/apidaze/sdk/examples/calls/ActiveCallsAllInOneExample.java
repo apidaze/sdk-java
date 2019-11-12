@@ -4,8 +4,8 @@ import com.apidaze.sdk.client.ApplicationAction;
 import com.apidaze.sdk.client.base.Credentials;
 import com.apidaze.sdk.client.calls.Calls;
 import com.apidaze.sdk.client.calls.CallsClient;
-import com.apidaze.sdk.client.messages.InvalidPhoneNumberException;
-import com.apidaze.sdk.client.messages.PhoneNumber;
+import com.apidaze.sdk.client.common.InvalidPhoneNumberException;
+import com.apidaze.sdk.client.common.PhoneNumber;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 
@@ -43,7 +43,11 @@ public class ActiveCallsAllInOneExample {
 
             // get active call details
             val activeCall = applicationAction.getActiveCall(callId);
-            log.info("Initiated call details = {}", activeCall);
+            if (activeCall.isPresent()) {
+                log.info("Initiated call details = {}", activeCall);
+            } else {
+                log.warn("There is no active call with id = {}", callId);
+            }
 
             // get full list of active calls
             val activeCalls = applicationAction.getActiveCalls();

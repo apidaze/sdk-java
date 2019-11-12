@@ -2,8 +2,9 @@ package com.apidaze.sdk.examples.externalscripts;
 
 import com.apidaze.sdk.client.ApplicationAction;
 import com.apidaze.sdk.client.base.Credentials;
-import com.apidaze.sdk.client.externalscripts.InvalidURLException;
-import com.apidaze.sdk.client.externalscripts.URL;
+import com.apidaze.sdk.client.common.InvalidURLException;
+import com.apidaze.sdk.client.common.URL;
+import com.apidaze.sdk.client.http.HttpResponseException;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 
@@ -34,10 +35,12 @@ public class CreateExternalScript {
             // create an external script
             val createdScript = applicationAction.createExternalScript(scriptName, URL.fromString(scriptUrl));
             log.info("Created {}", createdScript);
+        } catch (HttpResponseException e) {
+            log.error(e.toString());
         } catch (IOException e) {
-            log.error("An error occurred during communicating with API", e);
+            log.error("An IO error occurred during communicating with API", e);
         } catch (InvalidURLException e) {
-            log.error("newScriptUrl is invalid ", e);
+            log.error("scriptUrl is invalid ", e);
         }
     }
 }

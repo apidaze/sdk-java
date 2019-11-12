@@ -2,12 +2,13 @@ package com.apidaze.sdk.client.recordings;
 
 import com.apidaze.sdk.client.base.BaseApiClient;
 import com.apidaze.sdk.client.base.Credentials;
-import com.apidaze.sdk.client.http.HttpClient;
-import com.fasterxml.jackson.core.type.TypeReference;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.val;
-import okhttp3.*;
+import okhttp3.Call;
+import okhttp3.Request;
+import okhttp3.Response;
+import okhttp3.ResponseBody;
 import okio.BufferedSink;
 import okio.Okio;
 import okio.Sink;
@@ -28,7 +29,7 @@ import static lombok.AccessLevel.PRIVATE;
 import static lombok.AccessLevel.PROTECTED;
 
 @AllArgsConstructor(access = PRIVATE)
-public class RecordingsClient extends BaseApiClient implements Recordings {
+public class RecordingsClient extends BaseApiClient<String> implements Recordings {
 
     private static final String TEMP_FILE_PREFIX = "apidaze-sdk-recordings-";
 
@@ -39,8 +40,6 @@ public class RecordingsClient extends BaseApiClient implements Recordings {
     @Getter(PROTECTED)
     private final String baseUrl;
 
-    private final OkHttpClient client;
-
     public static RecordingsClient create(Credentials credentials) {
         return create(credentials, DEFAULT_BASE_URL);
     }
@@ -49,30 +48,24 @@ public class RecordingsClient extends BaseApiClient implements Recordings {
         requireNonNull(credentials, "Credentials must not be null.");
         requireNonNull(baseUrl, "baseUrl must not be null.");
 
-        return new RecordingsClient(credentials, baseUrl, HttpClient.getClientInstance());
+        return new RecordingsClient(credentials, baseUrl);
     }
 
     @Override
     public List<String> getRecordingsList() throws IOException {
-        Request request = new Request.Builder()
-                .url(authenticatedUrl())
-                .build();
+        return findAll(String.class);
+    }
 
-        try (Response response = client.newCall(request).execute()) {
-            if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
-
-            return objectMapper.readValue(response.body().string(), new TypeReference<List<String>>() {
-            });
-        }
+    @Override
+    public void deleteRecording(String fileName) throws IOException {
+        requireNonNull(fileName, "fileName must not be null");
+        delete(fileName);
     }
 
     @Override
     public InputStream downloadRecording(String sourceFileName) throws IOException {
-        Request request = downloadRequest(sourceFileName);
-        Response response = client.newCall(request).execute();
-
-        if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
-
+        val request = downloadRequest(sourceFileName);
+        val response = client.newCall(request).execute();
         return response.body().byteStream();
     }
 
@@ -105,12 +98,8 @@ public class RecordingsClient extends BaseApiClient implements Recordings {
             public void onResponse(@NotNull Call call, @NotNull Response response) {
                 try (ResponseBody responseBody = response.body();
                      Sink fileSink = Okio.sink(tempFile);
-                     BufferedSink bufferedSink = Okio.buffer(fileSink)) {
-
-                    if (!response.isSuccessful()) {
-                        throw new IOException("Unexpected code " + response);
-                    }
-
+                     BufferedSink bufferedSink = Okio.buffer(fileSink)
+                ) {
                     bufferedSink.writeAll(responseBody.source());
                     move(tempFile, destFile, REPLACE_EXISTING);
                     callback.onSuccess(destFile.toFile());
@@ -134,29 +123,13 @@ public class RecordingsClient extends BaseApiClient implements Recordings {
 
         try (Response response = client.newCall(request).execute();
              Sink fileSink = Okio.sink(tempFile);
-             BufferedSink bufferedSink = Okio.buffer(fileSink)) {
-
-            if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
-
+             BufferedSink bufferedSink = Okio.buffer(fileSink)
+        ) {
             bufferedSink.writeAll(response.body().source());
             move(tempFile, destFile, REPLACE_EXISTING);
             return destFile.toFile();
         } finally {
             deleteIfExists(tempFile);
-        }
-    }
-
-    @Override
-    public void deleteRecording(String fileName) throws IOException {
-        requireNonNull(fileName, "fileName must not be null");
-
-        Request request = new Request.Builder()
-                .url(authenticated().addPathSegment(fileName).build())
-                .delete()
-                .build();
-
-        try (Response response = client.newCall(request).execute()) {
-            if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
         }
     }
 

@@ -1,9 +1,8 @@
-package com.apidaze.sdk.examples.externalscripts;
+package com.apidaze.sdk.examples.cdrhttphandlers;
 
 import com.apidaze.sdk.client.ApplicationAction;
 import com.apidaze.sdk.client.base.Credentials;
-import com.apidaze.sdk.client.common.InvalidURLException;
-import com.apidaze.sdk.client.common.URL;
+import com.apidaze.sdk.client.http.HttpResponseException;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 
@@ -12,7 +11,7 @@ import java.io.IOException;
 import static java.util.Objects.isNull;
 
 @Slf4j
-public class UpdateExternalScriptUrl {
+public class DeleteCdrHttpHandlerExample {
 
     public static void main(String... args) {
 
@@ -24,22 +23,20 @@ public class UpdateExternalScriptUrl {
             System.exit(1);
         }
 
+        // CdrHttpHandler id to be deleted
+        val id = 1L;
+
         // initiate ApplicationAction
         val applicationAction = ApplicationAction.create(new Credentials(apiKey, apiSecret));
 
-        // id of updated script
-        val id = 1L;
-        // new url
-        val newScriptUrl = "http://new.cool.script.com";
-
-        // create external script
         try {
-            val script = applicationAction.updateExternalScriptUrl(id, URL.fromString(newScriptUrl));
-            log.info("Updated {}", script);
+            // delete CdrHttpHandler
+            applicationAction.deleteCdrHttpHandler(id);
+            log.info("CdrHttpHandler with id = {} has been deleted.", id);
+        } catch (HttpResponseException e) {
+            log.error(e.toString());
         } catch (IOException e) {
-            log.error("An error occurred during communicating with API", e);
-        } catch (InvalidURLException e) {
-            log.error("newScriptUrl is invalid ", e);
+            log.error("An IO error occurred during communicating with API", e);
         }
     }
 }

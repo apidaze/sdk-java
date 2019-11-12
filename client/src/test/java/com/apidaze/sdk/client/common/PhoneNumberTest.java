@@ -1,4 +1,4 @@
-package com.apidaze.sdk.client.messages;
+package com.apidaze.sdk.client.common;
 
 import lombok.val;
 import org.junit.Test;

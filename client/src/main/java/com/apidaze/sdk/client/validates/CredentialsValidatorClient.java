@@ -2,10 +2,9 @@ package com.apidaze.sdk.client.validates;
 
 import com.apidaze.sdk.client.base.BaseApiClient;
 import com.apidaze.sdk.client.base.Credentials;
-import com.apidaze.sdk.client.http.HttpClient;
+import com.apidaze.sdk.client.http.HttpResponseException;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
@@ -24,8 +23,6 @@ public class CredentialsValidatorClient extends BaseApiClient implements Credent
     @Getter
     private final String baseUrl;
 
-    private final OkHttpClient client;
-
     public static CredentialsValidatorClient create(Credentials credentials) {
         return create(credentials, DEFAULT_BASE_URL);
     }
@@ -34,7 +31,7 @@ public class CredentialsValidatorClient extends BaseApiClient implements Credent
         requireNonNull(credentials, "Credentials must not be null.");
         requireNonNull(baseUrl, "baseUrl must not be null.");
 
-        return new CredentialsValidatorClient(credentials, baseUrl, HttpClient.getClientInstance());
+        return new CredentialsValidatorClient(credentials, baseUrl);
     }
 
     @Override
@@ -43,14 +40,10 @@ public class CredentialsValidatorClient extends BaseApiClient implements Credent
                 .url(authenticatedUrl())
                 .build();
 
-        try (Response response = client.newCall(request).execute()) {
-            if (response.isSuccessful()) {
-                return Boolean.TRUE;
-            } else if (response.code() == 404 || response.code() == 401) {
-                return Boolean.FALSE;
-            } else {
-                throw new IOException("Unexpected code " + response);
-            }
+        try (Response ignored = client.newCall(request).execute()) {
+            return Boolean.TRUE;
+        } catch (HttpResponseException.Unauthorized e) {
+            return Boolean.FALSE;
         }
     }
 }

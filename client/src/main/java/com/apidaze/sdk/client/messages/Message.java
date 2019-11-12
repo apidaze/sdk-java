@@ -1,5 +1,7 @@
 package com.apidaze.sdk.client.messages;
 
+import com.apidaze.sdk.client.common.PhoneNumber;
+
 import java.io.IOException;
 
 public interface Message {
