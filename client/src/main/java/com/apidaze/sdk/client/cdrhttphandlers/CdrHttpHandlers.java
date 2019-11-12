@@ -9,59 +9,61 @@ import java.util.List;
 public interface CdrHttpHandlers {
 
     /**
-     * Get the list of CDR Http Handlers
+     * Returns the list of CDR Http Handlers
      * @return list of {@link CdrHttpHandler} instances
-     * @throws IOException           if the request could not be executed due to a connectivity problem or timeout.
-     * @throws HttpResponseException if REST API returned an unhappy HTTP response code like 404 or 500.
+     * @throws IOException
+     * @throws HttpResponseException
      */
     List<CdrHttpHandler> getCdrHttpHandlers() throws IOException;
 
     /**
      * Creates a new CDR HTTP Handler. This will post the call detail (after a call) to the webhook URL you define.
+     * Only one external script is allowed per domain.
+     *
      * @param name the name of {@code CdrHttpHandler}
      * @param url the webhook URL to which the call detail will be be post
      * @return created {@link CdrHttpHandler} instance
-     * @throws IOException           if the request could not be executed due to a connectivity problem or timeout.
-     * @throws HttpResponseException if REST API returned an unhappy HTTP response code like 404 or 500.
+     * @throws IOException
+     * @throws HttpResponseException
      */
     CdrHttpHandler createCdrHttpHandler(String name, URL url) throws IOException;
 
     /**
-     * Update the {@code CdrHttpHandler} name and url
+     * Updates the name and url of {@code CdrHttpHandler} instance.
      * @param id id of {@code CdrHttpHandler} to be updated
      * @param name a new name of {@code CdrHttpHandler}
      * @param url a new webhook URL
      * @return updated {@link CdrHttpHandler} instance
-     * @throws IOException           if the request could not be executed due to a connectivity problem or timeout.
-     * @throws HttpResponseException if REST API returned an unhappy HTTP response code like 404 or 500.
+     * @throws IOException
+     * @throws HttpResponseException
      */
     CdrHttpHandler updateCdrHttpHandler(Long id, String name, URL url) throws IOException;
 
     /**
-     * Update the {@code CdrHttpHandler} name
+     * Updates the name of {@code CdrHttpHandler} instance
      * @param id id of {@code CdrHttpHandler} to be updated
      * @param name a new name of {@code CdrHttpHandler}
      * @return updated {@link CdrHttpHandler} instance
-     * @throws IOException           if the request could not be executed due to a connectivity problem or timeout.
-     * @throws HttpResponseException if REST API returned an unhappy HTTP response code like 404 or 500.
+     * @throws IOException
+     * @throws HttpResponseException
      */
     CdrHttpHandler updateCdrHttpHandlerName(Long id, String name) throws IOException;
 
     /**
-     * Update the {@code CdrHttpHandler} webhook URL
+     * Updates the URL of {@code CdrHttpHandler} instance
      * @param id id of {@code CdrHttpHandler} to be updated
      * @param url a new webhook URL
      * @return updated {@link CdrHttpHandler} instance
-     * @throws IOException           if the request could not be executed due to a connectivity problem or timeout.
-     * @throws HttpResponseException if REST API returned an unhappy HTTP response code like 404 or 500.
+     * @throws IOException
+     * @throws HttpResponseException
      */
     CdrHttpHandler updateCdrHttpHandlerUrl(Long id, URL url) throws IOException;
 
     /**
-     * Delete the {@code CdrHttpHandler} instance
+     * Deletes an {@code CdrHttpHandler} instance
      * @param id id of {@code CdrHttpHandler} to be deleted
-     * @throws IOException           if the request could not be executed due to a connectivity problem or timeout.
-     * @throws HttpResponseException if REST API returned an unhappy HTTP response code like 404 or 500.@throws IOException
+     * @throws IOException
+     * @throws HttpResponseException
      */
     void deleteCdrHttpHandler(Long id) throws IOException;
 }

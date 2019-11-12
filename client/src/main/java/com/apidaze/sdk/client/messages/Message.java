@@ -1,6 +1,7 @@
 package com.apidaze.sdk.client.messages;
 
 import com.apidaze.sdk.client.common.PhoneNumber;
+import com.apidaze.sdk.client.http.HttpResponseException;
 
 import java.io.IOException;
 
@@ -11,6 +12,8 @@ public interface Message {
      * @param to Destination number (no + sign)
      * @param body The message to send. Must not be empty.
      * @return Response returned by API
+     * @throws IOException
+     * @throws HttpResponseException
      */
     String sendTextMessage(PhoneNumber from, PhoneNumber to, String body) throws IOException;
 }

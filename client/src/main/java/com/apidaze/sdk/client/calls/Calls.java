@@ -13,7 +13,7 @@ import java.util.UUID;
 public interface Calls {
 
     /**
-     * Place a call to the phone number or SIP account.
+     * Places a call to the phone number or SIP account.
      *
      * @param callerId    The phone number to present as the callerId (country code included, no + sign). Example: 15558675309
      * @param origin      The phone number or SIP account to ring first.
@@ -22,35 +22,35 @@ public interface Calls {
      *
      * @return id of created call.
      *
-     * @throws IOException             if the request could not be executed due to a connectivity problem or timeout.
-     * @throws HttpResponseException   if REST API returned an unhappy HTTP response code like 404 or 500.
-     * @throws CreateResponseException if the call could not be placed.
+     * @throws IOException
+     * @throws HttpResponseException
+     * @throws CreateResponseException
      */
     UUID createCall(PhoneNumber callerId, String origin, String destination, CallType callType) throws IOException;
 
     /**
-     * Get active calls list.
+     * Returns the list of active calls for your domain.
      * @return list of active calls.
-     * @throws IOException           if the request could not be executed due to a connectivity problem or timeout.
-     * @throws HttpResponseException if REST API returned an unhappy HTTP response code like 404 or 500.
+     * @throws IOException
+     * @throws HttpResponseException
      */
     List<ActiveCall> getActiveCalls() throws IOException;
 
     /**
-     * Get active call details.
+     * Returns the active call details object by id.
      * @param id id of active call to fetch.
      * @return an active call details if present, otherwise {@code Optional.empty()}
-     * @throws IOException           if the request could not be executed due to a connectivity problem or timeout.
-     * @throws HttpResponseException if REST API returned an unhappy HTTP response code like 404 or 500.
+     * @throws IOException
+     * @throws HttpResponseException
      */
     Optional<ActiveCall> getActiveCall(UUID id) throws IOException;
 
     /**
-     *  Hung up an active call.
+     *  Hangs up an active call.
      * @param id of the active call which should be deleted.
-     * @throws IOException             if the request could not be executed due to a connectivity problem or timeout.
-     * @throws HttpResponseException   if REST API returned an unhappy HTTP response code like 404 or 500.
-     * @throws DeleteResponseException if the call could not be deleted.
+     * @throws IOException
+     * @throws HttpResponseException
+     * @throws DeleteResponseException
      */
     void deleteActiveCall(UUID id) throws IOException;
 
@@ -86,12 +86,18 @@ public interface Calls {
         HANGUP
     }
 
+    /**
+     * An exception thrown if the call could not be placed. It contains error message returned by REST API.
+     */
     class CreateResponseException extends RuntimeException {
         CreateResponseException(String message) {
             super(message);
         }
     }
 
+    /**
+     * An exception thrown if the call could not be deleted. It contains error message returned by REST API.
+     */
     class DeleteResponseException extends RuntimeException {
         DeleteResponseException(String message) {
             super(message);
