@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document>
+    <work>
+        <dial>
+            <sipuri>phone_number@anysipdomain.com</sipuri>
+        </dial>
+        <hangup/>
+    </work>
+</document>
