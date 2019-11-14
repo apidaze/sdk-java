@@ -34,10 +34,7 @@ public class Speak implements ApidazeScript.Node {
 
     @JacksonXmlProperty(localName = "input-timeout", isAttribute = true)
     public Long getInputTimeoutMillis() {
-        if (isNull(inputTimeout)) {
-            return null;
-        }
-        return inputTimeout.toMillis();
+        return isNull(inputTimeout) ? null : inputTimeout.toMillis();
     }
 
     @AllArgsConstructor(access = AccessLevel.PRIVATE)

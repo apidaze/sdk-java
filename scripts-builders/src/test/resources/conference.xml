@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document>
+    <work>
+        <speak>You will now be placed into the conference</speak>
+        <conference>my_meeting_room</conference>
+    </work>
+</document>

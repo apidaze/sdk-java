@@ -20,12 +20,12 @@ public class ApidazeScriptDialTest {
                 .node(new Dial.Number("1234567890"))
                 .build();
 
-        val builder = ApidazeScript.builder()
+        val script = ApidazeScript.builder()
                 .node(dial)
                 .node(new Hangup())
                 .build();
 
-        val result = builder.toXml();
+        val result = script.toXml();
 
         assertThat(result).isXmlEqualToContentOf(expectedOutput);
     }
@@ -38,12 +38,12 @@ public class ApidazeScriptDialTest {
                 .node(new Dial.SipAccount("targetsipaccount"))
                 .build();
 
-        val builder = ApidazeScript.builder()
+        val script = ApidazeScript.builder()
                 .node(dial)
                 .node(new Hangup())
                 .build();
 
-        val result = builder.toXml();
+        val result = script.toXml();
 
         assertThat(result).isXmlEqualToContentOf(expectedOutput);
     }
@@ -56,12 +56,12 @@ public class ApidazeScriptDialTest {
                 .node(new Dial.SipUri("phone_number@anysipdomain.com"))
                 .build();
 
-        val builder = ApidazeScript.builder()
+        val script = ApidazeScript.builder()
                 .node(dial)
                 .node(new Hangup())
                 .build();
 
-        val result = builder.toXml();
+        val result = script.toXml();
 
         assertThat(result).isXmlEqualToContentOf(expectedOutput);
     }
@@ -82,12 +82,12 @@ public class ApidazeScriptDialTest {
                 .node(new Dial.SipUri("phone_number@anysipdomain.com"))
                 .build();
 
-        val builder = ApidazeScript.builder()
+        val script = ApidazeScript.builder()
                 .node(dial)
                 .node(new Hangup())
                 .build();
 
-        val result = builder.toXml();
+        val result = script.toXml();
 
         assertThat(result).isXmlEqualToContentOf(expectedOutput);
     }
