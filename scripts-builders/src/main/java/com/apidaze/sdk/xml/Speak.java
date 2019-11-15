@@ -22,6 +22,9 @@ public class Speak implements ApidazeScript.Node {
     @JacksonXmlProperty(isAttribute = true)
     Lang lang;
 
+    @JacksonXmlProperty(isAttribute = true)
+    Voice voice;
+
     @JsonIgnore
     Duration inputTimeout;
 
@@ -40,12 +43,43 @@ public class Speak implements ApidazeScript.Node {
         return "speak";
     }
 
-    @AllArgsConstructor(access = AccessLevel.PRIVATE)
+    @AllArgsConstructor
     public enum Lang {
-        EN("en-US"),
-        FR("fr-FR"),
-        IT("it-IT"),
-        ES("es-ES");
+        DANISH("da-DK"),
+        DUTCH("nl-NL"),
+        ITALIAN("it-IT"),
+        JAPANESE("ja-JP"),
+        NORWEGIAN("nb-NO"),
+        PORTUGESE_BRAZIL("pt-BR"),
+        PORTUGESE_PORTUGAL("pt-PT"),
+        SLOVAK("sk-SK"),
+        SPANISH("es-ES"),
+        SWEDISH("sv-SE"),
+        UKRANIAN("uk-UA"),
+        ENGLISH_AUSTRALIA("en-AU"),
+        ENGLISH_UK("en-GB"),
+        ENGLISH_US("en-US"),
+        FRENCH_CANADA("fr-CA"),
+        FRENCH_FRANCE("fr-FR"),
+        GERMAN("de-DE"),
+        KOREAN("ko-KR"),
+        POLISH("pl-PL"),
+        RUSSIAN("ru-RU"),
+        TURKISH("tr-TR");
+
+        @Getter
+        @JsonValue
+        private final String value;
+    }
+
+    @AllArgsConstructor
+    public enum Voice {
+        FEMALE_A("female-a"),
+        FEMALE_B("female-b"),
+        FEMALE_C("female-c"),
+        MALE_A("male-a"),
+        MALE_B("male-b"),
+        MALE_C("male-c");
 
         @Getter
         @JsonValue
