@@ -42,7 +42,7 @@ public class DialSerializer extends JsonSerializer<Dial> {
         // write nodes
         xmlGenerator.setNextIsAttribute(false);
         for (Dial.Node node : dial.getNodes()) {
-            xmlGenerator.writeObjectField(node.getTag(), node.getValue());
+            xmlGenerator.writeObjectField(node.tag(), node);
         }
 
         xmlGenerator.writeEndObject();

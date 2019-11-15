@@ -3,8 +3,9 @@ package com.apidaze.sdk.xml;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
-import lombok.*;
+import lombok.Builder;
+import lombok.Singular;
+import lombok.Value;
 
 import java.time.Duration;
 import java.util.List;
@@ -14,7 +15,6 @@ import static java.util.Objects.isNull;
 
 @Value
 @Builder
-@JacksonXmlRootElement(localName = "playback")
 public class Playback implements ApidazeScript.Node {
 
     @JacksonXmlProperty(isAttribute = true)
@@ -36,5 +36,10 @@ public class Playback implements ApidazeScript.Node {
     @JacksonXmlProperty(localName = "input-timeout", isAttribute = true)
     public Long getInputTimeoutMillis() {
         return isNull(inputTimeout) ? null : inputTimeout.toMillis();
+    }
+
+    @Override
+    public String tag() {
+        return "playback";
     }
 }

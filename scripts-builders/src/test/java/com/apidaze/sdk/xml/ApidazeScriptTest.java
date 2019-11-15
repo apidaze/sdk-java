@@ -1,11 +1,10 @@
 package com.apidaze.sdk.xml;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.val;
 import org.junit.Test;
 
-import javax.xml.stream.XMLStreamException;
 import java.io.File;
-import java.io.IOException;
 import java.time.Duration;
 import java.util.UUID;
 
@@ -14,7 +13,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class ApidazeScriptTest {
 
     @Test
-    public void testAnswer() throws IOException, XMLStreamException {
+    public void testAnswer() throws JsonProcessingException {
         val expectedOutput = new File("src/test/resources/answer.xml");
 
         val script = ApidazeScript.builder()
@@ -23,13 +22,13 @@ public class ApidazeScriptTest {
                 .node(new Hangup())
                 .build();
 
-        val result = script.toXml();
+        val result = script.toXmlWithPrettyPrinter();
 
         assertThat(result).isXmlEqualToContentOf(expectedOutput);
     }
 
     @Test
-    public void testPlayback() throws IOException, XMLStreamException {
+    public void testPlayback() throws JsonProcessingException {
         val expectedOutput = new File("src/test/resources/playback.xml");
 
         val script = ApidazeScript.builder()
@@ -38,13 +37,13 @@ public class ApidazeScriptTest {
                 .node(new Hangup())
                 .build();
 
-        val result = script.toXml();
+        val result = script.toXmlWithPrettyPrinter();
 
         assertThat(result).isXmlEqualToContentOf(expectedOutput);
     }
 
     @Test
-    public void testRingback() throws IOException, XMLStreamException {
+    public void testRingback() throws JsonProcessingException {
         val expectedOutput = new File("src/test/resources/ringback.xml");
 
         val script = ApidazeScript.builder()
@@ -54,13 +53,13 @@ public class ApidazeScriptTest {
                 .node(new Hangup())
                 .build();
 
-        val result = script.toXml();
+        val result = script.toXmlWithPrettyPrinter();
 
         assertThat(result).isXmlEqualToContentOf(expectedOutput);
     }
 
     @Test
-    public void testEcho() throws IOException, XMLStreamException {
+    public void testEcho() throws JsonProcessingException {
         val expectedOutput = new File("src/test/resources/echo.xml");
 
         val script = ApidazeScript.builder()
@@ -68,26 +67,26 @@ public class ApidazeScriptTest {
                 .node(Echo.withDelay(Duration.ofMillis(500)))
                 .build();
 
-        val result = script.toXml();
+        val result = script.toXmlWithPrettyPrinter();
 
         assertThat(result).isXmlEqualToContentOf(expectedOutput);
     }
 
     @Test
-    public void testHangup() throws IOException, XMLStreamException {
+    public void testHangup() throws JsonProcessingException {
         val expectedOutput = new File("src/test/resources/hangup.xml");
 
         val script = ApidazeScript.builder()
                 .node(new Hangup())
                 .build();
 
-        val result = script.toXml();
+        val result = script.toXmlWithPrettyPrinter();
 
         assertThat(result).isXmlEqualToContentOf(expectedOutput);
     }
 
     @Test
-    public void testIntercept() throws IOException, XMLStreamException {
+    public void testIntercept() throws JsonProcessingException {
         val expectedOutput = new File("src/test/resources/intercept.xml");
 
         val script = ApidazeScript.builder()
@@ -96,13 +95,13 @@ public class ApidazeScriptTest {
                 .node(new Hangup())
                 .build();
 
-        val result = script.toXml();
+        val result = script.toXmlWithPrettyPrinter();
 
         assertThat(result).isXmlEqualToContentOf(expectedOutput);
     }
 
     @Test
-    public void testSpeak() throws IOException, XMLStreamException {
+    public void testSpeak() throws JsonProcessingException {
         val expectedOutput = new File("src/test/resources/speak.xml");
 
         val script = ApidazeScript.builder()
@@ -114,13 +113,13 @@ public class ApidazeScriptTest {
                 .node(new Wait(Duration.ofSeconds(5)))
                 .build();
 
-        val result = script.toXml();
+        val result = script.toXmlWithPrettyPrinter();
 
         assertThat(result).isXmlEqualToContentOf(expectedOutput);
     }
 
     @Test
-    public void testBindWithSpeak() throws IOException, XMLStreamException {
+    public void testBindWithSpeak() throws JsonProcessingException {
         val expectedOutput = new File("src/test/resources/bind-with-speak.xml");
 
         val script = ApidazeScript.builder()
@@ -135,13 +134,13 @@ public class ApidazeScriptTest {
                 )
                 .build();
 
-        val result = script.toXml();
+        val result = script.toXmlWithPrettyPrinter();
 
         assertThat(result).isXmlEqualToContentOf(expectedOutput);
     }
 
     @Test
-    public void testBindWithPlayback() throws IOException, XMLStreamException {
+    public void testBindWithPlayback() throws JsonProcessingException {
         val expectedOutput = new File("src/test/resources/bind-with-playback.xml");
 
         val script = ApidazeScript.builder()
@@ -155,13 +154,13 @@ public class ApidazeScriptTest {
                         .build())
                 .build();
 
-        val result = script.toXml();
+        val result = script.toXmlWithPrettyPrinter();
 
         assertThat(result).isXmlEqualToContentOf(expectedOutput);
     }
 
     @Test
-    public void testWait() throws IOException, XMLStreamException {
+    public void testWait() throws JsonProcessingException {
         val expectedOutput = new File("src/test/resources/wait.xml");
 
         val script = ApidazeScript.builder()
@@ -173,13 +172,13 @@ public class ApidazeScriptTest {
                 .node(new Wait(Duration.ofSeconds(5)))
                 .build();
 
-        val result = script.toXml();
+        val result = script.toXmlWithPrettyPrinter();
 
         assertThat(result).isXmlEqualToContentOf(expectedOutput);
     }
 
     @Test
-    public void testConference() throws IOException, XMLStreamException {
+    public void testConference() throws JsonProcessingException {
         val expectedOutput = new File("src/test/resources/conference.xml");
 
         val script = ApidazeScript.builder()
@@ -187,13 +186,13 @@ public class ApidazeScriptTest {
                 .node(new Conference("my_meeting_room"))
                 .build();
 
-        val result = script.toXml();
+        val result = script.toXmlWithPrettyPrinter();
 
         assertThat(result).isXmlEqualToContentOf(expectedOutput);
     }
 
     @Test
-    public void testRecord() throws IOException, XMLStreamException {
+    public void testRecord() throws JsonProcessingException {
         val expectedOutput = new File("src/test/resources/record.xml");
 
         val script = ApidazeScript.builder()
@@ -208,7 +207,7 @@ public class ApidazeScriptTest {
                 .node(new Hangup())
                 .build();
 
-        val result = script.toXml();
+        val result = script.toXmlWithPrettyPrinter();
 
         assertThat(result).isXmlEqualToContentOf(expectedOutput);
     }

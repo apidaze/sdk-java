@@ -14,4 +14,9 @@ public class Bind implements ApidazeScript.Node {
 
     @JacksonXmlText
     String value;
+
+    @Override
+    public String tag() {
+        return "bind";
+    }
 }

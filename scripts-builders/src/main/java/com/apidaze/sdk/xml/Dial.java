@@ -1,7 +1,7 @@
 package com.apidaze.sdk.xml;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlText;
 import lombok.*;
 
 import java.time.Duration;
@@ -9,7 +9,6 @@ import java.util.List;
 
 @Value
 @Builder
-@JacksonXmlRootElement(localName = "dial")
 @JsonSerialize(using = DialSerializer.class)
 public class Dial implements ApidazeScript.Node {
     Duration timeout;
@@ -21,38 +20,44 @@ public class Dial implements ApidazeScript.Node {
     @Singular
     List<Node> nodes;
 
-    interface Node {
-        String getTag();
+    @Override
+    public String tag() {
+        return "dial";
+    }
 
-        String getValue();
+    interface Node {
+        String tag();
     }
 
     @Value
     public static class Number implements Node {
+        @JacksonXmlText
         String value;
 
         @Override
-        public String getTag() {
+        public String tag() {
             return "number";
         }
     }
 
     @Value
     public static class SipAccount implements Node {
+        @JacksonXmlText
         String value;
 
         @Override
-        public String getTag() {
+        public String tag() {
             return "sipaccount";
         }
     }
 
     @Value
     public static class SipUri implements Node {
+        @JacksonXmlText
         String value;
 
         @Override
-        public String getTag() {
+        public String tag() {
             return "sipuri";
         }
     }

@@ -1,50 +1,38 @@
 package com.apidaze.sdk.xml;
 
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.Singular;
 
-import javax.xml.stream.XMLInputFactory;
-import javax.xml.stream.XMLOutputFactory;
-import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamWriter;
-import java.io.IOException;
-import java.io.StringWriter;
 import java.util.List;
 
 @Builder
+@JacksonXmlRootElement(localName = "document")
+@JsonSerialize(using = ApidazeScriptSerializer.class)
 public class ApidazeScript {
 
-    public interface Node {}
+    private final ObjectMapper mapper = new XmlMapper().disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
 
+    public interface Node {
+        String tag();
+    }
+
+    @Getter
     @Singular
     private final List<Node> nodes;
 
-    public String toXml() throws XMLStreamException, IOException {
-        // First create Stax components we need
-        XMLInputFactory xmlInputFactory = XMLInputFactory.newFactory();
-        XMLOutputFactory xmlOutputFactory = XMLOutputFactory.newFactory();
-        xmlOutputFactory.setProperty(XMLOutputFactory.IS_REPAIRING_NAMESPACES, true);
-        StringWriter out = new StringWriter();
-        XMLStreamWriter sw = xmlOutputFactory.createXMLStreamWriter(out);
+    public String toXml() throws JsonProcessingException {
+        return mapper.writeValueAsString(this);
+    }
 
-        // then Jackson components
-        XmlMapper mapper = new XmlMapper(xmlInputFactory);
-
-        sw.writeStartDocument();
-        sw.writeStartElement("document");
-        sw.writeStartElement("work");
-
-        for (Node node : nodes) {
-            mapper.writeValue(sw, node);
-        }
-
-        // and/or regular Stax output
-        sw.writeEndElement();
-        sw.writeEndElement();
-        sw.writeEndDocument();
-
-        return out.toString();
+    public String toXmlWithPrettyPrinter() throws JsonProcessingException {
+        return mapper.writerWithDefaultPrettyPrinter().writeValueAsString(this);
     }
 }

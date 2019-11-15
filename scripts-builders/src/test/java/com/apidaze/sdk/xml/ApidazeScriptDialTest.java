@@ -1,11 +1,10 @@
 package com.apidaze.sdk.xml;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.val;
 import org.junit.Test;
 
-import javax.xml.stream.XMLStreamException;
 import java.io.File;
-import java.io.IOException;
 import java.time.Duration;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -13,7 +12,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class ApidazeScriptDialTest {
 
     @Test
-    public void testDialNumber() throws IOException, XMLStreamException {
+    public void testDialNumber() throws JsonProcessingException {
         val expectedOutput = new File("src/test/resources/dial-number.xml");
 
         val dial = Dial.builder()
@@ -31,7 +30,7 @@ public class ApidazeScriptDialTest {
     }
 
     @Test
-    public void testDialSipAccount() throws IOException, XMLStreamException {
+    public void testDialSipAccount() throws JsonProcessingException {
         val expectedOutput = new File("src/test/resources/dial-sipaccount.xml");
 
         val dial = Dial.builder()
@@ -49,7 +48,7 @@ public class ApidazeScriptDialTest {
     }
 
     @Test
-    public void testDialSipUri() throws IOException, XMLStreamException {
+    public void testDialSipUri() throws JsonProcessingException {
         val expectedOutput = new File("src/test/resources/dial-sipuri.xml");
 
         val dial = Dial.builder()
@@ -67,7 +66,7 @@ public class ApidazeScriptDialTest {
     }
 
     @Test
-    public void testDialWithAllAttributesAndDestinationTypes() throws IOException, XMLStreamException {
+    public void testDialWithAllAttributesAndDestinationTypes() throws JsonProcessingException {
         val expectedOutput = new File("src/test/resources/dial-all-in-one.xml");
 
         val dial = Dial.builder()

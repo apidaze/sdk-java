@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonValue;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlText;
 import lombok.*;
 
@@ -15,7 +14,6 @@ import static java.util.Objects.isNull;
 
 @Value
 @Builder
-@JacksonXmlRootElement(localName = "speak")
 public class Speak implements ApidazeScript.Node {
 
     @JacksonXmlText
@@ -35,6 +33,11 @@ public class Speak implements ApidazeScript.Node {
     @JacksonXmlProperty(localName = "input-timeout", isAttribute = true)
     public Long getInputTimeoutMillis() {
         return isNull(inputTimeout) ? null : inputTimeout.toMillis();
+    }
+
+    @Override
+    public String tag() {
+        return "speak";
     }
 
     @AllArgsConstructor(access = AccessLevel.PRIVATE)
