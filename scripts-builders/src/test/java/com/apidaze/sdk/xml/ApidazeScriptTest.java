@@ -211,4 +211,30 @@ public class ApidazeScriptTest {
 
         assertThat(result).isXmlEqualToContentOf(expectedOutput);
     }
+
+    @Test
+    public void testRecordWithAllAttributes() throws JsonProcessingException {
+        val expectedOutput = new File("src/test/resources/record-all-attributes.xml");
+
+        val script = ApidazeScript.builder()
+                .node(new Answer())
+                .node(new Wait(Duration.ofSeconds(2)))
+                .node(Speak.builder()
+                        .lang(Speak.Lang.EN)
+                        .text("Please leave a message.")
+                        .build())
+                .node(Record.builder()
+                        .name("example1")
+                        .onAnswered(true)
+                        .aLeg(false)
+                        .bLeg(false)
+                        .build())
+                .node(new Wait(Duration.ofSeconds(60)))
+                .node(new Hangup())
+                .build();
+
+        val result = script.toXmlWithPrettyPrinter();
+
+        assertThat(result).isXmlEqualToContentOf(expectedOutput);
+    }
 }
