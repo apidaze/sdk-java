@@ -8,7 +8,6 @@ import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
 import lombok.val;
 
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.time.Duration;
@@ -154,7 +153,7 @@ public class IvrExample {
             exchange.getResponseHeaders().add("Content-Type", "audio/wav");
             exchange.sendResponseHeaders(200, 0);
 
-            val is = new FileInputStream("examples/src/main/resources/apidazeintro.wav");
+            val is = this.getClass().getClassLoader().getResourceAsStream("apidazeintro.wav");
             val os = exchange.getResponseBody();
             while (is.available() > 0) {
                 os.write(is.read());
