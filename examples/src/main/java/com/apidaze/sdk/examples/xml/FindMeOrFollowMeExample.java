@@ -16,15 +16,17 @@ import static com.apidaze.sdk.examples.xml.HttpHandlerUtil.writeResponse;
 
 public class FindMeOrFollowMeExample implements HttpHandler {
 
+    private static final int PORT = 8080;
+
     private static final String FIRST_NUMBER = "123456788";
     private static final String SECOND_NUMBER = "123456799";
 
     public static void main(String[] args) throws IOException {
-        HttpServer server = HttpServer.create(new InetSocketAddress("localhost",8080), 0);
+        HttpServer server = HttpServer.create(new InetSocketAddress("localhost",PORT), 0);
         server.createContext("/", new FindMeOrFollowMeExample());
         server.start();
 
-        System.out.println("Server is running at " + server.getAddress());
+        System.out.println("Server is running at http://" + server.getAddress().getHostName() + ":" + PORT);
     }
 
     private String response() throws JsonProcessingException {

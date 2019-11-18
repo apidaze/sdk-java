@@ -18,6 +18,8 @@ import static com.apidaze.sdk.examples.xml.HttpHandlerUtil.writeResponse;
 
 public class IvrExample {
 
+    private static final int PORT = 8080;
+
     static final String STEP_1_PATH = "/step1";
     static final String STEP_2_PATH = "/step2";
     static final String STEP_3_PATH = "/step3";
@@ -32,7 +34,7 @@ public class IvrExample {
         server.createContext(PLAYBACK_PATH, new Playback());
         server.start();
 
-        System.out.println("Server is running at " + server.getAddress());
+        System.out.println("Server is running at http://" + server.getAddress().getHostName() + ":" + PORT);
     }
 
     static class Intro implements HttpHandler {
