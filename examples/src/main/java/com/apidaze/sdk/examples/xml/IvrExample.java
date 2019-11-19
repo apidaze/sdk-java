@@ -26,17 +26,18 @@ public class IvrExample {
 
     public static void main(String[] args) throws IOException {
         HttpServer server = HttpServer.create(new InetSocketAddress("localhost",8080), 0);
-        server.createContext("/", new Intro());
-        server.createContext(STEP_1_PATH, new Step1());
-        server.createContext(STEP_2_PATH, new Step2());
-        server.createContext(STEP_3_PATH, new Step3());
-        server.createContext(PLAYBACK_PATH, new Playback());
+
+        server.createContext("/", new IntroHandler());
+        server.createContext(STEP_1_PATH, new Step1Handler());
+        server.createContext(STEP_2_PATH, new Step2Handler());
+        server.createContext(STEP_3_PATH, new Step3Handler());
+        server.createContext(PLAYBACK_PATH, new PlaybackHandler());
         server.start();
 
         System.out.println("Server is running at http://" + server.getAddress().getHostName() + ":" + PORT);
     }
 
-    static class Intro implements HttpHandler {
+    static class IntroHandler implements HttpHandler {
 
         private String response(String localUrl) throws JsonProcessingException {
             return ApidazeScript.builder()
@@ -45,7 +46,7 @@ public class IvrExample {
                     .node(new Answer())
                     .node(Record.builder().name("example_recording").build())
                     .node(new Wait(Duration.ofSeconds(2)))
-                    .node(com.apidaze.sdk.xml.Playback.fromFile(localUrl + PLAYBACK_PATH))
+                    .node(Playback.fromFile(localUrl + PLAYBACK_PATH))
                     .node(Speak.builder()
                             .text("This example script will show you some things you can do with our API")
                             .build())
@@ -69,7 +70,7 @@ public class IvrExample {
         }
     }
 
-    static class Step1 implements HttpHandler {
+    static class Step1Handler implements HttpHandler {
 
         private String response() throws JsonProcessingException {
             return ApidazeScript.builder()
@@ -112,7 +113,7 @@ public class IvrExample {
         }
     }
 
-    static class Step2 implements HttpHandler {
+    static class Step2Handler implements HttpHandler {
 
         private String response() throws JsonProcessingException {
             return ApidazeScript.builder()
@@ -128,7 +129,7 @@ public class IvrExample {
         }
     }
 
-    static class Step3 implements HttpHandler {
+    static class Step3Handler implements HttpHandler {
 
         private String response() throws JsonProcessingException {
             return ApidazeScript.builder()
@@ -146,7 +147,7 @@ public class IvrExample {
         }
     }
 
-    static class Playback implements HttpHandler {
+    static class PlaybackHandler implements HttpHandler {
 
         @Override
         public void handle(HttpExchange exchange) throws IOException {
