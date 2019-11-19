@@ -1,0 +1,10 @@
+<document>
+  <work>
+    <answer/>
+    <wait>2</wait>
+    <speak lang="en-US">Please leave a message.</speak>
+    <record name='example1'/>
+    <wait>60</wait>
+    <hangup/>
+  </work>
+</document>

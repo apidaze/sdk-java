@@ -1,0 +1,7 @@
+<document>
+  <work>
+    <answer/>
+    <speak lang="fr-FR">Bonjour et bienvenue chez APIDAIZE. Vous pouvez patienter, mais n'oubliez pas de raccrocher.</speak>
+    <wait>5</wait>
+  </work>
+</document>

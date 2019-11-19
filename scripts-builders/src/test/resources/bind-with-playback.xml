@@ -1,0 +1,10 @@
+<document>
+  <work>
+    <answer/>
+    <playback input-timeout="5000" file="http://www.mydomain.com/welcome.wav">
+      <bind action="http://www.mydomain.com/get_digits.php?bind=1">1</bind>
+      <bind action="http://www.mydomain.com/get_digits.php?bind=2">2</bind>
+      <bind action="http://www.mydomain.com/get_digits.php?bind=other">~[3-9]</bind>
+    </playback>
+  </work>
+</document>

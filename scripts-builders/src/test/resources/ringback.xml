@@ -1,0 +1,10 @@
+<document>
+  <work>
+    <answer/>
+    <ringback>http://www.mydomain.com/welcome.wav</ringback>
+    <dial>
+      <sipaccount>bob</sipaccount>
+    </dial>
+    <hangup/>
+  </work>
+</document>

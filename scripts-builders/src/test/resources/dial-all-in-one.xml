@@ -1,0 +1,15 @@
+<document>
+  <work>
+    <dial timeout="60"
+          max-call-duration="300"
+          strategy="sequence"
+          action="http://action.url.com"
+          answer-url="http://answer-url.com"
+          caller-hangup-url="http://caller-hangup-url.com">
+      <number>1234567890</number>
+      <sipaccount>targetsipaccount</sipaccount>
+      <sipuri>phone_number@anysipdomain.com</sipuri>
+    </dial>
+    <hangup/>
+  </work>
+</document>

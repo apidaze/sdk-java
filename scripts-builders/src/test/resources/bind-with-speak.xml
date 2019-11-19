@@ -1,0 +1,10 @@
+<document>
+  <work>
+    <answer/>
+    <speak input-timeout="5000">Press one to or two, or any digit, and we'll handle your call, or not.
+      <bind action="http://www.mydomain.com/get_digits.php?bind=1">1</bind>
+      <bind action="http://www.mydomain.com/get_digits.php?bind=2">2</bind>
+      <bind action="http://www.mydomain.com/get_digits.php?bind=other">~[3-9]</bind>
+    </speak>
+  </work>
+</document>

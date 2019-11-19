@@ -1,0 +1,7 @@
+<document>
+  <work>
+    <answer/>
+    <playback file="http://www.mydomain.com/welcome.wav"/>
+    <hangup/>
+  </work>
+</document>

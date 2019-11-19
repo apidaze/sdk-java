@@ -14,26 +14,22 @@
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <spring.boot.starter.verion>2.1.8.RELEASE</spring.boot.starter.verion>
         <lombok.version>1.18.10</lombok.version>
         <guava.version>28.1-jre</guava.version>
         <fasterxml.version>2.10.0</fasterxml.version>
         <commons.validator.version>1.6</commons.validator.version>
         <logback.version>1.2.3</logback.version>
+        <assertj.version>3.13.2</assertj.version>
     </properties>
 
     <modules>
         <module>client</module>
         <module>examples</module>
+        <module>scripts-builders</module>
     </modules>
 
     <dependencyManagement>
         <dependencies>
-            <dependency>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-starter-webflux</artifactId>
-                <version>${spring.boot.starter.verion}</version>
-            </dependency>
             <dependency>
                 <groupId>org.projectlombok</groupId>
                 <artifactId>lombok</artifactId>
@@ -60,6 +56,11 @@
                 <version>${fasterxml.version}</version>
             </dependency>
             <dependency>
+                <groupId>com.fasterxml.jackson.dataformat</groupId>
+                <artifactId>jackson-dataformat-xml</artifactId>
+                <version>${fasterxml.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>commons-validator</groupId>
                 <artifactId>commons-validator</artifactId>
                 <version>${commons.validator.version}</version>
@@ -68,6 +69,13 @@
                 <groupId>ch.qos.logback</groupId>
                 <artifactId>logback-classic</artifactId>
                 <version>${logback.version}</version>
+            </dependency>
+
+            <!-- test -->
+            <dependency>
+                <groupId>org.assertj</groupId>
+                <artifactId>assertj-core</artifactId>
+                <version>${assertj.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
