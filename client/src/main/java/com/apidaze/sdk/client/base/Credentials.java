@@ -4,6 +4,9 @@ import lombok.Data;
 
 import static java.util.Objects.requireNonNull;
 
+/**
+ * The credentials to use in authenticate in Apidaze REST API
+ */
 @Data
 public class Credentials {
 

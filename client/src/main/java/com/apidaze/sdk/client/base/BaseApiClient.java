@@ -16,8 +16,17 @@ import java.util.Map;
 import java.util.Optional;
 
 
+/**
+ * <p>This is a <i>base</i> class for building Apidaze REST API clients.
+ * This class uses a shareable instance of <code>OkHttpClient</code> and supports CRUD methods.
+ * </p>
+ * @param <T> A type parameter which defines the type of entity managed the specific client implementation.
+ */
 public abstract class BaseApiClient<T> {
 
+    /**
+     * The default base URL used to communicate with Apidaze REST API
+     */
     protected final static String DEFAULT_BASE_URL = "https://api.apidaze.io";
 
     protected final ObjectMapper mapper = new ObjectMapper()
@@ -27,16 +36,31 @@ public abstract class BaseApiClient<T> {
 
     protected final OkHttpClient client = HttpClient.getClientInstance();
 
+    /**
+     * @return A base path of the resource managed by the client implementation.
+     */
     protected abstract String getBasePath();
 
+    /**
+     * @return A base URL used to communicate with Apidaze REST API.
+     */
     protected abstract String getBaseUrl();
 
+    /**
+     * @return {@link Credentials}
+     */
     protected abstract Credentials getCredentials();
 
+    /**
+     * @return The {@code HttpUrl} with baseUrl, apiKey, apiSecret and basePath included.
+     */
     protected HttpUrl authenticatedUrl() {
         return authenticated().build();
     }
 
+    /**
+     * @return The {@code HttpUrl.Builder} with baseUrl, apiKey, apiSecret and basePath included.
+     */
     protected HttpUrl.Builder authenticated() {
         return HttpUrl
                 .parse(getBaseUrl())
@@ -46,7 +70,13 @@ public abstract class BaseApiClient<T> {
                 .addQueryParameter("api_secret", getCredentials().getApiSecret());
     }
 
-
+    /**
+     * Creates an entity of type {@code T} by sending POST request to {@link #getBasePath()}
+     * @param params a map with parameters names an values which are passed as HTTP form parameters
+     * @param clazz the class object of type {@code T} used to deserialize JSON content
+     * @return a created entity
+     * @throws IOException
+     */
     protected T create(Map<String, String> params, Class<T> clazz) throws IOException {
         val formBody = new FormBody.Builder();
         params.forEach(formBody::add);
@@ -61,6 +91,12 @@ public abstract class BaseApiClient<T> {
         }
     }
 
+    /**
+     * Returns the list of entities of type {@code T} by sending GET request to {@link #getBasePath()}
+     * @param clazz the class object of type {@code T} used to deserialize JSON content
+     * @return the list of entities
+     * @throws IOException
+     */
     protected List<T> findAll(Class<T> clazz) throws IOException {
         Request request = new Request.Builder()
                 .url(authenticatedUrl())
@@ -71,6 +107,13 @@ public abstract class BaseApiClient<T> {
         }
     }
 
+    /**
+     * Returns an entity of type {@code T} by sending GET request to {@link #getBasePath()}/{@code id}
+     * @param id id of the entity to find
+     * @param clazz the class object of type {@code T} used to deserialize JSON content
+     * @return an entity of type {@code T} wrapped by {@code Optional} if present, otherwise an empty {@code Optional}
+     * @throws IOException
+     */
     protected Optional<T> findById(String id, Class<T> clazz) throws IOException {
         Request request = new Request.Builder()
                 .url(authenticated()
@@ -85,6 +128,14 @@ public abstract class BaseApiClient<T> {
         }
     }
 
+    /**
+     * Modifies an entity of type {@code T} by sending PUT request to {@link #getBasePath()}/{@code id}
+     * @param id id of the entity to modify
+     * @param params a map with parameters names an values which are passed as HTTP form parameters
+     * @param clazz the class object of type {@code T} used to deserialize JSON content
+     * @return a updated entity
+     * @throws IOException
+     */
     protected T update(String id, Map<String, String> params, Class<T> clazz) throws IOException {
         val formBody = new FormBody.Builder();
         params.forEach(formBody::add);
@@ -101,6 +152,11 @@ public abstract class BaseApiClient<T> {
         }
     }
 
+    /**
+     * Deletes an entity of type {@code T} by sending DELETE request to {@link #getBasePath()}/{@code id}
+     * @param id id of the entity to delete
+     * @throws IOException
+     */
     protected void delete(String id) throws IOException {
         Request request = new Request.Builder()
                 .url(authenticated().addPathSegment(id).build())
