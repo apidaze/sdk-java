@@ -1,5 +1,6 @@
-package com.apidaze.sdk.xml;
+package com.apidaze.sdk.xml.serializers;
 
+import com.apidaze.sdk.xml.ApidazeScript;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;

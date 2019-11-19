@@ -1,5 +1,6 @@
 package com.apidaze.sdk.xml;
 
+import com.apidaze.sdk.xml.serializers.DialSerializer;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlText;
 import lombok.*;
@@ -25,7 +26,7 @@ public class Dial implements ApidazeScript.Node {
         return "dial";
     }
 
-    interface Node {
+    public interface Node {
         String tag();
     }
 
