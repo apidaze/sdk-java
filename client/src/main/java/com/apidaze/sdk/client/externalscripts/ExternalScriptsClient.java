@@ -19,7 +19,6 @@ import static lombok.AccessLevel.PRIVATE;
 @AllArgsConstructor(access = PRIVATE)
 public class ExternalScriptsClient extends BaseApiClient<ExternalScript> implements ExternalScripts {
 
-    static final int MAX_NAME_LENGTH = 40;
     private static final String PARAM_URL = "url";
     private static final String PARAM_NAME = "name";
 

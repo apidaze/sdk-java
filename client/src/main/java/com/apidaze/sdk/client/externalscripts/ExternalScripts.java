@@ -10,6 +10,11 @@ import java.util.Optional;
 public interface ExternalScripts {
 
     /**
+     * The maximum length of the script name.
+     */
+    int MAX_NAME_LENGTH = 40;
+
+    /**
      * Returns the list of external scripts for your domain.
      * @return list of {@link ExternalScript} instances
      * @throws IOException
@@ -19,11 +24,12 @@ public interface ExternalScripts {
 
     /**
      * Creates a new external script. Only one external script is allowed per domain.
-     * @param name the name of {@code ExternalScript}
+     * @param name the name of {@code ExternalScript} , cannot be longer than {@link #MAX_NAME_LENGTH}
      * @param url the webhook URL to which the call detail will be be post
      * @return a created {@link ExternalScript} instance
      * @throws IOException
      * @throws HttpResponseException
+     * @throws IllegalArgumentException if the maximum length of the script name has been exceeded
      */
     ExternalScript createExternalScript(String name, URL url) throws IOException;
 
@@ -39,11 +45,12 @@ public interface ExternalScripts {
     /**
      * Updates the name and url of {@code ExternalScript} instance.
      * @param id id of external script to be updated
-     * @param name a new name
+     * @param name a new name, cannot be longer than {@link #MAX_NAME_LENGTH}
      * @param url a new url
      * @return an updated {@link ExternalScript} instance
      * @throws IOException
      * @throws HttpResponseException
+     * @throws IllegalArgumentException if the maximum length of the script name has been exceeded
      */
     ExternalScript updateExternalScript(Long id, String name, URL url) throws IOException;
 
