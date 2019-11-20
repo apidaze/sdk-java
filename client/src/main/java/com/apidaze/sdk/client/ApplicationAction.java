@@ -1,7 +1,7 @@
 package com.apidaze.sdk.client;
 
 import com.apidaze.sdk.client.base.Credentials;
-import com.apidaze.sdk.client.calls.ActiveCall;
+import com.apidaze.sdk.client.calls.Call;
 import com.apidaze.sdk.client.calls.Calls;
 import com.apidaze.sdk.client.calls.CallsClient;
 import com.apidaze.sdk.client.cdrhttphandlers.CdrHttpHandler;
@@ -31,6 +31,9 @@ import java.util.UUID;
 import static java.util.Objects.requireNonNull;
 import static lombok.AccessLevel.PRIVATE;
 
+/**
+ * The class used to make calls, send text messages and other application specific functions.
+ */
 @AllArgsConstructor(access = PRIVATE)
 public class ApplicationAction implements Calls, Message, ExternalScripts, Recordings, CredentialsValidator, CdrHttpHandlers {
 
@@ -41,6 +44,11 @@ public class ApplicationAction implements Calls, Message, ExternalScripts, Recor
     private final CredentialsValidator credentialsValidator;
     private final CdrHttpHandlers cdrHttpHandlers;
 
+    /**
+     * Initiates an object of this class.
+     * @param credentials an application specific key and secret
+     * @return An initiated object of this class
+     */
     public static ApplicationAction create(Credentials credentials) {
         requireNonNull(credentials, "Credentials must not be null.");
         return new ApplicationAction(
@@ -58,18 +66,18 @@ public class ApplicationAction implements Calls, Message, ExternalScripts, Recor
     }
 
     @Override
-    public List<ActiveCall> getActiveCalls() throws IOException {
-        return calls.getActiveCalls();
+    public List<Call> getCalls() throws IOException {
+        return calls.getCalls();
     }
 
     @Override
-    public Optional<ActiveCall> getActiveCall(UUID id) throws IOException {
-        return calls.getActiveCall(id);
+    public Optional<Call> getCall(UUID id) throws IOException {
+        return calls.getCall(id);
     }
 
     @Override
-    public void deleteActiveCall(UUID id) throws IOException {
-        calls.deleteActiveCall(id);
+    public void deleteCall(UUID id) throws IOException {
+        calls.deleteCall(id);
     }
 
     @Override

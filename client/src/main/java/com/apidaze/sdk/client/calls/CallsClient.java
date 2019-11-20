@@ -22,7 +22,7 @@ import static java.util.Objects.requireNonNull;
 import static lombok.AccessLevel.PRIVATE;
 
 @AllArgsConstructor(access = PRIVATE)
-public class CallsClient extends BaseApiClient<ActiveCall> implements Calls {
+public class CallsClient extends BaseApiClient<Call> implements Calls {
 
     @Getter
     private final String basePath = "calls";
@@ -75,18 +75,18 @@ public class CallsClient extends BaseApiClient<ActiveCall> implements Calls {
     }
 
     @Override
-    public List<ActiveCall> getActiveCalls() throws IOException {
-        return findAll(ActiveCall.class);
+    public List<Call> getCalls() throws IOException {
+        return findAll(Call.class);
     }
 
     @Override
-    public Optional<ActiveCall> getActiveCall(UUID id) throws IOException {
+    public Optional<Call> getCall(UUID id) throws IOException {
         requireNonNull(id, "id must not be null");
-        return findById(id.toString(), ActiveCall.class);
+        return findById(id.toString(), Call.class);
     }
 
     @Override
-    public void deleteActiveCall(UUID id) throws IOException {
+    public void deleteCall(UUID id) throws IOException {
         requireNonNull(id, "id must not be null");
 
         Request request = new Request.Builder()
@@ -103,18 +103,6 @@ public class CallsClient extends BaseApiClient<ActiveCall> implements Calls {
                 });
             }
 
-        }
-    }
-
-    public static class CreateResponseException extends RuntimeException {
-        CreateResponseException(String message) {
-            super(message);
-        }
-    }
-
-    public static class DeleteResponseException extends RuntimeException {
-        DeleteResponseException(String message) {
-            super(message);
         }
     }
 

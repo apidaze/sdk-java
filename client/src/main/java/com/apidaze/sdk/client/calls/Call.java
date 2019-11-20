@@ -11,7 +11,7 @@ import java.util.UUID;
 
 @Value
 @Builder
-public class ActiveCall {
+public class Call {
     UUID uuid;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     LocalDateTime created;
@@ -25,16 +25,16 @@ public class ActiveCall {
     String workTag;
 
     @JsonCreator
-    public ActiveCall(@JsonProperty("uuid") UUID uuid,
-                      @JsonProperty("created") LocalDateTime created,
-                      @JsonProperty("cid_name") String callerIdName,
-                      @JsonProperty("cid_num") String callerIdNumber,
-                      @JsonProperty("dest") String destination,
-                      @JsonProperty("callstate") Calls.CallState callState,
-                      @JsonProperty("call_uuid") String callUuid,
-                      @JsonProperty("callerid") String callerId,
-                      @JsonProperty("URL") String url,
-                      @JsonProperty("work_tag") String workTag) {
+    public Call(@JsonProperty("uuid") UUID uuid,
+                @JsonProperty("created") LocalDateTime created,
+                @JsonProperty("cid_name") String callerIdName,
+                @JsonProperty("cid_num") String callerIdNumber,
+                @JsonProperty("dest") String destination,
+                @JsonProperty("callstate") Calls.CallState callState,
+                @JsonProperty("call_uuid") String callUuid,
+                @JsonProperty("callerid") String callerId,
+                @JsonProperty("URL") String url,
+                @JsonProperty("work_tag") String workTag) {
         this.uuid = uuid;
         this.created = created;
         this.callerIdName = callerIdName;

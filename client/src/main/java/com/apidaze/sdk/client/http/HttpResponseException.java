@@ -7,6 +7,10 @@ import org.jetbrains.annotations.Nullable;
 import java.io.IOException;
 import java.util.Optional;
 
+/**
+ * Exception that contain actual HTTP response data.
+ * It is thrown if REST API returned an unhappy HTTP response code like 404 or 500
+ */
 @Getter
 @ToString
 public class HttpResponseException extends IOException {

@@ -112,20 +112,20 @@ public class CallsClientTest extends GenericRequest {
 
 
     @Test
-    public void shouldDeleteActiveCall() throws IOException {
+    public void shouldDeleteCall() throws IOException {
         val id = UUID.fromString("d64baf26-b116-4478-97b5-899de580461f");
 
         mockServer
                 .when(delete(id.toString()))
                 .respond(ok(""));
 
-        client.deleteActiveCall(id);
+        client.deleteCall(id);
 
         mockServer.verify(delete(id.toString()));
     }
 
     @Test
-    public void deleteActiveCallShouldThrowDeleteResponseException_ifApiReturnsBodyWithFailureMessage() {
+    public void deleteCallShouldThrowDeleteResponseException_ifApiReturnsBodyWithFailureMessage() {
         val id = UUID.fromString("d64baf26-b116-4478-97b5-899de580461f");
         val failureMessage = "NORMAL TEMPORARY_FAILURE";
 
@@ -134,60 +134,60 @@ public class CallsClientTest extends GenericRequest {
                 .respond(failed(failureMessage));
 
         assertThatExceptionOfType(CallsClient.DeleteResponseException.class)
-                .isThrownBy(() -> client.deleteActiveCall(id))
+                .isThrownBy(() -> client.deleteCall(id))
                 .withMessage(failureMessage);
     }
 
     @Test
-    public void shouldReturnListOfActiveCalls() throws IOException {
-        val activeCalls = generateActiveCallsList();
+    public void shouldReturnListOfCalls() throws IOException {
+        val calls = generateCallsList();
 
         mockServer
-                .when(getActiveCalls())
-                .respond(list(activeCalls));
+                .when(getAll())
+                .respond(list(calls));
 
-        val result = client.getActiveCalls();
+        val result = client.getCalls();
 
-        mockServer.verify(getActiveCalls());
+        mockServer.verify(getAll());
         assertThat(result)
                 .usingRecursiveFieldByFieldElementComparator()
-                .containsExactlyElementsOf(activeCalls);
+                .containsExactlyElementsOf(calls);
     }
 
     @Test
-    public void shouldReturnActiveCallById() throws IOException {
-        val activeCall = generateActiveCallsList().get(0);
-        val id = activeCall.getUuid();
+    public void shouldReturnCallById() throws IOException {
+        val call = generateCallsList().get(0);
+        val id = call.getUuid();
 
         mockServer
-                .when(getActiveCall(id))
-                .respond(one(activeCall));
+                .when(getById(id))
+                .respond(one(call));
 
-        val result = client.getActiveCall(id);
+        val result = client.getCall(id);
 
-        mockServer.verify(getActiveCall(id));
+        mockServer.verify(getById(id));
 
         assertThat(result).isPresent();
-        assertThat(result.get()).isEqualTo(activeCall);
+        assertThat(result.get()).isEqualTo(call);
     }
 
     @Test
-    public void getActiveCallShouldReturnEmpty_ifApiReturnsNotFound() throws IOException {
+    public void getCallShouldReturnEmpty_ifApiReturnsNotFound() throws IOException {
         val id = UUID.randomUUID();
 
         mockServer
                 .when(getById(id))
                 .respond(response().withStatusCode(404));
 
-        val response = client.getActiveCall(id);
+        val response = client.getCall(id);
 
         assertThat(response).isEmpty();
         mockServer.verify(getById(id));
     }
 
-    private List<ActiveCall> generateActiveCallsList() {
+    private List<Call> generateCallsList() {
         return ImmutableList.of(
-                ActiveCall.builder()
+                Call.builder()
                         .uuid(UUID.fromString("cd79587d-c71e-4bb0-9fdc-244bf9a95538"))
                         .created(LocalDateTime.parse("2019-10-09T12:01:22"))
                         .callerIdName("Outbound Call")
@@ -196,13 +196,13 @@ public class CallsClientTest extends GenericRequest {
                         .callState(Calls.CallState.ACTIVE)
                         .callUuid("cd79587d-c71e-4bb0-9fdc-244bf9a95538")
                         .build(),
-                ActiveCall.builder()
+                Call.builder()
                         .uuid(UUID.fromString("cd79587d-c71e-4bb0-9fdc-244bf9a95538"))
                         .created(LocalDateTime.parse("2019-11-09T12:01:22"))
                         .callerIdName("Outbound Call")
                         .callerIdNumber("987654321")
                         .destination("987654321")
-                        .callState(Calls.CallState.ACTIVE)
+                        .callState(Calls.CallState.EARLY)
                         .callUuid("fa67a5f3-bac4-48bb-ade7-efa19cd99938")
                         .build()
         );
@@ -215,13 +215,5 @@ public class CallsClientTest extends GenericRequest {
                 "destination", destination,
                 "type", callType.getValue()
         ));
-    }
-
-    private HttpRequest getActiveCalls() {
-        return getAll();
-    }
-
-    private HttpRequest getActiveCall(UUID id) {
-        return getById(id.toString());
     }
 }

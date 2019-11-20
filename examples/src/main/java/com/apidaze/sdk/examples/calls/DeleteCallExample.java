@@ -12,7 +12,7 @@ import java.util.UUID;
 import static java.util.Objects.isNull;
 
 @Slf4j
-public class DeleteActiveCallExample {
+public class DeleteCallExample {
 
     public static void main(String... args) {
 
@@ -32,7 +32,7 @@ public class DeleteActiveCallExample {
 
         // delete a call
         try {
-            applicationAction.deleteActiveCall(callId);
+            applicationAction.deleteCall(callId);
             log.info("Call with id = {} has been deleted.", callId);
         } catch (IOException e) {
             log.error("An error occurred during communicating with API", e);

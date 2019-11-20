@@ -18,6 +18,11 @@ public class ApplicationManager implements CredentialsValidator {
     private final ApplicationAction applicationAction;
     private final CredentialsValidator credentialsValidator;
 
+    /**
+     * Initiates an object of this class.
+     * @param credentials the root key and secret for the Apidaze account
+     * @return An initiated object of this class
+     */
     public static ApplicationManager create(Credentials credentials) {
         requireNonNull(credentials, "Credentials must not be null.");
 
