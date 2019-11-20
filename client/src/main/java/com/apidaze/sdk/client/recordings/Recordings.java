@@ -9,6 +9,9 @@ import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Path;
 import java.util.List;
 
+/**
+ * The interface manages recordings.
+ */
 public interface Recordings {
 
     /**

@@ -16,7 +16,7 @@ import java.io.InputStreamReader;
 import static java.util.Objects.isNull;
 
 @Slf4j
-public class ActiveCallsAllInOneExample {
+public class CallsAllInOneExample {
 
     public static void main(String... args) {
 
@@ -41,23 +41,23 @@ public class ActiveCallsAllInOneExample {
             val callId = applicationAction.createCall(PhoneNumber.of(callerId), origin, destination, Calls.CallType.NUMBER);
             log.info("Call with id = {} has been initiated.", callId);
 
-            // get active call details
-            val activeCall = applicationAction.getActiveCall(callId);
-            if (activeCall.isPresent()) {
-                log.info("Initiated call details = {}", activeCall);
+            // get call details
+            val call = applicationAction.getCall(callId);
+            if (call.isPresent()) {
+                log.info("Initiated call details = {}", call);
             } else {
-                log.warn("There is no active call with id = {}", callId);
+                log.warn("There is no call with id = {}", callId);
             }
 
-            // get full list of active calls
-            val activeCalls = applicationAction.getActiveCalls();
-            log.info("Active calls list = {}", activeCalls);
+            // get full list of calls for your domain
+            val calls = applicationAction.getCalls();
+            log.info("Calls list = {}", calls);
 
-            // hung up the active call
+            // hung up the call
             log.info("Press RETURN to hung up the call...");
             new BufferedReader(new InputStreamReader(System.in)).readLine();
 
-            applicationAction.deleteActiveCall(callId);
+            applicationAction.deleteCall(callId);
             log.info("Call with id = {} has been deleted.", callId);
 
         } catch (IOException e) {

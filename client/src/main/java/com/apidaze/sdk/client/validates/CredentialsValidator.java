@@ -4,6 +4,9 @@ import com.apidaze.sdk.client.http.HttpResponseException;
 
 import java.io.IOException;
 
+/**
+ * The interface used to validate credentials.
+ */
 public interface CredentialsValidator {
 
     /**

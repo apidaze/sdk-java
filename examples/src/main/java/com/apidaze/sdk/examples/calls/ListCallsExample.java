@@ -10,7 +10,7 @@ import java.io.IOException;
 import static java.util.Objects.isNull;
 
 @Slf4j
-public class ActiveCallsExample {
+public class ListCallsExample {
 
     public static void main(String... args) {
 
@@ -26,8 +26,8 @@ public class ActiveCallsExample {
         val appAction = ApplicationAction.create(new Credentials(apiKey, apiSecret));
 
         try {
-            val response = appAction.getActiveCalls();
-            log.info("Active calls: {}", response);
+            val response = appAction.getCalls();
+            log.info("Calls: {}", response);
         } catch (IOException e) {
             log.error("An error occurred during communicating with API", e);
         }

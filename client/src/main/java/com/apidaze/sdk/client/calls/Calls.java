@@ -10,6 +10,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+/**
+ * The interface manages calls, i.e. place a call, lists calls, deletes calls.
+ */
 public interface Calls {
 
     /**
@@ -29,30 +32,30 @@ public interface Calls {
     UUID createCall(PhoneNumber callerId, String origin, String destination, CallType callType) throws IOException;
 
     /**
-     * Returns the list of active calls for your domain.
-     * @return list of active calls.
+     * Returns the list of calls for your domain.
+     * @return list of calls.
      * @throws IOException
      * @throws HttpResponseException
      */
-    List<ActiveCall> getActiveCalls() throws IOException;
+    List<Call> getCalls() throws IOException;
 
     /**
-     * Returns the active call details object by id.
-     * @param id id of active call to fetch.
-     * @return an active call details if present, otherwise {@code Optional.empty()}
+     * Returns a call details object by id.
+     * @param id id of the call to fetch.
+     * @return an call details if present, otherwise {@code Optional.empty()}
      * @throws IOException
      * @throws HttpResponseException
      */
-    Optional<ActiveCall> getActiveCall(UUID id) throws IOException;
+    Optional<Call> getCall(UUID id) throws IOException;
 
     /**
-     *  Hangs up an active call.
-     * @param id of the active call which should be deleted.
+     *  Deletes the call.
+     * @param id of the call which should be deleted.
      * @throws IOException
      * @throws HttpResponseException
      * @throws DeleteResponseException
      */
-    void deleteActiveCall(UUID id) throws IOException;
+    void deleteCall(UUID id) throws IOException;
 
     /**
      * The type of the terminal which can be called.

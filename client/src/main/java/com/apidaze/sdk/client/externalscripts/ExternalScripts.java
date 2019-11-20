@@ -7,6 +7,11 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * <p>External Scripts are the applications that you build using simple XML responses to calls and messages we send to your application.
+ * </p>
+ * This interface allows you to manage those scripts.
+ */
 public interface ExternalScripts {
 
     /**

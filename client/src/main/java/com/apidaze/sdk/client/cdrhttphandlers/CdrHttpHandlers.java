@@ -6,6 +6,10 @@ import com.apidaze.sdk.client.http.HttpResponseException;
 import java.io.IOException;
 import java.util.List;
 
+
+/**
+ * The interface manages CDR HTTP Handler
+ */
 public interface CdrHttpHandlers {
 
     /**
