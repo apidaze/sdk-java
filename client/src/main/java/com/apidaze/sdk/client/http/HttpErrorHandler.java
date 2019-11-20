@@ -11,6 +11,9 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 
+/**
+ * An error handler which throws an {@code HttpResponseException} if an unhappy HTTP response code is returned.
+ */
 class HttpErrorHandler implements Interceptor {
 
     private static final String UNAUTHORIZED_MESSAGE_404 = "api secret and api key are not a pair";
