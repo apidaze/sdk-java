@@ -5,7 +5,7 @@
 
     <groupId>com.apidaze.sdk</groupId>
     <artifactId>apidaze-java-sdk-parent</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1.0.0-beta</version>
     <packaging>pom</packaging>
     <name>apidaze-java-sdk-parent</name>
     <url>https://github.com/apidaze/sdk-java</url>
@@ -24,8 +24,8 @@
 
     <modules>
         <module>client</module>
-        <module>examples</module>
         <module>scripts-builders</module>
+        <module>examples</module>
     </modules>
 
     <dependencyManagement>
