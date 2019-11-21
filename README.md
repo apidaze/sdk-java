@@ -1,9 +1,9 @@
 # Apidaze Java SDK
 
-#Requirements
+# Requirements
 JDK 1.8 or higher
 
-#Installation
+# Installation
 
 ## Using Maven
 - Clone the code repository
@@ -43,7 +43,7 @@ JDK 1.8 or higher
 
 - Download jar files from the latest [release](https://github.com/apidaze/sdk-java/releases)
 
-- Add *apidaze-java-client-1.X.X.jar* and the following files (downloaded from [maven](https://search.maven.org/) to your application classpath if you want to make calls, send text messages, etc...  
+- Add **apidaze-java-client-1.X.X.jar** and the following files (downloaded from [maven](https://search.maven.org/) to your application classpath if you want to make calls, send text messages, etc...  
     
     | file                                        | groupId                         | artifactId              | version
     | ------------------------------------------- | --------------------------------|-------------------------|--------
@@ -58,7 +58,7 @@ JDK 1.8 or higher
     | kotlin-stdlib-1.3.50.jar                    | org.jetbrains.kotlin            | kotlin-stdlib           | 1.3.50
     | guava-28.1-jre.jar                          | com.google.guava                | guava                   | 28.1-jre
      
-- Add *apidaze-scripts-builders-1.X.X.jar* and the following files (downloaded from [maven](https://search.maven.org/))to your application classpath if you want to build external scripts
+- Add **apidaze-scripts-builders-1.X.X.jar** and the following files (downloaded from [maven](https://search.maven.org/))to your application classpath if you want to build external scripts
 
     | file                                        | groupId                         | artifactId                       | version
     | ------------------------------------------- | --------------------------------|----------------------------------|--------
@@ -70,18 +70,18 @@ JDK 1.8 or higher
     | stax2-api-4.2.jar                           | org.codehaus.woodstox           | stax2-api                        | 4.2
     | woodstox-core-6.0.1.jar                     | com.fasterxml.woodstox          | woodstox-core                    | 6.0.1
     
-#Quickstart
+# Quickstart
 
 ## SDK client
 
-###Initiate ApplicationAction
+### Initiate ApplicationAction
 
 ```java
 Credentials credentials = new Credentials(apiKey, apiSecret);
 ApplicationAction applicationAction = ApplicationAction.create(credentials);
 ```
 
-###Make a call
+### Make a call
 
 ```java
 String callId = applicationAction.createCall(
@@ -91,7 +91,7 @@ String callId = applicationAction.createCall(
 );
 ```
 
-###Send a text message
+### Send a text message
 
 ```java
 applicationAction.sendTextMessage(
@@ -101,12 +101,12 @@ applicationAction.sendTextMessage(
 );
 ```
 
-###Download recordings
+### Download recordings
 
 
 ## Scripts builders
 
 
-#Examples
+# Examples
 
 
