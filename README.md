@@ -1,7 +1,7 @@
 # Apidaze Java SDK
 
 #Requirements
-Supported Version : Java SE 8 or higher
+JDK 1.8 or higher
 
 #Installation
 
@@ -72,12 +72,41 @@ Supported Version : Java SE 8 or higher
     
 #Quickstart
 
-##Make a call
+## SDK client
 
-##Send a text message
+###Initiate ApplicationAction
+
+```java
+Credentials credentials = new Credentials(apiKey, apiSecret);
+ApplicationAction applicationAction = ApplicationAction.create(credentials);
+```
+
+###Make a call
+
+```java
+String callId = applicationAction.createCall(
+    PhoneNumber.of("14123456789"),  // The phone number to present as the caller id
+    "14123456789",                  // The phone number or SIP account to ring first
+    "14123456789"                   // The destination passed as a parameter to your External Script URL
+);
+```
+
+###Send a text message
+
+```java
+applicationAction.sendTextMessage(
+    PhoneNumber.of("14123456789"),  // The number to send the text from
+    PhoneNumber.of("14123456789"),  // The destination number
+    "Have a nice day!"              // The text message to send
+);
+```
+
+###Download recordings
+
+
+## Scripts builders
+
 
 #Examples
 
-
-#IDE (Lombok plugin)
 
