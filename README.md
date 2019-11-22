@@ -1,7 +1,12 @@
 # Apidaze Java SDK
 
+The Apidaze Java SDK contains Java client of Apidaze REST API as well as XML scripts builders.
+The SDK allows you to leverage all Apidaze platform features such as making calls, sending text messages, serving IVR system and many others in your Java based application.
+The SDK also includes sample applications that demonstrate how to use the SDK interfaces.
+See [Apidaze REST API specification](https://apidocs.voipinnovations.com) which includes XML Scripting Reference as well.
+
 # Requirements
-JDK 1.8 or higher
+JDK 1.8+
 
 # Installation
 
@@ -21,21 +26,21 @@ JDK 1.8 or higher
 - Add the following dependency to your project if you want to make calls, send text messages, etc...
        
 ```xml
-        <dependency>
-          <groupId>com.apidaze.sdk</groupId>
-          <artifactId>apidaze-java-client</artifactId>
-          <version>1.0.0-beta</version>         
-       </dependency>
+<dependency>
+  <groupId>com.apidaze.sdk</groupId>
+  <artifactId>apidaze-java-client</artifactId>
+  <version>1.0.0-beta</version>         
+</dependency>
 ```
     
 - Add the following dependency to your project if you want to build external scripts
    
 ```xml
-        <dependency>
-          <groupId>com.apidaze.sdk</groupId>
-          <artifactId>apidaze-scripts-builders</artifactId>
-          <version>1.0.0-beta</version>         
-       </dependency>
+<dependency>
+  <groupId>com.apidaze.sdk</groupId>
+  <artifactId>apidaze-scripts-builders</artifactId>
+  <version>1.0.0-beta</version>         
+</dependency>
 ```
      
 
@@ -43,7 +48,7 @@ JDK 1.8 or higher
 
 - Download jar files from the latest [release](https://github.com/apidaze/sdk-java/releases)
 
-- Add **apidaze-java-client-1.X.X.jar** and the following files (downloaded from [maven](https://search.maven.org/) to your application classpath if you want to make calls, send text messages, etc...  
+- Add **apidaze-java-client-1.X.X.jar** and the following files (downloaded from [maven](https://search.maven.org/)) to your application classpath if you want to make calls, send text messages, etc...  
     
     | file                                        | groupId                         | artifactId              | version
     | ------------------------------------------- | --------------------------------|-------------------------|--------
@@ -58,7 +63,7 @@ JDK 1.8 or higher
     | kotlin-stdlib-1.3.50.jar                    | org.jetbrains.kotlin            | kotlin-stdlib           | 1.3.50
     | guava-28.1-jre.jar                          | com.google.guava                | guava                   | 28.1-jre
      
-- Add **apidaze-scripts-builders-1.X.X.jar** and the following files (downloaded from [maven](https://search.maven.org/))to your application classpath if you want to build external scripts
+- Add **apidaze-scripts-builders-1.X.X.jar** and the following files (downloaded from [maven](https://search.maven.org/)) to your application classpath if you want to build external scripts
 
     | file                                        | groupId                         | artifactId                       | version
     | ------------------------------------------- | --------------------------------|----------------------------------|--------
@@ -74,20 +79,26 @@ JDK 1.8 or higher
 
 ## SDK client
 
-### Initiate ApplicationAction
+### Initiate an ApplicationAction
+To execute any action such as making a call or send text message you need to initiate an **ApplicationAction** first. 
 
 ```java
-Credentials credentials = new Credentials(apiKey, apiSecret);
+import com.apidaze.sdk.client.base.Credentials
+import com.apidaze.sdk.client.ApplicationAction
+
+Credentials credentials = new Credentials(apiKey, apiSecret); // use api_key and api_secret assigned to your Apidaze application
 ApplicationAction applicationAction = ApplicationAction.create(credentials);
 ```
 
 ### Make a call
 
+Use **applicationAction** object from step [Initiate an ApplicationAction](#initiate-an-applicationaction)
+ 
 ```java
 String callId = applicationAction.createCall(
     PhoneNumber.of("14123456789"),  // The phone number to present as the caller id
-    "14123456789",                  // The phone number or SIP account to ring first
-    "14123456789"                   // The destination passed as a parameter to your External Script URL
+    "14987654321",                  // The phone number or SIP account to ring first
+    "14987654321"                   // The destination passed as a parameter to your External Script URL
 );
 ```
 
@@ -96,17 +107,54 @@ String callId = applicationAction.createCall(
 ```java
 applicationAction.sendTextMessage(
     PhoneNumber.of("14123456789"),  // The number to send the text from
-    PhoneNumber.of("14123456789"),  // The destination number
+    PhoneNumber.of("14987654321"),  // The destination number
     "Have a nice day!"              // The text message to send
 );
 ```
 
 ### Download recordings
 
+#### Keep the original file name
+In this case the file will be saved with the original name (*example.wav*) to the local directory *foo*.
+```java
+String sourceFileName = "example.wav";
+Path targetDir = Paths.get("foo"); 
+File downloadedFile1 = applicationAction.downloadRecordingToFile(sourceFileName, targetDir);
+```
+
+#### Save the file with a new name 
+In this case the file will be saved with the new name (*cool-example.wav*) to the local directory *foo*.
+```java
+String sourceFileName = "example.wav";
+Path targetFile = Paths.get("foo/cool-example.wav");
+File downloadedFile2 = applicationAction.downloadRecordingToFile(sourceFileName, targetFile);
+```
+
+### More examples
+More examples are [here](https://github.com/apidaze/sdk-java/tree/master/examples/src/main/java/com/apidaze/sdk/examples) .
 
 ## Scripts builders
 
+Scripts builders are used to build XML instructions described in [XML Scripting Reference](https://apidocs.voipinnovations.com)
+To build an instruction which echo back received audio to the caller with some delay use the following code.
+```java
+ApidazeScript script = ApidazeScript.builder()
+    .node(new Answer())
+    .node(Echo.withDelay(Duration.ofMillis(500)))
+    .build();
 
-# Examples
+String xml = script.toXmlWithPrettyPrinter();
+``` 
+The content of produced xml is as follow.
+```xml
+<document>
+  <work>
+    <answer/>
+    <echo>500</echo>
+  </work>
+</document>
+``` 
 
+For more examples see [unit tests](https://github.com/apidaze/sdk-java/tree/master/scripts-builders/src/test/java/com/apidaze/sdk/xml)
 
+Sample applications with real life scenarios (i.e. IVR demo) are [here](https://github.com/apidaze/sdk-java/tree/master/examples/src/main/java/com/apidaze/sdk/examples/xml)
