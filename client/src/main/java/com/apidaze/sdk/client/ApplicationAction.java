@@ -91,11 +91,6 @@ public class ApplicationAction implements Calls, Message, ExternalScripts, Recor
     }
 
     @Override
-    public ExternalScript createExternalScript(String name, URL url) throws IOException {
-        return externalScripts.createExternalScript(name, url);
-    }
-
-    @Override
     public Optional<ExternalScript> getExternalScript(Long id) throws IOException {
         return externalScripts.getExternalScript(id);
     }
@@ -108,11 +103,6 @@ public class ApplicationAction implements Calls, Message, ExternalScripts, Recor
     @Override
     public ExternalScript updateExternalScriptUrl(Long id, URL url) throws IOException {
         return externalScripts.updateExternalScriptUrl(id, url);
-    }
-
-    @Override
-    public void deleteExternalScript(Long id) throws IOException {
-        externalScripts.deleteExternalScript(id);
     }
 
     @Override

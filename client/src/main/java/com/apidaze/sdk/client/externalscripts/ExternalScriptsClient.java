@@ -46,14 +46,6 @@ public class ExternalScriptsClient extends BaseApiClient<ExternalScript> impleme
     }
 
     @Override
-    public ExternalScript createExternalScript(String name, URL url) throws IOException {
-        validateName(name);
-
-        val params = ImmutableMap.of(PARAM_NAME, name, PARAM_URL, url.getValue());
-        return create(params, ExternalScript.class);
-    }
-
-    @Override
     public Optional<ExternalScript> getExternalScript(Long id) throws IOException {
         requireNonNull(id, "id must not be null");
         return findById(id.toString(), ExternalScript.class);
@@ -75,13 +67,6 @@ public class ExternalScriptsClient extends BaseApiClient<ExternalScript> impleme
         requireNonNull(url, "url must not be null");
 
         return update(id.toString(), ImmutableMap.of(PARAM_URL, url.getValue()), ExternalScript.class);
-    }
-
-
-    @Override
-    public void deleteExternalScript(Long id) throws IOException {
-        requireNonNull(id, "id must not be null");
-        delete(id.toString());
     }
 
     private static void validateName(String name) {

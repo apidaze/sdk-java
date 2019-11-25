@@ -17,7 +17,6 @@ import java.time.ZonedDateTime;
 import static com.apidaze.sdk.client.GenericResponse.list;
 import static com.apidaze.sdk.client.GenericResponse.one;
 import static com.apidaze.sdk.client.TestUtil.*;
-import static com.apidaze.sdk.client.externalscripts.ExternalScriptsResponse.ok;
 import static org.assertj.core.api.Assertions.*;
 import static org.mockserver.model.HttpResponse.response;
 
@@ -90,40 +89,6 @@ public class ExternalScriptsClientTest extends GenericRequest {
         mockServer.verify(getById(id));
     }
 
-
-    @Test
-    public void shouldCreateExternalScript() throws IOException {
-        val script = script1;
-        val scriptName = script.getName();
-        val scriptUrl = script.getUrl();
-
-        mockServer
-                .when(create(scriptName, scriptUrl))
-                .respond(one(script).withStatusCode(201));
-
-        val response = client.createExternalScript(scriptName, scriptUrl);
-
-        assertThat(response)
-                .usingRecursiveComparison()
-                .withComparatorForType(dateTimeComparator, ZonedDateTime.class)
-                .isEqualTo(script);
-
-        mockServer.verify(create(scriptName, scriptUrl));
-    }
-
-    @Test
-    public void shouldDeleteExternalScript() throws IOException {
-        val id = 1L;
-
-        mockServer
-                .when(delete(id))
-                .respond(ok(""));
-
-        client.deleteExternalScript(id);
-
-        mockServer.verify(delete(id));
-    }
-
     @Test
     public void shouldUpdateExternalScriptUrl() throws IOException {
         val script = script1;
@@ -163,21 +128,6 @@ public class ExternalScriptsClientTest extends GenericRequest {
                 .isEqualTo(script);
 
         mockServer.verify(update(scriptId, scriptName, scriptUrl));
-    }
-
-    @Test
-    public void shouldNotInvokeApi_ifNameIsTooLongInCreateExternalScript() {
-        val scriptName = "Very long name.................................";
-        val scriptUrl = URL.fromString("http://my.script.com");
-
-        assertThat(scriptName.length())
-                .isGreaterThan(ExternalScriptsClient.MAX_NAME_LENGTH);
-
-        assertThatIllegalArgumentException()
-                .isThrownBy(() -> client.createExternalScript(scriptName, scriptUrl))
-                .withMessageContaining("name: maximum");
-
-        mockServer.verifyZeroInteractions();
     }
 
     @Test
