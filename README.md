@@ -1,7 +1,7 @@
 # Apidaze Java SDK
 
 The Apidaze Java SDK contains Java client of Apidaze REST API as well as XML scripts builders.
-The SDK allows you to leverage all Apidaze platform features such as making calls, sending text messages, serving IVR system and many others in your Java based application.
+The SDK allows you to leverage all Apidaze platform features such as making calls, sending text messages, serving IVR systems and many others in your Java based application.
 The SDK also includes sample applications that demonstrate how to use the SDK interfaces.
 See [Apidaze REST API specification](https://apidocs.voipinnovations.com) which includes XML Scripting Reference as well.
 
@@ -135,7 +135,7 @@ More examples are [here](https://github.com/apidaze/sdk-java/tree/master/example
 
 ## Scripts builders
 
-Scripts builders are used to build XML instructions described in [XML Scripting Reference](https://apidocs.voipinnovations.com)
+Scripts builders are used to build XML instructions described in [XML Scripting Reference](https://apidocs.voipinnovations.com).
 To build an instruction which echo back received audio to the caller with some delay use the following code.
 ```java
 ApidazeScript script = ApidazeScript.builder()
