@@ -26,6 +26,7 @@ public class ApplicationManager implements CredentialsValidator, Applications {
 
     /**
      * Initiates an object of this class.
+     *
      * @param credentials the root key and secret for the Apidaze account
      * @return An initiated object of this class
      */
@@ -61,5 +62,35 @@ public class ApplicationManager implements CredentialsValidator, Applications {
     @Override
     public Optional<Application> getApplicationByName(String name) throws IOException {
         return applications.getApplicationByName(name);
+    }
+
+    /**
+     * @param id application id
+     * @return a new instance of {@code ApplicationAction} associated with application id, if it exists
+     * @throws IOException
+     */
+    public Optional<ApplicationAction> getApplicationActionById(Long id) throws IOException {
+        return applications.getApplicationById(id)
+                .map(app -> ApplicationAction.create(app.getCredentials()));
+    }
+
+    /**
+     * @param apiKey api key
+     * @return a new instance of {@code ApplicationAction} associated with api key, if it exists
+     * @throws IOException
+     */
+    public Optional<ApplicationAction> getApplicationActionByApiKey(String apiKey) throws IOException {
+        return applications.getApplicationByApiKey(apiKey)
+                .map(app -> ApplicationAction.create(app.getCredentials()));
+    }
+
+    /**
+     * @param name application name unique to account
+     * @return a new instance of {@code ApplicationAction} associated with application name, if it exists for given account
+     * @throws IOException
+     */
+    public Optional<ApplicationAction> getApplicationActionByName(String name) throws IOException {
+        return applications.getApplicationByApiKey(name)
+                .map(app -> ApplicationAction.create(app.getCredentials()));
     }
 }

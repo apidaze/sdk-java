@@ -1,6 +1,8 @@
 package com.apidaze.sdk.client.applications;
 
+import com.apidaze.sdk.client.base.Credentials;
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 import lombok.Value;
@@ -39,5 +41,13 @@ public class Application {
         this.fsAddress = fsAddress;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
+    }
+
+    /**
+     * @return a new instance of {@code Credentials} with apiKey and apiSecret of this object
+     */
+    @JsonIgnore
+    public Credentials getCredentials() {
+        return new Credentials(apiKey, apiSecret);
     }
 }
