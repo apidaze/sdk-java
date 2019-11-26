@@ -79,6 +79,46 @@ public class ApplicationsClientTest extends GenericRequest {
         mockServer.verify(getByParameter(APP_ID, id.toString()));
     }
 
+    @Test
+    public void shouldReturnApplicationByApiKey() throws IOException {
+        val application = applicationsList(1).get(0);
+        val apiKey = application.getApiKey();
+
+        mockServer
+                .when(getByParameter(API_KEY, apiKey))
+                .respond(one(application));
+
+        val response = client.getApplicationByApiKey(apiKey);
+
+        assertThat(response).isPresent();
+        assertThat(response.get())
+                .usingRecursiveComparison()
+                .withComparatorForType(dateTimeComparator, ZonedDateTime.class)
+                .isEqualTo(application);
+
+        mockServer.verify(getByParameter(API_KEY, apiKey));
+    }
+
+    @Test
+    public void shouldReturnApplicationByName() throws IOException {
+        val application = applicationsList(1).get(0);
+        val name = application.getName();
+
+        mockServer
+                .when(getByParameter(APP_NAME, name))
+                .respond(one(application));
+
+        val response = client.getApplicationByName(name);
+
+        assertThat(response).isPresent();
+        assertThat(response.get())
+                .usingRecursiveComparison()
+                .withComparatorForType(dateTimeComparator, ZonedDateTime.class)
+                .isEqualTo(application);
+
+        mockServer.verify(getByParameter(APP_NAME, name));
+    }
+
     private List<Application> applicationsList(int size) {
         return IntStream.range(0, size)
                 .boxed()
