@@ -11,6 +11,7 @@ import lombok.Getter;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 
 import static java.util.Objects.requireNonNull;
 import static lombok.AccessLevel.PRIVATE;
@@ -45,5 +46,20 @@ public class ApplicationManager implements CredentialsValidator, Applications {
     @Override
     public List<Application> getApplications() throws IOException {
         return applications.getApplications();
+    }
+
+    @Override
+    public Optional<Application> getApplicationById(Long id) throws IOException {
+        return applications.getApplicationById(id);
+    }
+
+    @Override
+    public Optional<Application> getApplicationByApiKey(String apiKey) throws IOException {
+        return applications.getApplicationByApiKey(apiKey);
+    }
+
+    @Override
+    public Optional<Application> getApplicationByName(String name) throws IOException {
+        return applications.getApplicationByName(name);
     }
 }

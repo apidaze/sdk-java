@@ -8,6 +8,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 
 import static java.util.Objects.requireNonNull;
 import static lombok.AccessLevel.PRIVATE;
@@ -36,5 +37,23 @@ public class ApplicationsClient extends BaseApiClient<Application> implements Ap
     @Override
     public List<Application> getApplications() throws IOException {
         return findAll(Application.class);
+    }
+
+    @Override
+    public Optional<Application> getApplicationById(Long id) throws IOException {
+        requireNonNull(id, "id must not be null");
+        return findByParameter("app_id", id.toString(), Application.class);
+    }
+
+    @Override
+    public Optional<Application> getApplicationByApiKey(String apiKey) throws IOException {
+        requireNonNull(apiKey, "apiKey must not be null");
+        return findByParameter("api_key", apiKey, Application.class);
+    }
+
+    @Override
+    public Optional<Application> getApplicationByName(String name) throws IOException {
+        requireNonNull(name, "name must not be null");
+        return findByParameter("app_name", name, Application.class);
     }
 }
