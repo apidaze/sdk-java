@@ -50,18 +50,18 @@ public class ApplicationManager implements CredentialsValidator, Applications {
     }
 
     @Override
-    public Optional<Application> getApplicationById(Long id) throws IOException {
-        return applications.getApplicationById(id);
+    public List<Application> getApplicationsById(Long id) throws IOException {
+        return applications.getApplicationsById(id);
     }
 
     @Override
-    public Optional<Application> getApplicationByApiKey(String apiKey) throws IOException {
-        return applications.getApplicationByApiKey(apiKey);
+    public List<Application> getApplicationsByApiKey(String apiKey) throws IOException {
+        return applications.getApplicationsByApiKey(apiKey);
     }
 
     @Override
-    public Optional<Application> getApplicationByName(String name) throws IOException {
-        return applications.getApplicationByName(name);
+    public List<Application> getApplicationsByName(String name) throws IOException {
+        return applications.getApplicationsByName(name);
     }
 
     /**
@@ -70,7 +70,9 @@ public class ApplicationManager implements CredentialsValidator, Applications {
      * @throws IOException
      */
     public Optional<ApplicationAction> getApplicationActionById(Long id) throws IOException {
-        return applications.getApplicationById(id)
+        return applications.getApplicationsById(id)
+                .stream()
+                .findFirst()
                 .map(app -> ApplicationAction.create(app.getCredentials()));
     }
 
@@ -80,7 +82,9 @@ public class ApplicationManager implements CredentialsValidator, Applications {
      * @throws IOException
      */
     public Optional<ApplicationAction> getApplicationActionByApiKey(String apiKey) throws IOException {
-        return applications.getApplicationByApiKey(apiKey)
+        return applications.getApplicationsByApiKey(apiKey)
+                .stream()
+                .findFirst()
                 .map(app -> ApplicationAction.create(app.getCredentials()));
     }
 
@@ -90,7 +94,9 @@ public class ApplicationManager implements CredentialsValidator, Applications {
      * @throws IOException
      */
     public Optional<ApplicationAction> getApplicationActionByName(String name) throws IOException {
-        return applications.getApplicationByApiKey(name)
+        return applications.getApplicationsByName(name)
+                .stream()
+                .findFirst()
                 .map(app -> ApplicationAction.create(app.getCredentials()));
     }
 }

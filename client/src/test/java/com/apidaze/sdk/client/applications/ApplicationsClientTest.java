@@ -16,7 +16,6 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import static com.apidaze.sdk.client.GenericResponse.list;
-import static com.apidaze.sdk.client.GenericResponse.one;
 import static com.apidaze.sdk.client.TestUtil.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -61,60 +60,57 @@ public class ApplicationsClientTest extends GenericRequest {
 
     @Test
     public void shouldReturnApplicationById() throws IOException {
-        val application = applicationsList(1).get(0);
-        val id = application.getId();
+        val applications = applicationsList(1);
+        val id = applications.get(0).getId();
 
         mockServer
                 .when(getByParameter(APP_ID, id.toString()))
-                .respond(one(application));
+                .respond(list(applications));
 
-        val response = client.getApplicationById(id);
+        val response = client.getApplicationsById(id);
 
-        assertThat(response).isPresent();
-        assertThat(response.get())
-                .usingRecursiveComparison()
-                .withComparatorForType(dateTimeComparator, ZonedDateTime.class)
-                .isEqualTo(application);
+        assertThat(response)
+                .usingComparatorForElementFieldsWithType(dateTimeComparator, ZonedDateTime.class)
+                .usingRecursiveFieldByFieldElementComparator()
+                .containsExactlyElementsOf(applications);
 
         mockServer.verify(getByParameter(APP_ID, id.toString()));
     }
 
     @Test
     public void shouldReturnApplicationByApiKey() throws IOException {
-        val application = applicationsList(1).get(0);
-        val apiKey = application.getApiKey();
+        val applications = applicationsList(1);
+        val apiKey = applications.get(0).getApiKey();
 
         mockServer
                 .when(getByParameter(API_KEY, apiKey))
-                .respond(one(application));
+                .respond(list(applications));
 
-        val response = client.getApplicationByApiKey(apiKey);
+        val response = client.getApplicationsByApiKey(apiKey);
 
-        assertThat(response).isPresent();
-        assertThat(response.get())
-                .usingRecursiveComparison()
-                .withComparatorForType(dateTimeComparator, ZonedDateTime.class)
-                .isEqualTo(application);
+        assertThat(response)
+                .usingComparatorForElementFieldsWithType(dateTimeComparator, ZonedDateTime.class)
+                .usingRecursiveFieldByFieldElementComparator()
+                .containsExactlyElementsOf(applications);
 
         mockServer.verify(getByParameter(API_KEY, apiKey));
     }
 
     @Test
     public void shouldReturnApplicationByName() throws IOException {
-        val application = applicationsList(1).get(0);
-        val name = application.getName();
+        val applications = applicationsList(1);
+        val name = applications.get(0).getName();
 
         mockServer
                 .when(getByParameter(APP_NAME, name))
-                .respond(one(application));
+                .respond(list(applications));
 
-        val response = client.getApplicationByName(name);
+        val response = client.getApplicationsByName(name);
 
-        assertThat(response).isPresent();
-        assertThat(response.get())
-                .usingRecursiveComparison()
-                .withComparatorForType(dateTimeComparator, ZonedDateTime.class)
-                .isEqualTo(application);
+        assertThat(response)
+                .usingComparatorForElementFieldsWithType(dateTimeComparator, ZonedDateTime.class)
+                .usingRecursiveFieldByFieldElementComparator()
+                .containsExactlyElementsOf(applications);
 
         mockServer.verify(getByParameter(APP_NAME, name));
     }

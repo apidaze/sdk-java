@@ -108,6 +108,27 @@ public abstract class BaseApiClient<T> {
     }
 
     /**
+     * Returns the list of entities of type {@code T} by sending GET request with a given query parameter
+     * @param name the query parameter name
+     * @param value the query parameter value
+     * @param clazz the class object of type {@code T} used to deserialize JSON content
+     * @return the list of entities
+     * @throws IOException
+     */
+    protected List<T> findByParameter(String name, String value, Class<T> clazz) throws IOException {
+        Request request = new Request.Builder()
+                .url(authenticated()
+                        .addQueryParameter(name, value)
+                        .build())
+                .build();
+
+        try (Response response = client.newCall(request).execute()) {
+            return mapper.readValue(response.body().string(), listType(clazz));
+        }
+    }
+
+
+    /**
      * Returns an entity of type {@code T} by sending GET request to {@link #getBasePath()}/{@code id}
      * @param id id of the entity to find
      * @param clazz the class object of type {@code T} used to deserialize JSON content
@@ -118,28 +139,6 @@ public abstract class BaseApiClient<T> {
         Request request = new Request.Builder()
                 .url(authenticated()
                         .addPathSegment(id)
-                        .build())
-                .build();
-
-        try (Response response = client.newCall(request).execute()) {
-            return Optional.of(mapper.readValue(response.body().string(), mapper.constructType(clazz)));
-        } catch (HttpResponseException.NotFound e) {
-            return Optional.empty();
-        }
-    }
-
-    /**
-     * Returns an entity of type {@code T} by sending GET request with a given query parameter
-     * @param name the query parameter name
-     * @param value the query parameter value
-     * @param clazz the class object of type {@code T} used to deserialize JSON content
-     * @return an entity of type {@code T} wrapped by {@code Optional} if present, otherwise an empty {@code Optional}
-     * @throws IOException
-     */
-    protected Optional<T> findByParameter(String name, String value, Class<T> clazz) throws IOException {
-        Request request = new Request.Builder()
-                .url(authenticated()
-                        .addQueryParameter(name, value)
                         .build())
                 .build();
 

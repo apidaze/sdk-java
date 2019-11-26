@@ -10,7 +10,7 @@ import java.io.IOException;
 import static java.util.Objects.isNull;
 
 @Slf4j
-public class GetApplicationExample {
+public class GetApplicationActionExample {
 
     public static void main(String... args) {
 
@@ -28,27 +28,27 @@ public class GetApplicationExample {
         try {
             // get application by id
             val id = 3023L;
-            val appById = applicationManager.getApplicationById(id);
-            if (appById.isPresent()) {
-                log.info("Retrieved application with id = {} : {}", id, appById);
+            val appActionById = applicationManager.getApplicationActionById(id);
+            if (appActionById.isPresent()) {
+                log.info("Retrieved ApplicationAction for application with id = {}", id);
             } else {
                 log.error("Application with id = {} not found.", id);
             }
 
             // get application by api_key
             val subAppApiKey = "n8fetkvn";
-            val appByApiKey = applicationManager.getApplicationByApiKey(subAppApiKey);
-            if (appByApiKey.isPresent()) {
-                log.info("Retrieved application with api_key = {} : {}", subAppApiKey, appByApiKey);
+            val appActionByApiKey = applicationManager.getApplicationActionByApiKey(subAppApiKey);
+            if (appActionByApiKey.isPresent()) {
+                log.info("Retrieved ApplicationAction for application with api_key = {}", subAppApiKey);
             } else {
                 log.error("Application with api_key = {} not found.", subAppApiKey);
             }
 
             // get application by name
-            val name = "APPLICATION";
-            val appByName = applicationManager.getApplicationByName(name);
-            if (appByName.isPresent()) {
-                log.info("Retrieved application with name = {} : {}", name, appByName);
+            val name = "NEW APPLICATION";
+            val appActionByName = applicationManager.getApplicationActionByName(name);
+            if (appActionByName.isPresent()) {
+                log.info("Retrieved ApplicationAction for application with name = {}", name);
             } else {
                 log.error("Application with name = {} not found.", name);
             }
