@@ -16,10 +16,15 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import static com.apidaze.sdk.client.GenericResponse.list;
+import static com.apidaze.sdk.client.GenericResponse.one;
 import static com.apidaze.sdk.client.TestUtil.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class ApplicationsClientTest extends GenericRequest {
+
+    private static final String APP_ID = "app_id";
+    private static final String APP_NAME = "app_name";
+    private static final String API_KEY = "api_key";
 
     @Getter
     private final String basePath = "applications";
@@ -52,6 +57,26 @@ public class ApplicationsClientTest extends GenericRequest {
                 .containsExactlyElementsOf(applications);
 
         mockServer.verify(getAll());
+    }
+
+    @Test
+    public void shouldReturnApplicationById() throws IOException {
+        val application = applicationsList(1).get(0);
+        val id = application.getId();
+
+        mockServer
+                .when(getByParameter(APP_ID, id.toString()))
+                .respond(one(application));
+
+        val response = client.getApplicationById(id);
+
+        assertThat(response).isPresent();
+        assertThat(response.get())
+                .usingRecursiveComparison()
+                .withComparatorForType(dateTimeComparator, ZonedDateTime.class)
+                .isEqualTo(application);
+
+        mockServer.verify(getByParameter(APP_ID, id.toString()));
     }
 
     private List<Application> applicationsList(int size) {
