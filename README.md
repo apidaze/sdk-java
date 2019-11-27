@@ -82,12 +82,34 @@ JDK 1.8+
 ### Initiate an ApplicationAction
 To execute any action such as making a call or send text message you need to initiate an **ApplicationAction** first. 
 
+#### Root application
+You can initiate an ApplicationAction using credentials assigned to your application 
 ```java
 import com.apidaze.sdk.client.base.Credentials
 import com.apidaze.sdk.client.ApplicationAction
-
-Credentials credentials = new Credentials(apiKey, apiSecret); // use api_key and api_secret assigned to your Apidaze application
+ 
+// use api_key and api_secret assigned to your Apidaze application
+Credentials credentials = new Credentials(apiKey, apiSecret);
 ApplicationAction applicationAction = ApplicationAction.create(credentials);
+```
+#### Sub-applications
+Optionally if you have created sub-applications you can use *ApplicationManager* to initiate *ApplicationAction* by using on of the following methods
+```java
+import com.apidaze.sdk.client.base.Credentials
+import com.apidaze.sdk.client.ApplicationAction
+import com.apidaze.sdk.client.ApplicationManager
+
+// use root api_key and api_secret assigned to your Apidaze account
+ApplicationManager applicationManager = ApplicationManager.create(new Credentials(apiKey, apiSecret));
+
+// get ApplicationAction by id 
+ApplicationAction applicationAction = applicationManager.getApplicationActionById(1L);
+
+// get ApplicationAction by api_key assigned to sub-application
+//ApplicationAction applicationAction = applicationManager.getApplicationActionByApiKey("n8fetkvn");
+
+// get ApplicationAction by sub-application name 
+//ApplicationAction applicationAction = applicationManager.getApplicationActionByName("MY APPLICATION");
 ```
 
 ### Make a call
