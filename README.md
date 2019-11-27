@@ -29,7 +29,7 @@ JDK 1.8+
 <dependency>
   <groupId>com.apidaze.sdk</groupId>
   <artifactId>apidaze-java-client</artifactId>
-  <version>1.0.0-beta</version>         
+  <version>1.0.0-beta.1</version>         
 </dependency>
 ```
     
@@ -39,7 +39,7 @@ JDK 1.8+
 <dependency>
   <groupId>com.apidaze.sdk</groupId>
   <artifactId>apidaze-scripts-builders</artifactId>
-  <version>1.0.0-beta</version>         
+  <version>1.0.0-beta.1</version>         
 </dependency>
 ```
      
