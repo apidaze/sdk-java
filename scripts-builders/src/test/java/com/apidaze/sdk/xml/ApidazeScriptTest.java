@@ -64,7 +64,7 @@ public class ApidazeScriptTest {
 
         val script = ApidazeScript.builder()
                 .node(new Answer())
-                .node(Echo.withDelay(Duration.ofMillis(500)))
+                .node(new Echo(Duration.ofMillis(500)))
                 .build();
 
         val result = script.toXmlWithPrettyPrinter();
@@ -91,7 +91,7 @@ public class ApidazeScriptTest {
 
         val script = ApidazeScript.builder()
                 .node(new Answer())
-                .node(Intercept.of(UUID.fromString("f28a3e29-dac4-462c-bf94-b1d518ddbe2d")))
+                .node(new Intercept(UUID.fromString("f28a3e29-dac4-462c-bf94-b1d518ddbe2d")))
                 .node(new Hangup())
                 .build();
 
@@ -183,7 +183,7 @@ public class ApidazeScriptTest {
         val expectedOutput = new File("src/test/resources/conference.xml");
 
         val script = ApidazeScript.builder()
-                .node(Speak.builder().text("You will now be placed into the conference").build())
+                .node(Speak.withText("You will now be placed into the conference"))
                 .node(new Conference("my_meeting_room"))
                 .build();
 

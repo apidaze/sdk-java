@@ -162,7 +162,7 @@ To build an instruction which echo back received audio to the caller with some d
 ```java
 ApidazeScript script = ApidazeScript.builder()
     .node(new Answer())
-    .node(Echo.withDelay(Duration.ofMillis(500)))
+    .node(new Echo(Duration.ofMillis(500)))
     .build();
 
 String xml = script.toXmlWithPrettyPrinter();

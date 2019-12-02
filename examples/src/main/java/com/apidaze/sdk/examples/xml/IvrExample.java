@@ -117,8 +117,8 @@ public class IvrExample {
 
         private String response() throws JsonProcessingException {
             return ApidazeScript.builder()
-                    .node(Speak.builder().text("You will now be joined to an echo line.").build())
-                    .node(Echo.withDelay(Duration.ofMillis(500)))
+                    .node(Speak.withText("You will now be joined to an echo line."))
+                    .node(new Echo(Duration.ofMillis(500)))
                     .build()
                     .toXmlWithPrettyPrinter();
         }

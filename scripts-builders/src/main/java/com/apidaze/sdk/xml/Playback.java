@@ -4,12 +4,12 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import lombok.Builder;
+import lombok.NonNull;
 import lombok.Singular;
 import lombok.Value;
 
 import java.time.Duration;
 import java.util.List;
-import java.util.Objects;
 
 import static java.util.Objects.isNull;
 
@@ -17,6 +17,7 @@ import static java.util.Objects.isNull;
 @Builder
 public class Playback implements ApidazeScript.Node {
 
+    @NonNull
     @JacksonXmlProperty(isAttribute = true)
     String file;
 
@@ -29,7 +30,6 @@ public class Playback implements ApidazeScript.Node {
     List<Bind> binds;
 
     public static Playback fromFile(String file){
-        Objects.requireNonNull(file, "file must not be null");
         return Playback.builder().file(file).build();
     }
 
