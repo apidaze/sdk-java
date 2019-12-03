@@ -28,7 +28,7 @@ public class ListApplications {
         try {
             // get applications
             val applications = applicationManager.getApplications();
-            log.info("Applications: {}", applications);
+            applications.forEach(app -> log.info("{}", app));
         } catch (IOException e) {
             log.error("An error occurred during communicating with API", e);
         }
