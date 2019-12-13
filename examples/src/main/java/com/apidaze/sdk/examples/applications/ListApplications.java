@@ -2,6 +2,7 @@ package com.apidaze.sdk.examples.applications;
 
 import com.apidaze.sdk.client.ApplicationManager;
 import com.apidaze.sdk.client.base.Credentials;
+import com.apidaze.sdk.client.http.HttpResponseException;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 
@@ -29,6 +30,8 @@ public class ListApplications {
             // get applications
             val applications = applicationManager.getApplications();
             applications.forEach(app -> log.info("{}", app));
+        } catch (HttpResponseException e) {
+            log.error(e.toString());
         } catch (IOException e) {
             log.error("An error occurred during communicating with API", e);
         }
