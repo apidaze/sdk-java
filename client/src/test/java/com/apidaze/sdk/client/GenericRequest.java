@@ -50,6 +50,15 @@ public abstract class GenericRequest {
                 .withQueryStringParameters(param(PARAM_API_SECRET, API_SECRET));
     }
 
+    protected HttpRequest getByParameter(@NotNull String name, String value) {
+        return request()
+                .withMethod(GET.name())
+                .withPath("/" + API_KEY + "/" + getBasePath())
+                .withQueryStringParameters(
+                        param(PARAM_API_SECRET, API_SECRET),
+                        param(name, value));
+    }
+
     protected HttpRequest create(@NotNull Map<String, String> params) {
         List<Parameter> parameters = new ArrayList<>();
         params.forEach((k, v) -> parameters.add(new Parameter(k, v)));
@@ -62,11 +71,11 @@ public abstract class GenericRequest {
                 .withBody(params(parameters));
     }
 
-    protected HttpRequest update(@NotNull Long id,@NotNull Map<String, String> params) {
+    protected HttpRequest update(@NotNull Long id, @NotNull Map<String, String> params) {
         return update(id.toString(), params);
     }
 
-    protected HttpRequest update(@NotNull String id,@NotNull Map<String, String> params) {
+    protected HttpRequest update(@NotNull String id, @NotNull Map<String, String> params) {
         List<Parameter> parameters = new ArrayList<>();
         params.forEach((k, v) -> parameters.add(new Parameter(k, v)));
 
@@ -93,15 +102,15 @@ public abstract class GenericRequest {
         return create(ImmutableMap.of(PARAM_NAME, name, PARAM_URL, url.getValue()));
     }
 
-    protected HttpRequest update(@NotNull Long id, String newName,@NotNull URL newUrl) {
+    protected HttpRequest update(@NotNull Long id, String newName, @NotNull URL newUrl) {
         return update(id, ImmutableMap.of(PARAM_NAME, newName, PARAM_URL, newUrl.getValue()));
     }
 
-    protected HttpRequest updateUrl(@NotNull Long id,@NotNull URL newUrl) {
+    protected HttpRequest updateUrl(@NotNull Long id, @NotNull URL newUrl) {
         return update(id, ImmutableMap.of(PARAM_URL, newUrl.getValue()));
     }
 
-    protected HttpRequest updateName(@NotNull Long id,@NotNull String newName) {
+    protected HttpRequest updateName(@NotNull Long id, @NotNull String newName) {
         return update(id, ImmutableMap.of(PARAM_NAME, newName));
     }
 }

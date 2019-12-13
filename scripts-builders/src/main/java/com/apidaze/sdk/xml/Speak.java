@@ -33,6 +33,10 @@ public class Speak implements ApidazeScript.Node {
     @JacksonXmlElementWrapper(useWrapping = false)
     List<Bind> binds;
 
+    public static Speak withText(String text) {
+        return Speak.builder().text(text).build();
+    }
+
     @JacksonXmlProperty(localName = "input-timeout", isAttribute = true)
     public Long getInputTimeoutMillis() {
         return isNull(inputTimeout) ? null : inputTimeout.toMillis();

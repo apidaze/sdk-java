@@ -28,17 +28,6 @@ public interface ExternalScripts {
     List<ExternalScript> getExternalScripts() throws IOException;
 
     /**
-     * Creates a new external script. Only one external script is allowed per domain.
-     * @param name the name of {@code ExternalScript} , cannot be longer than {@link #MAX_NAME_LENGTH}
-     * @param url the webhook URL to which the call detail will be be post
-     * @return a created {@link ExternalScript} instance
-     * @throws IOException
-     * @throws HttpResponseException
-     * @throws IllegalArgumentException if the maximum length of the script name has been exceeded
-     */
-    ExternalScript createExternalScript(String name, URL url) throws IOException;
-
-    /**
      * Returns an external script object details by id.
      * @param id id of external script to fetch
      * @return an external script object if present, otherwise {@code Optional.empty()}
@@ -68,12 +57,4 @@ public interface ExternalScripts {
      * @throws HttpResponseException
      */
     ExternalScript updateExternalScriptUrl(Long id, URL url) throws IOException;
-
-    /**
-     * Deletes an {@code ExternalScript} instance.
-     * @param id id of external script to be deleted
-     * @throws IOException
-     * @throws HttpResponseException
-     */
-    void deleteExternalScript(Long id) throws IOException;
 }

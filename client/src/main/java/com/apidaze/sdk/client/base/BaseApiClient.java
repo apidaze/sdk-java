@@ -108,6 +108,27 @@ public abstract class BaseApiClient<T> {
     }
 
     /**
+     * Returns the list of entities of type {@code T} by sending GET request with a given query parameter
+     * @param name the query parameter name
+     * @param value the query parameter value
+     * @param clazz the class object of type {@code T} used to deserialize JSON content
+     * @return the list of entities
+     * @throws IOException
+     */
+    protected List<T> findByParameter(String name, String value, Class<T> clazz) throws IOException {
+        Request request = new Request.Builder()
+                .url(authenticated()
+                        .addQueryParameter(name, value)
+                        .build())
+                .build();
+
+        try (Response response = client.newCall(request).execute()) {
+            return mapper.readValue(response.body().string(), listType(clazz));
+        }
+    }
+
+
+    /**
      * Returns an entity of type {@code T} by sending GET request to {@link #getBasePath()}/{@code id}
      * @param id id of the entity to find
      * @param clazz the class object of type {@code T} used to deserialize JSON content

@@ -1,7 +1,8 @@
-package com.apidaze.sdk.examples.externalscripts;
+package com.apidaze.sdk.examples.applications;
 
-import com.apidaze.sdk.client.ApplicationAction;
+import com.apidaze.sdk.client.ApplicationManager;
 import com.apidaze.sdk.client.base.Credentials;
+import com.apidaze.sdk.client.http.HttpResponseException;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 
@@ -10,7 +11,7 @@ import java.io.IOException;
 import static java.util.Objects.isNull;
 
 @Slf4j
-public class DeleteExternalScript {
+public class ListApplications {
 
     public static void main(String... args) {
 
@@ -23,15 +24,14 @@ public class DeleteExternalScript {
         }
 
         // initiate ApplicationAction
-        val applicationAction = ApplicationAction.create(new Credentials(apiKey, apiSecret));
+        val applicationManager = ApplicationManager.create(new Credentials(apiKey, apiSecret));
 
-        // script id to be deleted
-        val id = 1L;
-
-        // delete an external script
         try {
-            applicationAction.deleteExternalScript(id);
-            log.info("ExternalScript with id = {} has been deleted.", id);
+            // get applications
+            val applications = applicationManager.getApplications();
+            applications.forEach(app -> log.info("{}", app));
+        } catch (HttpResponseException e) {
+            log.error(e.toString());
         } catch (IOException e) {
             log.error("An error occurred during communicating with API", e);
         }
