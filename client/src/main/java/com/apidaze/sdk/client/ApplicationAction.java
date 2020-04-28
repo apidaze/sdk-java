@@ -202,9 +202,13 @@ public class ApplicationAction implements Calls, Message, ExternalScripts, Recor
     }
 
     @Override
+    public SipUser updateSipUser(Long id, String name, String internalCallerIdNumber, String externalCallerIdNumber) throws IOException {
+        return sipUsers.updateSipUser(id, name, internalCallerIdNumber, externalCallerIdNumber);
+    }
+
+    @Override
     public SipUser updateSipUser(Long id, String name, String internalCallerIdNumber, String externalCallerIdNumber, boolean resetPassword) throws IOException {
-        // TODO
-        return null;
+        return sipUsers.updateSipUser(id, name, internalCallerIdNumber, externalCallerIdNumber, resetPassword);
     }
 
     @Override

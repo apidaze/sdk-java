@@ -54,6 +54,7 @@ public class SipUser {
     }
 
     @Value
+    @Builder
     public static class Sip {
         String username;
         String password;

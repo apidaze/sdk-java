@@ -79,6 +79,14 @@ public class SipUsersClient extends BaseApiClient<SipUser> implements SipUsers {
     public SipUser updateSipUser(Long id,
                                  String name,
                                  String internalCallerIdNumber,
+                                 String externalCallerIdNumber) throws IOException {
+        return updateSipUser(id, name, internalCallerIdNumber, externalCallerIdNumber, false);
+    }
+
+    @Override
+    public SipUser updateSipUser(Long id,
+                                 String name,
+                                 String internalCallerIdNumber,
                                  String externalCallerIdNumber,
                                  boolean resetPassword) throws IOException {
         requireNonNull(id, "id must not be null");

@@ -18,6 +18,11 @@ public interface SipUsers {
     SipUser updateSipUser(Long id,
                           String name,
                           String internalCallerIdNumber,
+                          String externalCallerIdNumber) throws IOException;
+
+    SipUser updateSipUser(Long id,
+                          String name,
+                          String internalCallerIdNumber,
                           String externalCallerIdNumber,
                           boolean resetPassword) throws IOException;
 
