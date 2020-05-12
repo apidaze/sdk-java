@@ -208,6 +208,21 @@ public class SipUsersClientTest extends GenericRequest {
     }
 
     @Test
+    public void getSipUserStatusShouldReturnEmptyResponse_ifApiReturns404() throws IOException {
+        val id = 1L;
+
+        mockServer
+                .when(getSipUserStatus(id))
+                .respond(response().withStatusCode(404));
+
+        val response = client.getSipUserStatus(id);
+
+        assertThat(response).isEmpty();
+        mockServer.verify(getSipUserStatus(id));
+    }
+
+
+    @Test
     public void shouldResetSipUserPassword() throws IOException {
         val id = sipUserWithPassword.getId();
 
@@ -223,6 +238,20 @@ public class SipUsersClientTest extends GenericRequest {
                 .withComparatorForType(dateTimeComparator, ZonedDateTime.class)
                 .isEqualTo(sipUserWithPassword);
 
+        mockServer.verify(resetSipUserPassword(id));
+    }
+
+    @Test
+    public void resetSipUserPasswordShouldReturnEmptyResponse_ifApiReturns404() throws IOException {
+        val id = 1L;
+
+        mockServer
+                .when(resetSipUserPassword(id))
+                .respond(response().withStatusCode(404));
+
+        val response = client.resetSipUserPassword(id);
+
+        assertThat(response).isEmpty();
         mockServer.verify(resetSipUserPassword(id));
     }
 
