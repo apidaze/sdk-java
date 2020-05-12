@@ -3,13 +3,16 @@ package com.apidaze.sdk.client.sipusers;
 import com.apidaze.sdk.client.GenericRequest;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import io.netty.handler.codec.http.HttpMethod;
 import lombok.Getter;
 import lombok.val;
+import org.jetbrains.annotations.NotNull;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.mockserver.client.MockServerClient;
 import org.mockserver.junit.MockServerRule;
+import org.mockserver.model.HttpRequest;
 
 import java.io.IOException;
 import java.time.ZonedDateTime;
@@ -18,7 +21,9 @@ import static com.apidaze.sdk.client.GenericResponse.list;
 import static com.apidaze.sdk.client.GenericResponse.one;
 import static com.apidaze.sdk.client.TestUtil.*;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockserver.model.HttpRequest.request;
 import static org.mockserver.model.HttpResponse.response;
+import static org.mockserver.model.Parameter.param;
 
 public class SipUsersClientTest extends GenericRequest {
 
@@ -28,6 +33,7 @@ public class SipUsersClientTest extends GenericRequest {
     private static final String PARAM_INTERNAL_CALLER_ID_NUMBER = "internal_caller_id_number";
     private static final String PARAM_EXTERNAL_CALLER_ID_NUMBER = "external_caller_id_number";
     private static final String PARAM_RESET_PASSWORD = "reset_password";
+    private static final String STATUS = "status";
 
     @Getter
     private final String basePath = "sipusers";
@@ -182,6 +188,29 @@ public class SipUsersClientTest extends GenericRequest {
         mockServer.verify(delete(id));
     }
 
+    @Test
+    public void shouldReturnSipUserStatus() throws IOException {
+        val id = 1L;
+        val status = new SipUserStatus("some uri", "Registered");
+
+        mockServer
+                .when(getSipUserStatus(id))
+                .respond(one(status));
+
+        val response = client.getSipUserStatus(id);
+
+        assertThat(response).isPresent();
+        assertThat(response.get()).isEqualTo(status);
+
+        mockServer.verify(getSipUserStatus(id));
+    }
+
+    private HttpRequest getSipUserStatus(@NotNull Long id) {
+        return request()
+                .withMethod(HttpMethod.GET.name())
+                .withPath("/" + API_KEY + "/" + getBasePath() + "/" + id + "/" + STATUS)
+                .withQueryStringParameters(param(PARAM_API_SECRET, API_SECRET));
+    }
 
     private final SipUser sipUser1 = SipUser.builder()
             .id(1L)
