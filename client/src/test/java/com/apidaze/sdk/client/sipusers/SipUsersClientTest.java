@@ -20,6 +20,7 @@ import java.time.ZonedDateTime;
 import static com.apidaze.sdk.client.GenericResponse.list;
 import static com.apidaze.sdk.client.GenericResponse.one;
 import static com.apidaze.sdk.client.TestUtil.*;
+import static io.netty.handler.codec.http.HttpMethod.POST;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockserver.model.HttpRequest.request;
 import static org.mockserver.model.HttpResponse.response;
@@ -34,6 +35,7 @@ public class SipUsersClientTest extends GenericRequest {
     private static final String PARAM_EXTERNAL_CALLER_ID_NUMBER = "external_caller_id_number";
     private static final String PARAM_RESET_PASSWORD = "reset_password";
     private static final String STATUS = "status";
+    private static final String PASSWORD = "password";
 
     @Getter
     private final String basePath = "sipusers";
@@ -205,10 +207,36 @@ public class SipUsersClientTest extends GenericRequest {
         mockServer.verify(getSipUserStatus(id));
     }
 
+    @Test
+    public void shouldResetSipUserPassword() throws IOException {
+        val id = sipUserWithPassword.getId();
+
+        mockServer
+                .when(resetSipUserPassword(id))
+                .respond(one(sipUserWithPassword));
+
+        val response = client.resetSipUserPassword(id);
+
+        assertThat(response).isPresent();
+        assertThat(response.get())
+                .usingRecursiveComparison()
+                .withComparatorForType(dateTimeComparator, ZonedDateTime.class)
+                .isEqualTo(sipUserWithPassword);
+
+        mockServer.verify(resetSipUserPassword(id));
+    }
+
     private HttpRequest getSipUserStatus(@NotNull Long id) {
         return request()
                 .withMethod(HttpMethod.GET.name())
                 .withPath("/" + API_KEY + "/" + getBasePath() + "/" + id + "/" + STATUS)
+                .withQueryStringParameters(param(PARAM_API_SECRET, API_SECRET));
+    }
+
+    private HttpRequest resetSipUserPassword(@NotNull Long id) {
+        return request()
+                .withMethod(POST.name())
+                .withPath("/" + API_KEY + "/" + getBasePath() + "/" + id + "/" + PASSWORD)
                 .withQueryStringParameters(param(PARAM_API_SECRET, API_SECRET));
     }
 
