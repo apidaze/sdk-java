@@ -10,7 +10,7 @@ import java.io.IOException;
 import static java.util.Objects.isNull;
 
 @Slf4j
-public class GetSipUser {
+public class GetSipUserStatusExample {
 
     public static void main(String... args) {
 
@@ -25,15 +25,15 @@ public class GetSipUser {
         // initiate ApplicationAction
         val applicationAction = ApplicationAction.create(new Credentials(apiKey, apiSecret));
 
-        // id of sip user to be fetched
+        // id of sip user status to be fetched
         val id = 24789L;
 
         try {
             // get sip user
-            val sipUser = applicationAction.getSipUser(id);
+            val status = applicationAction.getSipUserStatus(id);
 
-            if (sipUser.isPresent()) {
-                log.info("Retrieved {}", sipUser.get());
+            if (status.isPresent()) {
+                log.info("Retrieved {}", status.get());
             } else {
                 log.error("Sip user with id = {} not found.", id);
             }
