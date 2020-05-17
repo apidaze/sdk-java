@@ -6,14 +6,16 @@ import com.google.common.collect.ImmutableMap;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.val;
-import okhttp3.Request;
-import okhttp3.Response;
+import okhttp3.*;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
+import java.nio.file.InvalidPathException;
+import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
 
+import static java.nio.file.Files.isRegularFile;
 import static java.util.Collections.emptyMap;
 import static java.util.Objects.nonNull;
 import static java.util.Objects.requireNonNull;
@@ -22,10 +24,13 @@ import static lombok.AccessLevel.PRIVATE;
 @AllArgsConstructor(access = PRIVATE)
 public class MediaFilesClient extends BaseApiClient<MediaFile> implements MediaFiles {
 
+    private static final MediaType MEDIA_TYPE_AUDIO_WAV = MediaType.parse("audio/wav");
+
     private static final String PARAM_DETAILS = "details";
     private static final String PARAM_FILTER = "filter";
     private static final String PARAM_MAX_ITEMS = "max_items";
     private static final String PARAM_LAST_TOKEN = "last_token";
+    private static final String PARAM_MEDIA_FILE = "mediafile";
     private static final String HEADER_LIST_TRUNCATION_TOKEN = "List-Truncation-Token";
 
     @Getter
@@ -63,6 +68,39 @@ public class MediaFilesClient extends BaseApiClient<MediaFile> implements MediaF
                 .build();
 
         return getResult(parameters, MediaFile.class);
+    }
+
+    @Override
+    public String uploadMediaFile(Path filePath) throws IOException {
+        requireNonNull(filePath, "filePath must not be null");
+        if (!isRegularFile(filePath))
+            throw new InvalidPathException(filePath.toString(), "filePath is not a regular file");
+
+        val fileName = filePath.getFileName().toString();
+        return uploadMediaFile(filePath, fileName);
+    }
+
+    @Override
+    public String uploadMediaFile(Path filePath, String fileName) throws IOException {
+        requireNonNull(fileName, "fileName must not be null");
+        requireNonNull(filePath, "filePath must not be null");
+        if (!isRegularFile(filePath))
+            throw new InvalidPathException(filePath.toString(), "filePath is not a regular file");
+
+        val requestBody = new MultipartBody.Builder()
+                .setType(MultipartBody.FORM)
+                .addFormDataPart(PARAM_MEDIA_FILE, fileName,
+                        RequestBody.create(filePath.toFile(), MEDIA_TYPE_AUDIO_WAV))
+                .build();
+
+        Request request = new Request.Builder()
+                .url(authenticatedUrl())
+                .post(requestBody)
+                .build();
+
+        try (Response response = client.newCall(request).execute()) {
+            return response.body().string();
+        }
     }
 
     @Override

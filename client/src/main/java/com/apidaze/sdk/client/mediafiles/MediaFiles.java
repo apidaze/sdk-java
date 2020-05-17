@@ -3,6 +3,7 @@ package com.apidaze.sdk.client.mediafiles;
 import lombok.Value;
 
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.List;
 
 public interface MediaFiles {
@@ -14,6 +15,10 @@ public interface MediaFiles {
     Result<MediaFile> getMediaFiles() throws IOException;
 
     Result<MediaFile> getMediaFiles(String filter, Integer maxItems, String lastToken) throws IOException;
+
+    String uploadMediaFile(Path filePath) throws IOException;
+
+    String uploadMediaFile(Path filePath, String fileName) throws IOException;
 
     @Value
     class Result<T> {

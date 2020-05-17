@@ -6,11 +6,12 @@ import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 
 import java.io.IOException;
+import java.nio.file.Paths;
 
 import static java.util.Objects.isNull;
 
 @Slf4j
-public class ListMediaFiles {
+public class UploadMediaFileExample {
 
     public static void main(String... args) {
 
@@ -26,19 +27,16 @@ public class ListMediaFiles {
         val client = MediaFilesClient.create(new Credentials(apiKey, apiSecret));
 
         try {
-            // get media files
-            val result = client.getMediaFiles();
+            val filePath = Paths.get("client/src/test/resources/data/mediafile.wav");
 
-            // get media files with parameters
-//            val result = client.getMediaFiles(null, 1, null);
+            // upload media file
+            val response = client.uploadMediaFile(filePath);
 
-            // get media file names
-//            val result = client.getMediaFileNames();
+            // upload media file with new name
+//            val fileName = "mediafile2.wav";
+//            val response = client.uploadMediaFile(filePath, fileName);
 
-            // get media file names with parameters
-//            val result = client.getMediaFileNames(null, 2, null);
-
-            log.info("Media files result: {}", result);
+            log.info("Media file has been successfully uploaded: {}", response);
         } catch (IOException e) {
             log.error("An error occurred during communicating with API", e);
         }
