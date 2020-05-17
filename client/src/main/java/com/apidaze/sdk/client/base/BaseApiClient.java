@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.google.common.collect.ImmutableMap;
 import lombok.val;
 import okhttp3.*;
 
@@ -14,6 +15,9 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+
+import static java.util.Collections.emptyMap;
+import static java.util.Objects.nonNull;
 
 
 /**
@@ -62,12 +66,26 @@ public abstract class BaseApiClient<T> {
      * @return The {@code HttpUrl.Builder} with baseUrl, apiKey, apiSecret and basePath included.
      */
     protected HttpUrl.Builder authenticated() {
-        return HttpUrl
+        return authenticated(emptyMap());
+    }
+
+    /**
+     * Creates the authenticated {@code HttpUrl.Builder} with provided parameters.
+     * @return The {@code HttpUrl.Builder} with paramters, baseUrl, apiKey, apiSecret and basePath included.
+     */
+    protected HttpUrl.Builder authenticated(Map<String, String> parameters) {
+        val url = HttpUrl
                 .parse(getBaseUrl())
                 .newBuilder()
                 .addPathSegments(getCredentials().getApiKey())
                 .addPathSegment(getBasePath())
                 .addQueryParameter("api_secret", getCredentials().getApiSecret());
+
+        if (nonNull(parameters)) {
+            parameters.forEach(url::addQueryParameter);
+        }
+
+        return url;
     }
 
     /**
@@ -79,7 +97,10 @@ public abstract class BaseApiClient<T> {
      */
     protected T create(Map<String, String> params, Class<T> clazz) throws IOException {
         val formBody = new FormBody.Builder();
-        params.forEach(formBody::add);
+
+        if (nonNull(params)) {
+            params.forEach(formBody::add);
+        }
 
         Request request = new Request.Builder()
                 .url(authenticatedUrl())
@@ -116,10 +137,20 @@ public abstract class BaseApiClient<T> {
      * @throws IOException
      */
     protected List<T> findByParameter(String name, String value, Class<T> clazz) throws IOException {
+        val params = ImmutableMap.of(name, value);
+        return findByParameters(params, clazz);
+    }
+
+    /**
+     * Returns the list of entities of type {@code T} by sending GET request with a given query parameters
+     * @param parameters the map containing query parameters to be sent in GET request
+     * @param clazz the class object of type {@code T} used to deserialize JSON content
+     * @return the list of entities
+     * @throws IOException
+     */
+    protected List<T> findByParameters(Map<String, String> parameters, Class<T> clazz) throws IOException {
         Request request = new Request.Builder()
-                .url(authenticated()
-                        .addQueryParameter(name, value)
-                        .build())
+                .url(authenticated(parameters).build())
                 .build();
 
         try (Response response = client.newCall(request).execute()) {
