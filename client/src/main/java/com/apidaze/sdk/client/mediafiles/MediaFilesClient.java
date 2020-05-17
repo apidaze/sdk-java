@@ -10,6 +10,7 @@ import okhttp3.*;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
 import java.util.List;
@@ -101,6 +102,18 @@ public class MediaFilesClient extends BaseApiClient<MediaFile> implements MediaF
         try (Response response = client.newCall(request).execute()) {
             return response.body().string();
         }
+    }
+
+    @Override
+    public InputStream downloadMediaFile(String fileName) throws IOException {
+        val request = new Request.Builder()
+                .url(authenticated()
+                        .addPathSegment(fileName)
+                        .build())
+                .build();
+
+        val response = client.newCall(request).execute();
+        return response.body().byteStream();
     }
 
     @Override
