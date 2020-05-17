@@ -20,6 +20,8 @@ public interface MediaFiles {
 
     String uploadMediaFile(Path filePath, String fileName) throws IOException;
 
+    void deleteMediaFile(String fileName) throws IOException;
+
     @Value
     class Result<T> {
         String lastToken;

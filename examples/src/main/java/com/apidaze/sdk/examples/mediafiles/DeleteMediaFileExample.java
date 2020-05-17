@@ -10,7 +10,7 @@ import java.io.IOException;
 import static java.util.Objects.isNull;
 
 @Slf4j
-public class ListMediaFilesExample {
+public class DeleteMediaFileExample {
 
     public static void main(String... args) {
 
@@ -26,19 +26,10 @@ public class ListMediaFilesExample {
         val client = MediaFilesClient.create(new Credentials(apiKey, apiSecret));
 
         try {
-            // get media files
-            val result = client.getMediaFiles();
-
-            // get media files with parameters
-//            val result = client.getMediaFiles(null, 1, null);
-
-            // get media file names
-//            val result = client.getMediaFileNames();
-
-            // get media file names with parameters
-//            val result = client.getMediaFileNames(null, 2, null);
-
-            log.info("Media files result: {}", result);
+            // delete media file
+            val fileName = "mediafile2.wav";
+            client.deleteMediaFile(fileName);
+            log.info("Media file {} has been successfully deleted.", fileName);
         } catch (IOException e) {
             log.error("An error occurred during communicating with API", e);
         }

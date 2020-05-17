@@ -104,6 +104,12 @@ public class MediaFilesClient extends BaseApiClient<MediaFile> implements MediaF
     }
 
     @Override
+    public void deleteMediaFile(String fileName) throws IOException {
+        requireNonNull(fileName, "fileName must not be null");
+        delete(fileName);
+    }
+
+    @Override
     public Result<String> getMediaFileNames() throws IOException {
         return getResult(emptyMap(), String.class);
     }

@@ -23,7 +23,7 @@ public class UploadMediaFileExample {
             System.exit(1);
         }
 
-        // initiate ApplicationAction
+        // initiate MediaFilesClient
         val client = MediaFilesClient.create(new Credentials(apiKey, apiSecret));
 
         try {
