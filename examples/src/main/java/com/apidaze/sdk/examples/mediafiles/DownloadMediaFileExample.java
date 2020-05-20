@@ -1,7 +1,7 @@
 package com.apidaze.sdk.examples.mediafiles;
 
+import com.apidaze.sdk.client.ApplicationAction;
 import com.apidaze.sdk.client.base.Credentials;
-import com.apidaze.sdk.client.mediafiles.MediaFilesClient;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 
@@ -26,17 +26,17 @@ public class DownloadMediaFileExample {
             System.exit(1);
         }
 
-        // initiate MediaFilesClient
-        val client = MediaFilesClient.create(new Credentials(apiKey, apiSecret));
+        // initiate ApplicationAction
+        val applicationAction = ApplicationAction.create(new Credentials(apiKey, apiSecret));
 
         // the name of the file to be downloaded
         val sourceFileName = "mediafile.wav";
 
-        // the path of target file to which the stream will copied to
+        // the path to which the file will copied to
         val targetFilePath = Paths.get("data/mediafile.wav");
 
         // Remember to close the stream, the following example uses try-with-resources which automatically closes the stream
-        try (InputStream inputStream = client.downloadMediaFile(sourceFileName)) {
+        try (InputStream inputStream = applicationAction.downloadMediaFile(sourceFileName)) {
             Files.copy(inputStream, targetFilePath, StandardCopyOption.REPLACE_EXISTING);
             log.info("The {} file has been downloaded to {}", sourceFileName, targetFilePath);
         }

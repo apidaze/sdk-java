@@ -1,7 +1,7 @@
 package com.apidaze.sdk.examples.mediafiles;
 
+import com.apidaze.sdk.client.ApplicationAction;
 import com.apidaze.sdk.client.base.Credentials;
-import com.apidaze.sdk.client.mediafiles.MediaFilesClient;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 
@@ -23,18 +23,18 @@ public class UploadMediaFileExample {
             System.exit(1);
         }
 
-        // initiate MediaFilesClient
-        val client = MediaFilesClient.create(new Credentials(apiKey, apiSecret));
+        // initiate ApplicationAction
+        val applicationAction = ApplicationAction.create(new Credentials(apiKey, apiSecret));
 
         try {
             val filePath = Paths.get("client/src/test/resources/data/mediafile.wav");
 
             // upload media file
-            val response = client.uploadMediaFile(filePath);
+            val response = applicationAction.uploadMediaFile(filePath);
 
             // upload media file with new name
 //            val fileName = "mediafile2.wav";
-//            val response = client.uploadMediaFile(filePath, fileName);
+//            val response = applicationAction.uploadMediaFile(filePath, fileName);
 
             log.info("Media file has been successfully uploaded: {}", response);
         } catch (IOException e) {

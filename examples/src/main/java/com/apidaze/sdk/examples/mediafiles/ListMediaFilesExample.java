@@ -1,7 +1,7 @@
 package com.apidaze.sdk.examples.mediafiles;
 
+import com.apidaze.sdk.client.ApplicationAction;
 import com.apidaze.sdk.client.base.Credentials;
-import com.apidaze.sdk.client.mediafiles.MediaFilesClient;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 
@@ -22,21 +22,21 @@ public class ListMediaFilesExample {
             System.exit(1);
         }
 
-        // initiate MediaFilesClient
-        val client = MediaFilesClient.create(new Credentials(apiKey, apiSecret));
+        // initiate ApplicationAction
+        val applicationAction = ApplicationAction.create(new Credentials(apiKey, apiSecret));
 
         try {
             // get media files
-            val result = client.getMediaFiles();
+            val result = applicationAction.getMediaFiles();
 
             // get media files with parameters
-//            val result = client.getMediaFiles(null, 1, null);
+//            val result = applicationAction.getMediaFiles(null, 1, null);
 
             // get media file names
-//            val result = client.getMediaFileNames();
+//            val result = applicationAction.getMediaFileNames();
 
             // get media file names with parameters
-//            val result = client.getMediaFileNames(null, 2, null);
+//            val result = applicationAction.getMediaFileNames(null, 2, null);
 
             log.info("Media files result: {}", result);
         } catch (IOException e) {
