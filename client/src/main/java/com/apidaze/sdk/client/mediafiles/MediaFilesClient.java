@@ -25,14 +25,14 @@ import static lombok.AccessLevel.PRIVATE;
 @AllArgsConstructor(access = PRIVATE)
 public class MediaFilesClient extends BaseApiClient<MediaFile> implements MediaFiles {
 
-    private static final MediaType MEDIA_TYPE_AUDIO_WAV = MediaType.parse("audio/wav");
+    static final MediaType MEDIA_TYPE_AUDIO_WAV = MediaType.parse("audio/wav");
 
-    private static final String PARAM_DETAILS = "details";
-    private static final String PARAM_FILTER = "filter";
-    private static final String PARAM_MAX_ITEMS = "max_items";
-    private static final String PARAM_LAST_TOKEN = "last_token";
-    private static final String PARAM_MEDIA_FILE = "mediafile";
-    private static final String HEADER_LIST_TRUNCATION_TOKEN = "List-Truncation-Token";
+    static final String PARAM_DETAILS = "details";
+    static final String PARAM_FILTER = "filter";
+    static final String PARAM_MAX_ITEMS = "max_items";
+    static final String PARAM_LAST_TOKEN = "last_token";
+    static final String PARAM_MEDIA_FILE = "mediafile";
+    static final String HEADER_LIST_TRUNCATION_TOKEN = "List-Truncation-Token";
 
     @Getter
     private final String basePath = "mediafiles";

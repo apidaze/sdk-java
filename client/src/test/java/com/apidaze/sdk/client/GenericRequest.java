@@ -2,6 +2,7 @@ package com.apidaze.sdk.client;
 
 import com.apidaze.sdk.client.common.URL;
 import com.google.common.collect.ImmutableMap;
+import org.apache.commons.lang3.ArrayUtils;
 import org.jetbrains.annotations.NotNull;
 import org.mockserver.model.HttpRequest;
 import org.mockserver.model.Parameter;
@@ -50,13 +51,16 @@ public abstract class GenericRequest {
                 .withQueryStringParameters(param(PARAM_API_SECRET, API_SECRET));
     }
 
-    protected HttpRequest getByParameter(@NotNull String name, String value) {
+    protected HttpRequest getByParameters(@NotNull Parameter... parameters) {
         return request()
                 .withMethod(GET.name())
                 .withPath("/" + API_KEY + "/" + getBasePath())
                 .withQueryStringParameters(
-                        param(PARAM_API_SECRET, API_SECRET),
-                        param(name, value));
+                        ArrayUtils.add(parameters, param(PARAM_API_SECRET, API_SECRET)));
+    }
+
+    protected HttpRequest getByParameter(@NotNull String name, String value) {
+        return getByParameters(param(name, value));
     }
 
     protected HttpRequest create(@NotNull Map<String, String> params) {

@@ -22,7 +22,6 @@ import java.nio.file.Paths;
 
 import static com.apidaze.sdk.client.GenericResponse.list;
 import static com.apidaze.sdk.client.TestUtil.*;
-import static com.apidaze.sdk.client.recordings.RecordingsClientResponse.responseWithFile;
 import static java.nio.file.Files.copy;
 import static java.nio.file.Files.deleteIfExists;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -101,7 +100,7 @@ public class RecordingsClientTest extends GenericRequest {
 
         mockServer
                 .when(getById(SOURCE_FILE_NAME))
-                .respond(responseWithFile(SOURCE_FILE));
+                .respond(responseWithAudioFile(SOURCE_FILE));
 
         val resultStream = client.downloadRecording(SOURCE_FILE_NAME);
 
@@ -119,7 +118,7 @@ public class RecordingsClientTest extends GenericRequest {
 
         mockServer
                 .when(getById(SOURCE_FILE_NAME))
-                .respond(responseWithFile(SOURCE_FILE));
+                .respond(responseWithAudioFile(SOURCE_FILE));
 
         client.downloadRecordingToFileAsync(SOURCE_FILE_NAME, TARGET_DIR, callback);
 
@@ -138,7 +137,7 @@ public class RecordingsClientTest extends GenericRequest {
 
         mockServer
                 .when(getById(SOURCE_FILE_NAME))
-                .respond(responseWithFile(SOURCE_FILE));
+                .respond(responseWithAudioFile(SOURCE_FILE));
 
         client.downloadRecordingToFileAsync(SOURCE_FILE_NAME, TARGET_DIR, overwrite, callback);
 
@@ -172,7 +171,7 @@ public class RecordingsClientTest extends GenericRequest {
     public void shouldDownloadFileToLocalFolderWithOriginalName() throws IOException {
         mockServer
                 .when(getById(SOURCE_FILE_NAME))
-                .respond(responseWithFile(SOURCE_FILE));
+                .respond(responseWithAudioFile(SOURCE_FILE));
 
         val downloadedFile = client.downloadRecordingToFile(SOURCE_FILE_NAME, TARGET_DIR);
 
@@ -184,7 +183,7 @@ public class RecordingsClientTest extends GenericRequest {
     public void shouldDownloadFileToLocalFolderWithChangedName() throws IOException {
         mockServer
                 .when(getById(SOURCE_FILE_NAME))
-                .respond(responseWithFile(SOURCE_FILE));
+                .respond(responseWithAudioFile(SOURCE_FILE));
 
         val downloadedFile = client.downloadRecordingToFile(SOURCE_FILE_NAME, TARGET_FILE_WITH_CHANGED_NAME.toPath());
 
@@ -203,7 +202,7 @@ public class RecordingsClientTest extends GenericRequest {
 
         mockServer
                 .when(getById(SOURCE_FILE_NAME))
-                .respond(responseWithFile(SOURCE_FILE));
+                .respond(responseWithAudioFile(SOURCE_FILE));
 
         val downloadedFile = client.downloadRecordingToFile(SOURCE_FILE_NAME, TARGET_DIR, overwrite);
 
@@ -219,7 +218,7 @@ public class RecordingsClientTest extends GenericRequest {
 
         mockServer
                 .when(getById(SOURCE_FILE_NAME))
-                .respond(responseWithFile(SOURCE_FILE));
+                .respond(responseWithAudioFile(SOURCE_FILE));
 
         assertThatExceptionOfType(FileAlreadyExistsException.class)
                 .isThrownBy(() -> client.downloadRecordingToFile(SOURCE_FILE_NAME, TARGET_DIR, overwrite))
