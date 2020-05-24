@@ -275,6 +275,11 @@ public class ApplicationAction implements
     }
 
     @Override
+    public MediaFileSummary getMediaFileSummary(String fileName) throws IOException {
+        return mediaFiles.getMediaFileSummary(fileName);
+    }
+
+    @Override
     public void deleteMediaFile(String fileName) throws IOException {
         mediaFiles.deleteMediaFile(fileName);
     }

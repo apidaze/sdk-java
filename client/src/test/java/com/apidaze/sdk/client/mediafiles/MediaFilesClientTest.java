@@ -19,9 +19,11 @@ import java.time.ZonedDateTime;
 import static com.apidaze.sdk.client.GenericResponse.list;
 import static com.apidaze.sdk.client.TestUtil.*;
 import static com.apidaze.sdk.client.mediafiles.MediaFilesClient.*;
+import static io.netty.handler.codec.http.HttpMethod.HEAD;
 import static io.netty.handler.codec.http.HttpMethod.POST;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
+import static org.mockserver.model.Header.header;
 import static org.mockserver.model.HttpRequest.request;
 import static org.mockserver.model.HttpResponse.response;
 import static org.mockserver.model.HttpStatusCode.NO_CONTENT_204;
@@ -245,6 +247,29 @@ public class MediaFilesClientTest extends GenericRequest {
         mockServer.verify(delete(fileName));
     }
 
+    @Test
+    public void shouldReturnMediaFileSummary() throws IOException {
+        val fileName = "mediafile.wav";
+        val contentLength = 1000L;
+        val contentType = "audio/wav";
+        val date = "Sun, 24 May 2020 18:28:23 GMT";
+        val fileSummary = new MediaFileSummary(contentLength, contentType, date);
+
+        mockServer
+                .when(getMediaFileSummary(fileName))
+                .respond(response().withHeaders(
+                        header("Content-Length", String.valueOf(contentLength)),
+                        header("Content-type", contentType),
+                        header("Date", date)));
+
+        val result = client.getMediaFileSummary(fileName);
+
+        assertThat(result)
+                .usingRecursiveComparison()
+                .isEqualTo(fileSummary);
+        mockServer.verify(getMediaFileSummary(fileName));
+    }
+
     private final MediaFile mediaFile1 = MediaFile.builder()
             .name("file1.wav")
             .size(10L)
@@ -269,5 +294,12 @@ public class MediaFilesClientTest extends GenericRequest {
                 .withPath("/" + API_KEY + "/" + getBasePath())
                 .withQueryStringParameters(param(PARAM_API_SECRET, API_SECRET))
                 .withBody(subString(contentDisposition));
+    }
+
+    private HttpRequest getMediaFileSummary(String fileName) {
+        return request()
+                .withMethod(HEAD.name())
+                .withPath("/" + API_KEY + "/" + getBasePath() + "/" + fileName)
+                .withQueryStringParameters(param(PARAM_API_SECRET, API_SECRET));
     }
 }

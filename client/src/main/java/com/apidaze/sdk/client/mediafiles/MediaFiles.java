@@ -1,5 +1,6 @@
 package com.apidaze.sdk.client.mediafiles;
 
+import lombok.Builder;
 import lombok.Value;
 
 import java.io.IOException;
@@ -23,11 +24,21 @@ public interface MediaFiles {
 
     InputStream downloadMediaFile(String fileName) throws IOException;
 
+    MediaFileSummary getMediaFileSummary(String fileName) throws IOException;
+
     void deleteMediaFile(String fileName) throws IOException;
 
     @Value
     class Result<T> {
         String lastToken;
         List<T> mediaFiles;
+    }
+
+    @Value
+    @Builder
+    class MediaFileSummary {
+        Long contentLength;
+        String contentType;
+        String date;
     }
 }

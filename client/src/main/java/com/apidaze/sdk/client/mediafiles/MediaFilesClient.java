@@ -15,6 +15,7 @@ import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import static java.nio.file.Files.isRegularFile;
 import static java.util.Collections.emptyMap;
@@ -114,6 +115,28 @@ public class MediaFilesClient extends BaseApiClient<MediaFile> implements MediaF
 
         val response = client.newCall(request).execute();
         return response.body().byteStream();
+    }
+
+    @Override
+    public MediaFileSummary getMediaFileSummary(String fileName) throws IOException {
+        val request = new Request.Builder()
+                .url(authenticated()
+                        .addPathSegment(fileName)
+                        .build())
+                .head()
+                .build();
+
+        try (Response response = client.newCall(request).execute()) {
+            val contentLength = Optional.ofNullable(response.header("Content-Length"))
+                    .map(Long::parseLong)
+                    .orElse(null);
+
+            return MediaFileSummary.builder()
+                    .contentLength(contentLength)
+                    .contentType(response.header("Content-type"))
+                    .date(response.header("Date"))
+                    .build();
+        }
     }
 
     @Override
