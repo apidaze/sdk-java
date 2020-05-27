@@ -12,6 +12,9 @@ import com.apidaze.sdk.client.common.URL;
 import com.apidaze.sdk.client.externalscripts.ExternalScript;
 import com.apidaze.sdk.client.externalscripts.ExternalScripts;
 import com.apidaze.sdk.client.externalscripts.ExternalScriptsClient;
+import com.apidaze.sdk.client.mediafiles.MediaFile;
+import com.apidaze.sdk.client.mediafiles.MediaFiles;
+import com.apidaze.sdk.client.mediafiles.MediaFilesClient;
 import com.apidaze.sdk.client.messages.Message;
 import com.apidaze.sdk.client.messages.MessageClient;
 import com.apidaze.sdk.client.recordings.Recordings;
@@ -39,7 +42,15 @@ import static lombok.AccessLevel.PRIVATE;
  * The class used to make calls, send text messages and other application specific functions.
  */
 @AllArgsConstructor(access = PRIVATE)
-public class ApplicationAction implements Calls, Message, ExternalScripts, Recordings, CredentialsValidator, CdrHttpHandlers, SipUsers {
+public class ApplicationAction implements
+        Calls,
+        Message,
+        ExternalScripts,
+        Recordings,
+        CredentialsValidator,
+        CdrHttpHandlers,
+        SipUsers,
+        MediaFiles {
 
     private final Calls calls;
     private final ExternalScripts externalScripts;
@@ -48,6 +59,7 @@ public class ApplicationAction implements Calls, Message, ExternalScripts, Recor
     private final CredentialsValidator credentialsValidator;
     private final CdrHttpHandlers cdrHttpHandlers;
     private final SipUsers sipUsers;
+    private final MediaFiles mediaFiles;
 
     /**
      * Initiates an object of this class.
@@ -64,7 +76,8 @@ public class ApplicationAction implements Calls, Message, ExternalScripts, Recor
                 RecordingsClient.create(credentials),
                 CredentialsValidatorClient.create(credentials),
                 CdrHttpHandlersClient.create(credentials),
-                SipUsersClient.create(credentials));
+                SipUsersClient.create(credentials),
+                MediaFilesClient.create(credentials));
     }
 
     @Override
@@ -224,5 +237,50 @@ public class ApplicationAction implements Calls, Message, ExternalScripts, Recor
     @Override
     public Optional<SipUser> resetSipUserPassword(Long id) throws IOException {
         return sipUsers.resetSipUserPassword(id);
+    }
+
+    @Override
+    public Result<String> getMediaFileNames() throws IOException {
+        return mediaFiles.getMediaFileNames();
+    }
+
+    @Override
+    public Result<String> getMediaFileNames(String filter, Integer maxItems, String lastToken) throws IOException {
+        return mediaFiles.getMediaFileNames(filter, maxItems, lastToken);
+    }
+
+    @Override
+    public Result<MediaFile> getMediaFiles() throws IOException {
+        return mediaFiles.getMediaFiles();
+    }
+
+    @Override
+    public Result<MediaFile> getMediaFiles(String filter, Integer maxItems, String lastToken) throws IOException {
+        return mediaFiles.getMediaFiles(filter, maxItems, lastToken);
+    }
+
+    @Override
+    public String uploadMediaFile(Path filePath) throws IOException {
+        return mediaFiles.uploadMediaFile(filePath);
+    }
+
+    @Override
+    public String uploadMediaFile(Path filePath, String fileName) throws IOException {
+        return mediaFiles.uploadMediaFile(filePath, fileName);
+    }
+
+    @Override
+    public InputStream downloadMediaFile(String fileName) throws IOException {
+        return mediaFiles.downloadMediaFile(fileName);
+    }
+
+    @Override
+    public MediaFileSummary getMediaFileSummary(String fileName) throws IOException {
+        return mediaFiles.getMediaFileSummary(fileName);
+    }
+
+    @Override
+    public void deleteMediaFile(String fileName) throws IOException {
+        mediaFiles.deleteMediaFile(fileName);
     }
 }

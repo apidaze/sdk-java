@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.apache.commons.io.IOUtils;
 import org.mockserver.logging.MockServerLogger;
+import org.mockserver.model.HttpResponse;
 import org.mockserver.model.JsonBody;
 import org.mockserver.serialization.ObjectMapperFactory;
 
@@ -17,7 +18,11 @@ import java.io.InputStream;
 import java.time.ZonedDateTime;
 import java.util.Comparator;
 
+import static com.google.common.net.HttpHeaders.CONTENT_DISPOSITION;
+import static com.google.common.net.HttpHeaders.CONTENT_TYPE;
 import static java.util.Objects.nonNull;
+import static org.mockserver.model.Header.header;
+import static org.mockserver.model.HttpStatusCode.OK_200;
 
 public class TestUtil {
 
@@ -54,5 +59,15 @@ public class TestUtil {
         try (InputStream inputStream = new FileInputStream(file)) {
             return IOUtils.toByteArray(inputStream);
         }
+    }
+
+    public static HttpResponse responseWithAudioFile(File file) throws IOException {
+        return HttpResponse.response()
+                .withStatusCode(OK_200.code())
+                .withHeaders(
+                        header(CONTENT_TYPE, "audio/x-wav"),
+                        header(CONTENT_DISPOSITION, "attachment; filename=\"" + file.getName() + "\"")
+                )
+                .withBody(getBinaryContent(file));
     }
 }
