@@ -21,10 +21,10 @@ import static org.mockserver.model.ParameterBody.params;
 
 public abstract class GenericRequest {
 
-    private static final String PARAM_NAME = "name";
-    private static final String PARAM_URL = "url";
-    private static final String PARAM_API_SECRET = "api_secret";
-    private static final String APPLICATION_FORM_URLENCODED = "application/x-www-form-urlencoded";
+    protected static final String PARAM_NAME = "name";
+    protected static final String PARAM_URL = "url";
+    protected static final String PARAM_API_SECRET = "api_secret";
+    protected static final String APPLICATION_FORM_URLENCODED = "application/x-www-form-urlencoded";
 
     protected abstract String getBasePath();
 

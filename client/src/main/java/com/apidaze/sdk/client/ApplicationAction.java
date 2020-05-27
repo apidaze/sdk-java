@@ -16,6 +16,10 @@ import com.apidaze.sdk.client.messages.Message;
 import com.apidaze.sdk.client.messages.MessageClient;
 import com.apidaze.sdk.client.recordings.Recordings;
 import com.apidaze.sdk.client.recordings.RecordingsClient;
+import com.apidaze.sdk.client.sipusers.SipUser;
+import com.apidaze.sdk.client.sipusers.SipUserStatus;
+import com.apidaze.sdk.client.sipusers.SipUsers;
+import com.apidaze.sdk.client.sipusers.SipUsersClient;
 import com.apidaze.sdk.client.validates.CredentialsValidator;
 import com.apidaze.sdk.client.validates.CredentialsValidatorClient;
 import lombok.AllArgsConstructor;
@@ -35,7 +39,7 @@ import static lombok.AccessLevel.PRIVATE;
  * The class used to make calls, send text messages and other application specific functions.
  */
 @AllArgsConstructor(access = PRIVATE)
-public class ApplicationAction implements Calls, Message, ExternalScripts, Recordings, CredentialsValidator, CdrHttpHandlers {
+public class ApplicationAction implements Calls, Message, ExternalScripts, Recordings, CredentialsValidator, CdrHttpHandlers, SipUsers {
 
     private final Calls calls;
     private final ExternalScripts externalScripts;
@@ -43,9 +47,11 @@ public class ApplicationAction implements Calls, Message, ExternalScripts, Recor
     private final Recordings recordings;
     private final CredentialsValidator credentialsValidator;
     private final CdrHttpHandlers cdrHttpHandlers;
+    private final SipUsers sipUsers;
 
     /**
      * Initiates an object of this class.
+     *
      * @param credentials an application specific key and secret
      * @return An initiated object of this class
      */
@@ -57,7 +63,8 @@ public class ApplicationAction implements Calls, Message, ExternalScripts, Recor
                 MessageClient.create(credentials),
                 RecordingsClient.create(credentials),
                 CredentialsValidatorClient.create(credentials),
-                CdrHttpHandlersClient.create(credentials));
+                CdrHttpHandlersClient.create(credentials),
+                SipUsersClient.create(credentials));
     }
 
     @Override
@@ -173,5 +180,49 @@ public class ApplicationAction implements Calls, Message, ExternalScripts, Recor
     @Override
     public void deleteCdrHttpHandler(Long id) throws IOException {
         cdrHttpHandlers.deleteCdrHttpHandler(id);
+    }
+
+    @Override
+    public List<SipUser> getSipUsers() throws IOException {
+        return sipUsers.getSipUsers();
+    }
+
+    @Override
+    public SipUser createSipUser(String username,
+                                 String name,
+                                 String emailAddress,
+                                 String internalCallerIdNumber,
+                                 String externalCallerIdNumber) throws IOException {
+        return sipUsers.createSipUser(username, name, emailAddress, internalCallerIdNumber, externalCallerIdNumber);
+    }
+
+    @Override
+    public Optional<SipUser> getSipUser(Long id) throws IOException {
+        return sipUsers.getSipUser(id);
+    }
+
+    @Override
+    public SipUser updateSipUser(Long id, String name, String internalCallerIdNumber, String externalCallerIdNumber) throws IOException {
+        return sipUsers.updateSipUser(id, name, internalCallerIdNumber, externalCallerIdNumber);
+    }
+
+    @Override
+    public SipUser updateSipUser(Long id, String name, String internalCallerIdNumber, String externalCallerIdNumber, boolean resetPassword) throws IOException {
+        return sipUsers.updateSipUser(id, name, internalCallerIdNumber, externalCallerIdNumber, resetPassword);
+    }
+
+    @Override
+    public void deleteSipUser(Long id) throws IOException {
+        sipUsers.deleteSipUser(id);
+    }
+
+    @Override
+    public Optional<SipUserStatus> getSipUserStatus(Long id) throws IOException {
+        return sipUsers.getSipUserStatus(id);
+    }
+
+    @Override
+    public Optional<SipUser> resetSipUserPassword(Long id) throws IOException {
+        return sipUsers.resetSipUserPassword(id);
     }
 }
