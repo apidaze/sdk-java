@@ -15,7 +15,7 @@
         <maven.compiler.target>1.8</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <lombok.version>1.18.10</lombok.version>
-        <guava.version>28.1-jre</guava.version>
+        <guava.version>29.0-jre</guava.version>
         <fasterxml.version>2.10.0</fasterxml.version>
         <commons.validator.version>1.6</commons.validator.version>
         <logback.version>1.2.3</logback.version>
